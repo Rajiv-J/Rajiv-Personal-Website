@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajiv J. - Personal Website</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://www.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <!-- Three.js Import Map -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.157.0/examples/jsm/"
+        }
+      }
+    </script>
+    <style>
+        /* Applying the Inter font to the whole page */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #0A3031; /* New Darker Teal Background */
+        }
+        /* Custom scrollbar for a more modern look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #062223; /* Darker version of new background */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2dd4bf; /* Teal-400 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #5eead4; /* Teal-300 */
+        }
+
+        /* Blinking cursor effect */
+        .blinking-cursor {
+            font-weight: 500;
+            color: #5eead4; /* Teal-300 */
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to {
+                color: transparent;
+            }
+            50% {
+                color: #5eead4; /* Teal-300 */
+            }
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <div class="container mx-auto p-4 lg:p-8 max-w-3xl">
+        
+        <!-- Navigation Bar -->
+        <nav class="flex justify-center md:justify-end mb-8">
+            <a href="#" data-page="home" id="nav-home" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Home</a>
+            <a href="#" data-page="projects" id="nav-projects" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Projects</a>
+            <a href="#" data-page="learning" id="nav-learning" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Learning</a>
+        </nav>
+
+        <!-- Home Page Content -->
+        <div id="home-page">
+            <!-- Profile Header Section -->
+            <header class="text-center mb-12">
+                <!-- 
+                🔴 IMPORTANT: Make sure the image file 'Rajiv_pfp.jpg' is in the same
+                folder as this index.html file for it to display correctly.
+                -->
+                <img src="Rajiv_pfp.jpg" alt="A photo of Rajiv" class="w-80 h-80 rounded-full mx-auto mb-6 border-4 border-teal-400 shadow-2xl">
+                <h1 class="text-4xl md:text-6xl font-black tracking-tight text-white uppercase">
+                    RAJIV J.
+                </h1>
+                <p class="text-xl text-teal-300 font-semibold mt-2 h-7">
+                    <span id="typing-quote"></span><span class="blinking-cursor">|</span>
+                </p>
+            </header>
+
+            <!-- Main Content Section -->
+            <main>
+                
+                <!-- About Me Section -->
+                <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 mb-8 backdrop-blur-sm">
+                    <h2 class="text-3xl font-bold text-white mb-4 border-b-2 border-teal-400 pb-2">About Me:</h2>
+                    <p class="text-gray-300 leading-relaxed text-lg mb-6">
+                        Hey there and welcome to my personal website! My name is Rajiv and I am a mechanical engineer! Well more so an engineer who wants to build/create technologies that impact peoples lives and perspectives with some fun sprinkled in. More than the labels though, I am a person who enjoys learning new skills, sharing stories (I love story times!), embarking on new adventures, and stealing my mom's cooking recipes (man cooking is hard 👨‍🍳). But anyways, I hope that this website helps convey the honest journey I have had so far personally and academically in becoming my best self!
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-white mt-8 mb-3">🏫 Academic History:</h3>
+                    <ul class="list-disc list-inside text-gray-300 text-lg space-y-2">
+                        <li>Masters of Science in Mechanical Engineering - Research @ Carnegie Mellon University (Present)</li>
+                        <li>Bachelors of Science in Mechanical Engineering - Robotics and Mechatronics @ Virginia Tech (May 2024)</li>
+                        <li>Bachelors of Science in Mechanical Engineering - Mechanical @ Virginia Tech (May 2024)</li>
+                    </ul>
+
+                    <h3 class="text-2xl font-semibold text-white mt-6 mb-3">📔 Professional Interests:</h3>
+                    <p class="text-gray-300 text-lg">
+                        Wearable robotics | Exoskeletons | Robotics | Mechatronics | Embedded Systems | Controls | CAD/Design | Mechanical Design | Leadership | Team Organization/Structure
+                    </p>
+
+                    <h3 class="text-2xl font-semibold text-white mt-6 mb-3">😎 Personal Interests:</h3>
+                    <p class="text-gray-300 text-lg">
+                        🏐 Volleyball | 🎱 Billiards | ⚽ Soccer | 🛠 CAD/Design | 🐉 D&D
+                    </p>
+                </div>
+
+                <!-- Bottom Sections Wrapper -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Contact/Links Section -->
+                    <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 text-center flex flex-col justify-center backdrop-blur-sm">
+                        <h2 class="text-3xl font-bold text-white mb-6 border-b-2 border-teal-400 pb-2">Connect With Me:</h2>
+                        <div class="flex items-center justify-center pt-2">
+                            <!-- LinkedIn -->
+                            <a href="https://www.linkedin.com/in/rajivj02/" target="_blank" class="text-gray-400 hover:text-teal-300 transition-colors duration-300 transform hover:scale-110">
+                                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                                <span class="sr-only">LinkedIn</span>
+                            </a>
+                            <!-- Email -->
+                            <a href="mailto:rajivj2002@gmail.com" class="ml-8 text-gray-400 hover:text-teal-300 transition-colors duration-300 transform hover:scale-110">
+                                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H2V8l10 7 10-7v10zM12 11L2 6h20l-10 5z"/></svg>
+                                <span class="sr-only">Email</span>
+                            </a>
+                        </div>
+                        <button id="go-to-projects-btn" class="mt-8 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                            Check out my Projects!
+                        </button>
+                        <button id="go-to-learning-btn" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                            Learn with Me!
+                        </button>
+                    </div>
+
+                    <!-- Resume Section -->
+                    <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 text-center backdrop-blur-sm">
+                        <h2 class="text-3xl font-bold text-white mb-6 border-b-2 border-teal-400 pb-2">My Resume:</h2>
+                        <!-- 
+                        🔴 IMPORTANT: Make sure your resume PDF file is named 'Rajiv_Joshi_Resume.pdf' 
+                        and is in the same folder as this file.
+                        -->
+                        <a href="#" id="resume-link" class="cursor-pointer block">
+                             <div class="relative w-full max-w-xs mx-auto aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2">
+                                <!-- Canvas for PDF Preview -->
+                                <canvas id="resume-canvas" class="rounded-lg transition-all duration-300 w-full"></canvas>
+                                <!-- Loading Spinner -->
+                                <div id="loading-spinner" class="absolute text-center">
+                                    <svg class="animate-spin h-8 w-8 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <p class="text-white mt-2 text-sm">Loading Preview...</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+
+        <!-- Projects Page Content -->
+        <div id="projects-page" class="hidden">
+            <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 backdrop-blur-sm">
+                <h2 class="text-3xl font-bold text-white mb-8 border-b-2 border-teal-400 pb-2">My Projects:</h2>
+                
+                <!-- Grid for projects -->
+                <div class="space-y-12">
+
+                    <!-- Project 1 Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                        <!-- 3D Container -->
+                        <div id="knee-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-gray-800/50 self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
+                        <!-- Project Details -->
+                        <div class="flex-1">
+                            <h3 id="knee-exo-title" class="text-2xl font-bold text-teal-300">MetaMobility Lab - Knee Exoskeleton</h3>
+                            <div class="mt-4 bg-gray-800/40 p-3 rounded-lg border border-teal-700/50">
+                                <p class="font-semibold text-teal-200">Interact with the 3D model!</p>
+                                <ul class="list-disc list-inside text-gray-300 mt-1 text-sm space-y-1">
+                                    <li><strong>Click + Drag:</strong> Rotate</li>
+                                    <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
+                                </ul>
+                            </div>
+                            <p class="text-gray-400 mt-4 leading-relaxed">
+                                A lightweight, high-torque knee exoskeleton designed to assist individuals with gait impairment. Click the title for a more detailed project breakdown.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                         <!-- Project Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Hip+Exoskeleton" alt="Hip Exoskeleton Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <!-- Project Details -->
+                        <div class="flex-1">
+                            <h3 id="hip-exo-title" class="text-2xl font-bold text-teal-300">MetaMobility Lab - Hip Exoskeleton</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">
+                               An assistive device focused on reducing user hip work through an adaptive control strategy based on real-time gait cycle estimation. Click the title for more details.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                        <!-- Project Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Haptic+Device" alt="Haptic Device Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <!-- Project Details -->
+                        <div class="flex-1">
+                            <h3 id="haptic-design-title" class="text-2xl font-bold text-teal-300">Haptic Design Interfaces - Open-Source Haptic Device</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">
+                                An open-source teaching tool for learning forward kinematics, biological sensors, and haptics. Click for more details.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                        <!-- Project Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Mechatronics" alt="Mechatronics Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <!-- Project Details -->
+                        <div class="flex-1">
+                            <h3 id="mechatronics-project-title" class="text-2xl font-bold text-teal-300">ADV Mechatronics - Final Project</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">
+                                A robust arcade game demonstrating depth of knowledge in mechatronic system design. Click for more details.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project 5 Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                        <!-- Project Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Solar+Car" alt="Solar Car Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <!-- Project Details -->
+                        <div class="flex-1">
+                            <h3 id="solar-car-title" class="text-2xl font-bold text-teal-300">Solar Car at Virginia Tech</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">
+                                Contributions to the design and manufacturing of a solar-powered vehicle for competitive racing. Click for more details.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Project 6 Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                        <!-- Project Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Tennis+Robot" alt="Tennis Robot Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <!-- Project Details -->
+                        <div class="flex-1">
+                            <h3 id="assistive-robotics-title" class="text-2xl font-bold text-teal-300">Assistive Robotics Lab - Tennis Training Robot</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">
+                                Development of an autonomous robotic system for tennis training and practice. Click for more details.
+                            </p>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <!-- Learning Page Content -->
+        <div id="learning-page" class="hidden">
+            <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 backdrop-blur-sm">
+                <h2 class="text-3xl font-bold text-white mb-8 border-b-2 border-teal-400 pb-2">My Learnings:</h2>
+                <div class="space-y-12">
+                    <!-- Placeholder Learning Item Card -->
+                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                        <!-- Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Learning+Topic" alt="Learning Topic Placeholder" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <!-- Details -->
+                        <div class="flex-1">
+                            <h3 id="learning-item-1-title" class="text-2xl font-bold text-teal-300">Placeholder Learning Topic</h3>
+                            <p class="text-gray-400 mt-3 leading-relaxed">
+                               A brief description of what I learned in this area. Click the title for a more detailed breakdown.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Footer -->
+        <footer class="text-center mt-12 py-4 border-t border-teal-600/30">
+            <p class="text-gray-500">&copy; <span id="year"></span> Rajiv J. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <!-- Resume Modal -->
+    <div id="resume-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div class="bg-[#062223] border-2 border-teal-600/30 rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-teal-600/30">
+                <h3 class="text-xl font-semibold text-white">Resume</h3>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+            </div>
+            <div class="flex-grow p-1">
+                <iframe src="Rajiv_Joshi_Resume.pdf" class="w-full h-full border-0" title="Rajiv Joshi's Resume"></iframe>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Item Detail Modal -->
+    <div id="item-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div class="bg-[#062223] border-2 border-teal-600/30 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-teal-600/30">
+                <h3 id="item-modal-title" class="text-2xl font-bold text-white">Details</h3>
+                <button id="close-item-modal-btn" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+            </div>
+            <div id="item-modal-content" class="flex-grow p-6 overflow-y-auto text-gray-300 leading-relaxed">
+                <!-- Item details will be injected here -->
+            </div>
+        </div>
+    </div>
+
+
+    <!-- PDF.js Library -->
+    <script src="https://mozilla.github.io/pdf.js/build/pdf.mjs" type="module"></script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // --- Main App Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- STATE MANAGEMENT ---
+            const state = {
+                kneeExo3DInitialized: false,
+                sliderInterval: null
+            };
+
+            // --- DOM ELEMENT SELECTIONS ---
+            const yearSpan = document.getElementById('year');
+            const typingQuoteSpan = document.getElementById('typing-quote');
+
+            // Navigation Elements
+            const navLinks = {
+                home: document.getElementById('nav-home'),
+                projects: document.getElementById('nav-projects'),
+                learning: document.getElementById('nav-learning')
+            };
+            const pages = {
+                home: document.getElementById('home-page'),
+                projects: document.getElementById('projects-page'),
+                learning: document.getElementById('learning-page')
+            };
+            const navButtons = {
+                goToProjects: document.getElementById('go-to-projects-btn'),
+                goToLearning: document.getElementById('go-to-learning-btn')
+            };
+
+            // Resume Modal Elements
+            const resumeModal = {
+                trigger: document.getElementById('resume-link'),
+                modal: document.getElementById('resume-modal'),
+                closeBtn: document.getElementById('close-modal-btn')
+            };
+
+            // Generic Item Modal Elements
+            const itemModal = {
+                modal: document.getElementById('item-detail-modal'),
+                closeBtn: document.getElementById('close-item-modal-btn'),
+                title: document.getElementById('item-modal-title'),
+                content: document.getElementById('item-modal-content')
+            };
+            
+            // --- DATA ---
+            const itemDetails = {
+                'knee-exo-title': {
+                    title: 'MetaMobility Lab - Knee Exoskeleton',
+                    content: `
+                        <div id="knee-slider" class="relative w-full max-w-lg mx-auto aspect-square mb-6 rounded-lg overflow-hidden">
+                            <img src="Knee_IRL_Front.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100">
+                            <img src="Knee_IRL_Side.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                            <img src="Knee_IRL_Back.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                        </div>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <p class="mb-4">The overall goal of this project was to design, manufacture, and test a state-of-the-art robotic knee exoskeleton. This device is aimed at trying to assist people who suffer with gait impairment issues like cerebral palsy, stroke, osteoarthritis, and more. To actually realize this, multiple communication protocols, high torque density motors, and custom adjustable orthotic interfaces were designed and interfaced to adapt to the various body proportions of people. More than this, this project aims to advance current human locomotion understandings through adaptive, generalized, and personalized control.</p>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
+                        <p class="mb-4">As the project lead, I was responsible for coordinating a team of five researchers in a 2-3 month summer design and baseline control validation sprint. My duties included and were not limited to:</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-4">
+                            <li>Setting project milestones/timeline</li>
+                            <li>Working with and Teaching undergraduates on CAD design/prototyping</li>
+                            <li>Leading literature reviews for understanding knee biomechanics during various actions (level ground gait, sit to stand, incline/decline walking)</li>
+                            <li>Full software/hardware integration of sensors + motor control</li>
+                            <li>Baseline data collection for validation of sensor readings</li>
+                        </ol>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                           <li><strong>Orthotic Cuffs:</strong> Custom designed for user comfort.</li>
+                           <li><strong>Linear Freedom Adjustments:</strong> Allows for adaptable sizing.</li>
+                           <li><strong>Custom BOA Straps:</strong> For secure and easy fastening.</li>
+                           <li><strong>Onyx:</strong> Utilized for 3D printing robust parts.</li>
+                        </ul>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li><strong>Teensy 4.1:</strong> The core microcontroller for low-level control.</li>
+                            <li><strong>Inertial Measurement Units (IMU):</strong> For tracking limb orientation and gait phase.</li>
+                            <li><strong>AK80-9 Motors:</strong> High-torque density motors for actuation.</li>
+                            <li><strong>Jetson Orin Nano:</strong> Planned for high-level control and complex computations.</li>
+                            <li><strong>CAN and CANFD:</strong> For robust communication between components.</li>
+                            <li><strong>SPI/I2C:</strong> For sensor data acquisition.</li>
+                        </ul>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
+                        <p class="mb-4">We were able to create a novel knee exoskeleton system that is able to translate 10-15 Nm of torque to users when wearing the system. The system was test on various people in the lab and was able to adapt seamlessly to all body shapes using the built-in adjustment mechanisms. Custom BOA strapping + neoprene foam padding proved to be sufficient in suspending the system off users thighs and shanks while providing a comfortable experience. Overall, the embedded systems we set up functionally, data was able to be collected and a simple impedance based controller was able to be deployed.</p>
+                        <p class="mb-4">However, with all these wins there are still many steps ahead:</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-6">
+                            <li><strong>Improved cuff interface strength:</strong> cuffs tabs that held the straps in are very thin and as a result at higher torques snap</li>
+                            <li><strong>PCB:</strong> While our current system does “work” the Protoboard is really not robust. During long uses cables pull and eventually connections break.</li>
+                            <li><strong>Finalized 2 tier communication architecture:</strong> Something I have been working on is offloading only low level commands (getting sensor values, commanding torque) to the teensy while a jetson Orin nano would handle the main controller.</li>
+                            <li><strong>Proper Controller for Validation:</strong> The main next step of this project will be developing some new novel controllers that actually push/challenge the current knowledge of lower body assistive knee exoskeletons (this is a future project).</li>
+                        </ol>
+                        <div class="flex flex-col md:flex-row gap-6 mt-6 items-center">
+                            <div class="w-full md:w-2/5">
+                                <img src="Knee_Professional.jpg" alt="Professional photo of the Knee Exoskeleton" class="w-full rounded-lg shadow-lg">
+                            </div>
+                            <div class="w-full md:w-3/5">
+                                <video autoplay muted loop playsinline class="w-full rounded-lg shadow-lg">
+                                    <source src="Rajiv_Walk_knee_outside.mp4" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                    `
+                },
+                'hip-exo-title': {
+                    title: 'MetaMobility Lab - Hip Exoskeleton',
+                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                },
+                'haptic-design-title': {
+                    title: 'Haptic Design Interfaces - Open-Source Haptic Device',
+                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                },
+                'mechatronics-project-title': {
+                    title: 'ADV Mechatronics - Final Project',
+                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                },
+                'solar-car-title': {
+                    title: 'Solar Car at Virginia Tech',
+                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                },
+                'assistive-robotics-title': {
+                    title: 'Assistive Robotics Lab - Tennis Training Robot',
+                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                },
+                'learning-item-1-title': {
+                    title: 'Placeholder Learning Topic',
+                    content: `
+                        <p class="mb-4">This is where you can write about a new skill, technology, or concept you've been learning.</p>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Key Takeaways</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li>The first major concept I learned.</li>
+                            <li>The second important detail.</li>
+                            <li>A challenge I overcame during the learning process.</li>
+                        </ul>
+                        <p>You can add images, videos, or code snippets here as well.</p>
+                    `
+                }
+            };
+            
+            // --- FUNCTIONS ---
+
+            // Navigation
+            const setupNavigation = () => {
+                const activeClasses = 'text-teal-300 border-b-2 border-teal-400'.split(' ');
+                const inactiveClasses = 'text-gray-400 hover:text-teal-300 border-b-2 border-transparent'.split(' ');
+
+                const navigateTo = (pageKey) => {
+                    Object.values(pages).forEach(page => page.classList.add('hidden'));
+                    Object.values(navLinks).forEach(link => {
+                        link.classList.remove(...activeClasses);
+                        link.classList.add(...inactiveClasses);
+                    });
+
+                    pages[pageKey].classList.remove('hidden');
+                    navLinks[pageKey].classList.add(...activeClasses);
+                    navLinks[pageKey].classList.remove(...inactiveClasses);
+
+                    if (pageKey === 'projects') initKneeExo3D();
+                };
+
+                Object.entries(navLinks).forEach(([key, link]) => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        navigateTo(key);
+                    });
+                });
+                
+                navButtons.goToProjects.addEventListener('click', () => navigateTo('projects'));
+                navButtons.goToLearning.addEventListener('click', () => navigateTo('learning'));
+                
+                navigateTo('home'); // Set initial page
+            };
+
+            // Modals
+            const setupModals = () => {
+                // Resume Modal
+                resumeModal.trigger?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    resumeModal.modal.classList.remove('hidden');
+                });
+                resumeModal.closeBtn?.addEventListener('click', () => resumeModal.modal.classList.add('hidden'));
+                resumeModal.modal?.addEventListener('click', (e) => {
+                    if (e.target === resumeModal.modal) resumeModal.modal.classList.add('hidden');
+                });
+
+                // Generic Item Modal
+                const itemTriggers = document.querySelectorAll('[id$="-title"]');
+                itemTriggers.forEach(trigger => {
+                    if (itemDetails[trigger.id]) {
+                        trigger.classList.add('cursor-pointer', 'hover:text-teal-200', 'transition-colors');
+                        trigger.addEventListener('click', () => {
+                            const details = itemDetails[trigger.id];
+                            itemModal.title.textContent = details.title;
+                            itemModal.content.innerHTML = details.content;
+                            itemModal.modal.classList.remove('hidden');
+                            if (trigger.id === 'knee-exo-title') initImageSlider();
+                        });
+                    }
+                });
+                
+                const closeItemModal = () => {
+                    itemModal.modal.classList.add('hidden');
+                    if (state.sliderInterval) clearInterval(state.sliderInterval);
+                };
+
+                itemModal.closeBtn?.addEventListener('click', closeItemModal);
+                itemModal.modal?.addEventListener('click', (e) => {
+                    if (e.target === itemModal.modal) closeItemModal();
+                });
+            };
+
+            // Image Slider
+            const initImageSlider = () => {
+                if (state.sliderInterval) clearInterval(state.sliderInterval);
+                const slider = document.getElementById('knee-slider');
+                if (!slider) return;
+                const images = slider.querySelectorAll('.slider-image');
+                if (images.length === 0) return;
+                let currentIndex = 0;
+                state.sliderInterval = setInterval(() => {
+                    images[currentIndex].classList.remove('opacity-100');
+                    images[currentIndex].classList.add('opacity-0');
+                    currentIndex = (currentIndex + 1) % images.length;
+                    images[currentIndex].classList.remove('opacity-0');
+                    images[currentIndex].classList.add('opacity-100');
+                }, 3000);
+            };
+            
+            // PDF Preview
+            const initPDFPreview = async () => {
+                const url = 'Rajiv_Joshi_Resume.pdf';
+                const canvas = document.getElementById('resume-canvas');
+                const loadingSpinner = document.getElementById('loading-spinner');
+                if (!canvas) return;
+                try {
+                    const { pdfjsLib } = globalThis;
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://mozilla.github.io/pdf.js/build/pdf.worker.mjs`;
+                    const pdf = await pdfjsLib.getDocument(url).promise;
+                    const page = await pdf.getPage(1);
+                    const viewport = page.getViewport({ scale: 1.5 });
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    await page.render({ canvasContext: context, viewport }).promise;
+                    canvas.classList.add('hover:shadow-teal-400/50', 'transform', 'hover:scale-105');
+                    loadingSpinner.style.display = 'none';
+                } catch (error) {
+                    console.error('Error rendering PDF preview:', error);
+                    loadingSpinner.innerHTML = `<p class="text-red-400 text-center p-4 text-xs"><strong>Error:</strong> Could not load preview.<br>Please ensure <strong>${url}</strong> is in the same folder.</p>`;
+                }
+            };
+            
+            // 3D Scene
+            const initKneeExo3D = () => {
+                if (state.kneeExo3DInitialized) return;
+                const container = document.getElementById('knee-exo-3d-container');
+                if (!container) return;
+                state.kneeExo3DInitialized = true;
+
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(container.clientWidth, container.clientHeight);
+                container.appendChild(renderer.domElement);
+                
+                const controls = new OrbitControls(camera, renderer.domElement);
+                controls.enableDamping = true;
+
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+                scene.add(ambientLight);
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+                directionalLight.position.set(5, 10, 7.5);
+                scene.add(directionalLight);
+
+                new GLTFLoader().load('knee_exoskeleton.glb', (gltf) => {
+                    const model = gltf.scene;
+                    const box = new THREE.Box3().setFromObject(model);
+                    const size = box.getSize(new THREE.Vector3()).length();
+                    const center = box.getCenter(new THREE.Vector3());
+                    model.position.sub(center);
+                    camera.position.set(size * 0.6, size * 0.4, size);
+                    controls.target.set(0, 0, 0);
+                    camera.lookAt(0, 0, 0);
+                    controls.minDistance = size / 5;
+                    controls.maxDistance = size * 5;
+                    camera.near = size / 100;
+                    camera.far = size * 100;
+                    camera.updateProjectionMatrix();
+                    scene.add(model);
+                    controls.update();
+                }, undefined, (error) => {
+                    console.error(error);
+                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
+                });
+
+                window.addEventListener('resize', () => {
+                    if (!container) return;
+                    camera.aspect = container.clientWidth / container.clientHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.clientWidth, container.clientHeight);
+                }, false);
+
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    controls.update();
+                    renderer.render(scene, camera);
+                };
+                animate();
+            };
+            
+            // Typing Animation
+            const initTypingAnimation = async () => {
+                if (!typingQuoteSpan) return;
+                const quotes = [
+                    '"Measuring once 📏... Cutting twice ✂️..."',
+                    '"This will only take a minute⌛... *4 hours later*... It sorta works 😵..."',
+                    '"Copying my mom\'s cooking... burning all the food 🙅..."',
+                    ':3'
+                ];
+                const typeSpeed = 100, eraseSpeed = 50, pauseTime = 3000;
+                const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+                let quoteIndex = 0;
+                while (true) {
+                    const currentQuote = quotes[quoteIndex];
+                    for (let i = 0; i < currentQuote.length; i++) {
+                        typingQuoteSpan.textContent += currentQuote[i];
+                        await sleep(typeSpeed);
+                    }
+                    await sleep(pauseTime);
+                    for (let i = currentQuote.length; i > 0; i--) {
+                        typingQuoteSpan.textContent = typingQuoteSpan.textContent.slice(0, -1);
+                        await sleep(eraseSpeed);
+                    }
+                    quoteIndex = (quoteIndex + 1) % quotes.length;
+                    await sleep(500);
+                }
+            };
+            
+            // --- INITIALIZATION ---
+            yearSpan.textContent = new Date().getFullYear();
+            setupNavigation();
+            setupModals();
+            initPDFPreview();
+            initTypingAnimation();
+        });
+    </script>
+</body>
+</html>
+
