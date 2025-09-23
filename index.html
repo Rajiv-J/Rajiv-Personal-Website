@@ -198,19 +198,12 @@
 
                     <!-- Project 2 Card -->
                     <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
-                         <!-- 3D Container -->
-                        <div id="hip-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-gray-800/50 self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
+                         <!-- Project Image -->
+                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Hip+Exoskeleton" alt="Hip Exoskeleton Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
                         <div class="flex-1">
                             <h3 id="hip-exo-title" class="text-2xl font-bold text-teal-300">MetaMobility Lab - Hip Exoskeleton</h3>
-                            <div class="mt-4 bg-gray-800/40 p-3 rounded-lg border border-teal-700/50">
-                                <p class="font-semibold text-teal-200">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-gray-300 mt-1 text-sm space-y-1">
-                                    <li><strong>Click + Drag:</strong> Rotate</li>
-                                    <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
-                                </ul>
-                            </div>
-                            <p class="text-gray-400 mt-4 leading-relaxed">
+                            <p class="text-gray-400 mt-3 leading-relaxed">
                                An assistive device focused on reducing user hip work through an adaptive control strategy based on real-time gait cycle estimation. Click the title for more details.
                             </p>
                         </div>
@@ -342,7 +335,6 @@
             // --- STATE MANAGEMENT ---
             const state = {
                 kneeExo3DInitialized: false,
-                hipExo3DInitialized: false,
                 sliderInterval: null
             };
 
@@ -492,11 +484,8 @@
                     pages[pageKey].classList.remove('hidden');
                     navLinks[pageKey].classList.add(...activeClasses);
                     navLinks[pageKey].classList.remove(...inactiveClasses);
-                    
-                    if (pageKey === 'projects') {
-                        init3DScene('knee-exo-3d-container', 'knee_exoskeleton.glb', 'kneeExo3DInitialized');
-                        init3DScene('hip-exo-3d-container', 'Hip_Exo_V2_Rajiv.glb', 'hipExo3DInitialized');
-                    }
+
+                    if (pageKey === 'projects') initKneeExo3D();
                 };
 
                 Object.entries(navLinks).forEach(([key, link]) => {
@@ -591,12 +580,12 @@
                 }
             };
             
-            // Generic 3D Scene
-            const init3DScene = (containerId, modelUrl, initializedFlag) => {
-                if (state[initializedFlag]) return;
-                const container = document.getElementById(containerId);
+            // 3D Scene
+            const initKneeExo3D = () => {
+                if (state.kneeExo3DInitialized) return;
+                const container = document.getElementById('knee-exo-3d-container');
                 if (!container) return;
-                state[initializedFlag] = true;
+                state.kneeExo3DInitialized = true;
 
                 const scene = new THREE.Scene();
                 const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
@@ -613,7 +602,7 @@
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
-                new GLTFLoader().load(modelUrl, (gltf) => {
+                new GLTFLoader().load('knee_exoskeleton.glb', (gltf) => {
                     const model = gltf.scene;
                     const box = new THREE.Box3().setFromObject(model);
                     const size = box.getSize(new THREE.Vector3()).length();
