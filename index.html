@@ -198,12 +198,19 @@
 
                     <!-- Project 2 Card -->
                     <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
-                         <!-- Project Image -->
-                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Hip+Exoskeleton" alt="Hip Exoskeleton Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                         <!-- 3D Container -->
+                        <div id="hip-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-gray-800/50 self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
                         <div class="flex-1">
                             <h3 id="hip-exo-title" class="text-2xl font-bold text-teal-300">MetaMobility Lab - Hip Exoskeleton</h3>
-                            <p class="text-gray-400 mt-3 leading-relaxed">
+                            <div class="mt-4 bg-gray-800/40 p-3 rounded-lg border border-teal-700/50">
+                                <p class="font-semibold text-teal-200">Interact with the 3D model!</p>
+                                <ul class="list-disc list-inside text-gray-300 mt-1 text-sm space-y-1">
+                                    <li><strong>Click + Drag:</strong> Rotate</li>
+                                    <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
+                                </ul>
+                            </div>
+                            <p class="text-gray-400 mt-4 leading-relaxed">
                                An assistive device focused on reducing user hip work through an adaptive control strategy based on real-time gait cycle estimation. Click the title for more details.
                             </p>
                         </div>
@@ -484,8 +491,10 @@
                     pages[pageKey].classList.remove('hidden');
                     navLinks[pageKey].classList.add(...activeClasses);
                     navLinks[pageKey].classList.remove(...inactiveClasses);
-
-                    if (pageKey === 'projects') initKneeExo3D();
+                    
+                    if (pageKey === 'projects') {
+                        initKneeExo3D();
+                    }
                 };
 
                 Object.entries(navLinks).forEach(([key, link]) => {
@@ -620,7 +629,7 @@
                     controls.update();
                 }, undefined, (error) => {
                     console.error(error);
-                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
+                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model. <br> Check browser console.</div>`;
                 });
 
                 window.addEventListener('resize', () => {
@@ -676,3 +685,4 @@
     </script>
 </body>
 </html>
+
