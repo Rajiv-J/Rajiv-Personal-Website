@@ -484,10 +484,8 @@
                     pages[pageKey].classList.remove('hidden');
                     navLinks[pageKey].classList.add(...activeClasses);
                     navLinks[pageKey].classList.remove(...inactiveClasses);
-                    
-                    if (pageKey === 'projects') {
-                        initKneeExo3D();
-                    }
+
+                    if (pageKey === 'projects') initKneeExo3D();
                 };
 
                 Object.entries(navLinks).forEach(([key, link]) => {
@@ -622,7 +620,7 @@
                     controls.update();
                 }, undefined, (error) => {
                     console.error(error);
-                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model. <br> Check browser console.</div>`;
+                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
                 });
 
                 window.addEventListener('resize', () => {
@@ -678,4 +676,3 @@
     </script>
 </body>
 </html>
-
