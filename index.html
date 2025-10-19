@@ -490,7 +490,44 @@
                 },
                 'mechatronics-project-title': {
                     title: 'ADV Mechatronics - Final Project',
-                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                    content: `
+                        <div class="flex flex-col md:flex-row gap-6 mb-6 items-center">
+                            <div class="w-full md:w-1/2">
+                                <img src="https://placehold.co/600x400/0A3031/FFFFFF?text=Whac-A-Wacko+Game" alt="Whac-A-Wacko Arcade Game" class="w-full rounded-lg shadow-lg">
+                            </div>
+                            <div class="w-full md:w-1/2">
+                               <img src="https://placehold.co/600x400/0A3031/FFFFFF?text=Game+Schematic" alt="Schematic of the game electronics" class="w-full rounded-lg shadow-lg">
+                            </div>
+                        </div>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <p class="mb-4">For our Advanced Mechatronics final project, our team was tasked with creating a fully-integrated, robust, and creative mechatronic system. We embraced this challenge by developing "Whac-A-Wacko," an original arcade game inspired by the classic Whac-A-Mole. The goal was to design and build an engaging game from the ground up, demonstrating our collective skills in mechanical design, electronics, embedded systems, and software development.</p>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Team Role and Responsibilities:</h4>
+                        <p class="mb-4">As a member of a four-person team, I was involved in all stages of the project's development. My specific contributions and our shared responsibilities included:</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-4">
+                            <li>Collaborating on the conceptual and mechanical design of the game cabinet and interactive elements.</li>
+                            <li>Designing the overall mechatronic system architecture, including sensor and actuator selection.</li>
+                            <li>Creating the final device schematics and contributing to the comprehensive Bill of Materials (BOM).</li>
+                            <li>Assisting in the development and debugging of the C++ code and the state machine logic that governed the game.</li>
+                            <li>Writing and compiling project documentation, including the summarized description and final report.</li>
+                        </ol>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical & Electrical Systems:</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                           <li><strong>Game Cabinet:</strong> Constructed from wood with a 3D-printed game board for durability and a professional finish.</li>
+                           <li><strong>"Wacko" Actuators:</strong> Utilized nine 12V solenoids to pop the alien targets up for the player to hit.</li>
+                           <li><strong>Player Input:</strong> Incorporated a 2-axis joystick for navigating the game board and a user button for starting the game.</li>
+                           <li><strong>Safety Feature:</strong> An emergency stop button was integrated to immediately halt the game and reset the system.</li>
+                        </ul>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Software & Control Architecture:</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li><strong>Microcontroller:</strong> The game was powered by an mBed LPC1768, which managed all game logic and I/O operations.</li>
+                            <li><strong>State Machine:</strong> The core of the software was a finite state machine (FSM) that controlled the game flow through states like IDLE, GAME_ACTIVE, and GAME_OVER.</li>
+                            <li><strong>Actuator Control:</strong> A MOSFET relay board was used to safely and effectively drive the high-current solenoids from the microcontroller.</li>
+                            <li><strong>User Feedback:</strong> A 7-segment display provided real-time feedback on the game timer and the player's score.</li>
+                        </ul>
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Lessons Learned:</h4>
+                        <p class="mb-4">The project was a complete success, resulting in a fully functional, reliable, and entertaining "Whac-A-Wacko" arcade game that met all course requirements. The game was a hit during final presentations, showcasing a seamless integration of mechanical, electrical, and software components.</p>
+                        <p class="mb-4">Key lessons from this project included the critical importance of robust mechanical design for systems undergoing repeated physical stress, the challenges of debugging complex hardware-software interactions, and the power of a well-structured state machine for managing application logic. The experience was invaluable in reinforcing our end-to-end mechatronic design skills.</p>
+                    `
                 },
                 'solar-car-title': {
                     title: 'Solar Car at Virginia Tech',
