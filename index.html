@@ -316,7 +316,7 @@
                 <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
             </div>
             <div class="flex-grow p-1">
-                <iframe src="Rajiv_Joshi_Resume.pdf" class="w-full h-full border-0" title="Rajiv Joshi's Resume"></iframe>
+                <iframe src="" class="w-full h-full border-0" title="Rajiv Joshi's Resume"></iframe>
             </div>
         </div>
     </div>
@@ -603,11 +603,24 @@
                 // Resume Modal
                 resumeModal.trigger?.addEventListener('click', (e) => {
                     e.preventDefault();
+                    const resumeIframe = document.querySelector('#resume-modal iframe');
+                    if (resumeIframe) {
+                        resumeIframe.src = 'Rajiv_Joshi_Resume.pdf?t=' + new Date().getTime();
+                    }
                     resumeModal.modal.classList.remove('hidden');
                 });
-                resumeModal.closeBtn?.addEventListener('click', () => resumeModal.modal.classList.add('hidden'));
+                const closeResumeModal = () => {
+                    const resumeIframe = document.querySelector('#resume-modal iframe');
+                    if (resumeIframe) {
+                        resumeIframe.src = ''; // Stop loading when modal is closed
+                    }
+                    resumeModal.modal.classList.add('hidden');
+                };
+                resumeModal.closeBtn?.addEventListener('click', closeResumeModal);
                 resumeModal.modal?.addEventListener('click', (e) => {
-                    if (e.target === resumeModal.modal) resumeModal.modal.classList.add('hidden');
+                    if (e.target === resumeModal.modal) {
+                        closeResumeModal();
+                    }
                 });
 
                 // Generic Item Modal
@@ -655,7 +668,7 @@
             
             // PDF Preview
             const initPDFPreview = async () => {
-                const url = 'Rajiv_Joshi_Resume.pdf';
+                const url = 'Rajiv_Joshi_Resume.pdf?t=' + new Date().getTime();
                 const canvas = document.getElementById('resume-canvas');
                 const loadingSpinner = document.getElementById('loading-spinner');
                 if (!canvas) return;
@@ -673,7 +686,7 @@
                     loadingSpinner.style.display = 'none';
                 } catch (error) {
                     console.error('Error rendering PDF preview:', error);
-                    loadingSpinner.innerHTML = `<p class="text-red-400 text-center p-4 text-xs"><strong>Error:</strong> Could not load preview.<br>Please ensure <strong>${url}</strong> is in the same folder.</p>`;
+                    loadingSpinner.innerHTML = `<p class="text-red-400 text-center p-4 text-xs"><strong>Error:</strong> Could not load preview.<br>Please ensure <strong>${url.split('?')[0]}</strong> is in the same folder.</p>`;
                 }
             };
             
@@ -887,5 +900,4 @@
     </script>
 </body>
 </html>
-
 
