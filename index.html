@@ -351,7 +351,10 @@
                 kneeExo3DInitialized: false,
                 hipExo3DInitialized: false,
                 hapticDevice3DInitialized: false,
-                sliderInterval: null
+                sliderInterval: null,
+                kneeExoControls: null,
+                hipExoControls: null,
+                hapticDeviceControls: null
             };
 
             // --- DOM ELEMENT SELECTIONS ---
@@ -582,6 +585,10 @@
                         initKneeExo3D();
                         initHipExo3D();
                         initHapticDevice3D();
+                        // Reset controls every time the page is viewed
+                        if (state.kneeExoControls) state.kneeExoControls.reset();
+                        if (state.hipExoControls) state.hipExoControls.reset();
+                        if (state.hapticDeviceControls) state.hapticDeviceControls.reset();
                     }
                 };
 
@@ -705,6 +712,7 @@
                 
                 const controls = new OrbitControls(camera, renderer.domElement);
                 controls.enableDamping = true;
+                state.kneeExoControls = controls; // Store controls
 
                 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
                 scene.add(ambientLight);
@@ -762,6 +770,7 @@
                 
                 const controls = new OrbitControls(camera, renderer.domElement);
                 controls.enableDamping = true;
+                state.hipExoControls = controls; // Store controls
 
                 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
                 scene.add(ambientLight);
@@ -819,6 +828,7 @@
                 
                 const controls = new OrbitControls(camera, renderer.domElement);
                 controls.enableDamping = true;
+                state.hapticDeviceControls = controls; // Store controls
 
                 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
                 scene.add(ambientLight);
@@ -900,4 +910,5 @@
     </script>
 </body>
 </html>
+
 
