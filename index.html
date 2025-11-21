@@ -351,8 +351,8 @@
                 kneeExo3DInitialized: false,
                 hipExo3DInitialized: false,
                 hapticDevice3DInitialized: false,
-                sliderInterval: null,
-                electronicsSliderInterval: null, // New interval for the second slider
+                // Sliders state maps: 'sliderID' -> { interval, currentIndex, totalImages }
+                sliders: {},
                 kneeExoControls: null,
                 hipExoControls: null,
                 hapticDeviceControls: null
@@ -397,12 +397,23 @@
             const itemDetails = {
                 'knee-exo-title': {
                     title: 'MetaMobility Lab - Knee Exoskeleton',
+                    // UPDATED SLIDER HTML: Grid-based stacking & Navigation Buttons
                     content: `
-                        <div id="knee-slider" class="relative w-full max-w-lg mx-auto aspect-square mb-6 rounded-lg overflow-hidden">
-                            <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100">
-                            <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
-                            <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                        <div id="knee-slider" class="grid grid-cols-1 relative w-full max-w-lg mx-auto mb-6 rounded-lg overflow-hidden group">
+                            <!-- Images -->
+                            <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            
+                            <!-- Navigation Buttons -->
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
                         </div>
+
                         <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
                         <p class="mb-4">The overall goal of this project was to design, manufacture, and test a state-of-the-art robotic knee exoskeleton. This device is aimed at trying to assist people who suffer with gait impairment issues like cerebral palsy, stroke, osteoarthritis, and more. To actually realize this, multiple communication protocols, high torque density motors, and custom adjustable orthotic interfaces were designed and interfaced to adapt to the various body proportions of people. More than this, this project aims to advance current human locomotion understandings through adaptive, generalized, and personalized control.</p>
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
@@ -423,12 +434,19 @@
                         </ul>
 
                         <!-- New Electronics Slider -->
-                        <!-- Changed aspect-video to maintain a standard shape, added bg-black/50 for letterboxing look -->
-                        <div id="knee-electronics-slider" class="relative w-full max-w-lg mx-auto aspect-video mb-6 mt-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
-                            <!-- Changed object-cover to object-contain to ensure full image is visible -->
-                            <img src="Knee_Exo_Resources/Knee_Electronics.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-100">
-                            <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
-                            <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                        <div id="knee-electronics-slider" class="grid grid-cols-1 relative w-full max-w-lg mx-auto mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800">
+                            <!-- Images -->
+                            <img src="Knee_Exo_Resources/Knee_Electronics.jpg" class="col-start-1 row-start-1 w-full h-auto object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" class="col-start-1 row-start-1 w-full h-auto object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" class="col-start-1 row-start-1 w-full h-auto object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+
+                            <!-- Navigation Buttons -->
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
                         </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
@@ -652,8 +670,9 @@
                             itemModal.content.innerHTML = details.content;
                             itemModal.modal.classList.remove('hidden');
                             if (trigger.id === 'knee-exo-title') {
-                                initImageSlider();
-                                initElectronicsSlider(); // Initialize the second slider
+                                // Initialize generic slider helper for both
+                                setupSlider('knee-slider');
+                                setupSlider('knee-electronics-slider');
                             }
                         });
                     }
@@ -661,8 +680,9 @@
                 
                 const closeItemModal = () => {
                     itemModal.modal.classList.add('hidden');
-                    if (state.sliderInterval) clearInterval(state.sliderInterval);
-                    if (state.electronicsSliderInterval) clearInterval(state.electronicsSliderInterval); // Clear second slider
+                    // Clear all slider intervals
+                    Object.values(state.sliders).forEach(s => clearInterval(s.interval));
+                    state.sliders = {};
                 };
 
                 itemModal.closeBtn?.addEventListener('click', closeItemModal);
@@ -671,38 +691,66 @@
                 });
             };
 
-            // Main Image Slider (Top)
-            const initImageSlider = () => {
-                if (state.sliderInterval) clearInterval(state.sliderInterval);
-                const slider = document.getElementById('knee-slider');
+            // Generic Slider Logic
+            const setupSlider = (sliderId) => {
+                const slider = document.getElementById(sliderId);
                 if (!slider) return;
+                
                 const images = slider.querySelectorAll('.slider-image');
+                const prevBtn = slider.querySelector('.prev-btn');
+                const nextBtn = slider.querySelector('.next-btn');
+                
                 if (images.length === 0) return;
-                let currentIndex = 0;
-                state.sliderInterval = setInterval(() => {
-                    images[currentIndex].classList.remove('opacity-100');
-                    images[currentIndex].classList.add('opacity-0');
-                    currentIndex = (currentIndex + 1) % images.length;
-                    images[currentIndex].classList.remove('opacity-0');
-                    images[currentIndex].classList.add('opacity-100');
-                }, 3000);
-            };
 
-            // Electronics Image Slider (Middle)
-            const initElectronicsSlider = () => {
-                if (state.electronicsSliderInterval) clearInterval(state.electronicsSliderInterval);
-                const slider = document.getElementById('knee-electronics-slider');
-                if (!slider) return;
-                const images = slider.querySelectorAll('.slider-image');
-                if (images.length === 0) return;
-                let currentIndex = 0;
-                state.electronicsSliderInterval = setInterval(() => {
-                    images[currentIndex].classList.remove('opacity-100');
-                    images[currentIndex].classList.add('opacity-0');
-                    currentIndex = (currentIndex + 1) % images.length;
-                    images[currentIndex].classList.remove('opacity-0');
-                    images[currentIndex].classList.add('opacity-100');
-                }, 3000);
+                // Initialize state for this specific slider
+                state.sliders[sliderId] = {
+                    currentIndex: 0,
+                    totalImages: images.length,
+                    interval: null
+                };
+                
+                const showSlide = (index) => {
+                    images.forEach((img, i) => {
+                        if (i === index) {
+                            img.classList.remove('opacity-0');
+                            img.classList.add('opacity-100');
+                        } else {
+                            img.classList.remove('opacity-100');
+                            img.classList.add('opacity-0');
+                        }
+                    });
+                };
+                
+                const nextSlide = () => {
+                    state.sliders[sliderId].currentIndex = (state.sliders[sliderId].currentIndex + 1) % state.sliders[sliderId].totalImages;
+                    showSlide(state.sliders[sliderId].currentIndex);
+                };
+                
+                const prevSlide = () => {
+                    state.sliders[sliderId].currentIndex = (state.sliders[sliderId].currentIndex - 1 + state.sliders[sliderId].totalImages) % state.sliders[sliderId].totalImages;
+                    showSlide(state.sliders[sliderId].currentIndex);
+                };
+
+                const resetInterval = () => {
+                    if (state.sliders[sliderId].interval) clearInterval(state.sliders[sliderId].interval);
+                    state.sliders[sliderId].interval = setInterval(nextSlide, 3000);
+                };
+
+                // Event Listeners
+                if (nextBtn) nextBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent modal close if bubbling
+                    nextSlide();
+                    resetInterval();
+                });
+                
+                if (prevBtn) prevBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    prevSlide();
+                    resetInterval();
+                });
+
+                // Start Auto-play
+                resetInterval();
             };
             
             // PDF Preview
