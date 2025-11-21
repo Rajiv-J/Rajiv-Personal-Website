@@ -136,6 +136,10 @@
                         <button id="go-to-projects-btn" class="mt-8 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
                             Check out my Projects!
                         </button>
+                        <!-- Added Gallery Button -->
+                        <button id="go-to-gallery-btn" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                            Check out my Gallery!
+                        </button>
                     </div>
 
                     <!-- Resume Section -->
@@ -407,6 +411,7 @@
             };
             const navButtons = {
                 goToProjects: document.getElementById('go-to-projects-btn'),
+                goToGallery: document.getElementById('go-to-gallery-btn')  // New button reference
             };
 
             // PDF Modal Elements (Renamed for clarity)
@@ -482,7 +487,7 @@
                             <!-- Base of Pyramid -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
-                                    <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="IMU Sensor" class="w-full h-auto object-contain">
+                                    <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="Knee IMU" class="w-full h-auto object-contain">
                                 </div>
                                 <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
                                     <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Thigh Electronics" class="w-full h-auto object-contain">
@@ -795,6 +800,7 @@
                 });
                 
                 navButtons.goToProjects.addEventListener('click', () => navigateTo('projects'));
+                navButtons.goToGallery.addEventListener('click', () => navigateTo('gallery')); // New event listener
                 
                 navigateTo('home'); // Set initial page
             };
@@ -1099,7 +1105,7 @@
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
-                new GLTFLoader().load('Hip_Exo_V2_Rajiv.glb', (gltf) => {
+                new GLTFLoader().load('Hip_Exo/Hip_Exo_V2_Rajiv.glb', (gltf) => {
                     const model = gltf.scene;
                     const box = new THREE.Box3().setFromObject(model);
                     const size = box.getSize(new THREE.Vector3()).length();
