@@ -433,20 +433,21 @@
                            <li><strong>Onyx:</strong> Utilized for 3D printing robust parts.</li>
                         </ul>
 
-                        <!-- New Electronics Slider -->
-                        <div id="knee-electronics-slider" class="grid grid-cols-1 relative w-full max-w-lg mx-auto mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800">
-                            <!-- Images -->
-                            <img src="Knee_Exo_Resources/Knee_Electronics.jpg" class="col-start-1 row-start-1 w-full h-auto object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
-                            <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" class="col-start-1 row-start-1 w-full h-auto object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
-                            <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" class="col-start-1 row-start-1 w-full h-auto object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
-
-                            <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                            </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                            </button>
+                        <!-- New Electronics Image Pyramid -->
+                        <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
+                            <!-- Top of Pyramid -->
+                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
+                                <img src="Knee_Exo_Resources/Knee_Electronics.jpg" alt="Main Electronics Board" class="w-full h-auto object-contain">
+                            </div>
+                            <!-- Base of Pyramid -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
+                                    <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="IMU Sensor" class="w-full h-auto object-contain">
+                                </div>
+                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
+                                    <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Thigh Electronics" class="w-full h-auto object-contain">
+                                </div>
+                            </div>
                         </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
@@ -670,9 +671,8 @@
                             itemModal.content.innerHTML = details.content;
                             itemModal.modal.classList.remove('hidden');
                             if (trigger.id === 'knee-exo-title') {
-                                // Initialize generic slider helper for both
+                                // Initialize only the main slider
                                 setupSlider('knee-slider');
-                                setupSlider('knee-electronics-slider');
                             }
                         });
                     }
