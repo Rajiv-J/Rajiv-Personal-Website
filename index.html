@@ -918,7 +918,8 @@
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
-                new GLTFLoader().load('Open_Source_Haptic_Device.glb', (gltf) => {
+                // UPDATED PATH: Now looking inside the Haptic_Device folder
+                new GLTFLoader().load('Haptic_Device/Open_Source_Haptic_Device.glb', (gltf) => {
                     const model = gltf.scene;
                     const box = new THREE.Box3().setFromObject(model);
                     const size = box.getSize(new THREE.Vector3()).length();
@@ -937,7 +938,7 @@
                     controls.saveState();
                 }, undefined, (error) => {
                     console.error(error);
-                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
+                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.<br>Check 'Haptic_Device' folder.</div>`;
                 });
 
                 window.addEventListener('resize', () => {
