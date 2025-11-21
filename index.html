@@ -68,7 +68,7 @@
         <nav class="flex justify-center md:justify-end mb-8">
             <a href="#" data-page="home" id="nav-home" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Home</a>
             <a href="#" data-page="projects" id="nav-projects" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Projects</a>
-            <a href="#" data-page="learning" id="nav-learning" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Learning</a>
+            <a href="#" data-page="gallery" id="nav-gallery" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Gallery</a>
         </nav>
 
         <!-- Home Page Content -->
@@ -135,9 +135,6 @@
                         </div>
                         <button id="go-to-projects-btn" class="mt-8 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
                             Check out my Projects!
-                        </button>
-                        <button id="go-to-learning-btn" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
-                            Learn with Me!
                         </button>
                     </div>
 
@@ -279,22 +276,37 @@
             </div>
         </div>
         
-        <!-- Learning Page Content -->
-        <div id="learning-page" class="hidden">
+        <!-- Gallery Page Content -->
+        <div id="gallery-page" class="hidden">
             <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 backdrop-blur-sm">
-                <h2 class="text-3xl font-bold text-white mb-8 border-b-2 border-teal-400 pb-2">My Learnings:</h2>
-                <div class="space-y-12">
-                    <!-- Placeholder Learning Item Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
-                        <!-- Image -->
-                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Learning+Topic" alt="Learning Topic Placeholder" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
-                        <!-- Details -->
-                        <div class="flex-1">
-                            <h3 id="learning-item-1-title" class="text-2xl font-bold text-teal-300">Placeholder Learning Topic</h3>
-                            <p class="text-gray-400 mt-3 leading-relaxed">
-                               A brief description of what I learned in this area. Click the title for a more detailed breakdown.
-                            </p>
-                        </div>
+                <h2 class="text-3xl font-bold text-white mb-8 border-b-2 border-teal-400 pb-2">Project Gallery:</h2>
+                
+                <!-- Knee Exo Section -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold text-teal-300 mb-4">Knee Exoskeleton</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" alt="Knee Front" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" alt="Knee Side" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" alt="Knee Back" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Electronics.jpg" alt="Knee Electronics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="Knee IMU" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Knee Thigh Electronics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Knee Professional Shot" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Haptics Section -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold text-teal-300 mb-4">Haptic Device</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <img src="Haptic_Device/Haptics_Thumb.png" alt="Haptic Thumb" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Index.png" alt="Haptic Index" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_GUI.png" alt="Haptic GUI" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Final_1.png" alt="Haptics Final 1" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Final_2.png" alt="Haptics Final 2" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Final_3.png" alt="Haptics Final 3" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                     </div>
                 </div>
             </div>
@@ -335,6 +347,12 @@
         </div>
     </div>
 
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 cursor-zoom-out">
+        <img id="lightbox-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl border-2 border-teal-500" alt="Full Size Image">
+        <button id="close-lightbox" class="absolute top-4 right-4 text-white text-4xl hover:text-teal-400">&times;</button>
+    </div>
+
 
     <!-- PDF.js Library -->
     <script src="https://mozilla.github.io/pdf.js/build/pdf.mjs" type="module"></script>
@@ -367,16 +385,15 @@
             const navLinks = {
                 home: document.getElementById('nav-home'),
                 projects: document.getElementById('nav-projects'),
-                learning: document.getElementById('nav-learning')
+                gallery: document.getElementById('nav-gallery')
             };
             const pages = {
                 home: document.getElementById('home-page'),
                 projects: document.getElementById('projects-page'),
-                learning: document.getElementById('learning-page')
+                gallery: document.getElementById('gallery-page')
             };
             const navButtons = {
                 goToProjects: document.getElementById('go-to-projects-btn'),
-                goToLearning: document.getElementById('go-to-learning-btn')
             };
 
             // PDF Modal Elements (Renamed for clarity)
@@ -394,6 +411,13 @@
                 closeBtn: document.getElementById('close-item-modal-btn'),
                 title: document.getElementById('item-modal-title'),
                 content: document.getElementById('item-modal-content')
+            };
+
+            // Lightbox Elements
+            const lightbox = {
+                modal: document.getElementById('lightbox-modal'),
+                img: document.getElementById('lightbox-img'),
+                closeBtn: document.getElementById('close-lightbox')
             };
             
             // --- DATA ---
@@ -513,11 +537,12 @@
                         </ol>
                         
                         <!-- 2. Side-by-Side Images (Above Mechanical Systems) -->
-                        <div class="grid grid-cols-2 gap-4 mb-4 mt-8">
-                            <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                <img src="Haptic_Device/Haptics_Tumb.png" alt="Thumb Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
+                        <!-- Updated: removed grid constraint to let images size naturally -->
+                        <div class="flex flex-col md:flex-row gap-4 mb-4 mt-8 justify-center items-center">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Haptic_Device/Haptics_Thumb.png" alt="Thumb Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
                             </div>
-                            <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
                                 <img src="Haptic_Device/Haptics_Index.png" alt="Index Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
                             </div>
                         </div>
@@ -650,19 +675,6 @@
                     title: 'Assistive Robotics Lab - Tennis Training Robot',
                     content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
                 },
-                'learning-item-1-title': {
-                    title: 'Placeholder Learning Topic',
-                    content: `
-                        <p class="mb-4">This is where you can write about a new skill, technology, or concept you've been learning.</p>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Key Takeaways</h4>
-                        <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li>The first major concept I learned.</li>
-                            <li>The second important detail.</li>
-                            <li>A challenge I overcame during the learning process.</li>
-                        </ul>
-                        <p>You can add images, videos, or code snippets here as well.</p>
-                    `
-                }
             };
             
             // --- FUNCTIONS ---
@@ -702,9 +714,29 @@
                 });
                 
                 navButtons.goToProjects.addEventListener('click', () => navigateTo('projects'));
-                navButtons.goToLearning.addEventListener('click', () => navigateTo('learning'));
                 
                 navigateTo('home'); // Set initial page
+            };
+
+            // Lightbox Logic
+            const setupLightbox = () => {
+                const images = document.querySelectorAll('.gallery-img');
+                images.forEach(img => {
+                    img.addEventListener('click', (e) => {
+                        lightbox.img.src = e.target.src;
+                        lightbox.modal.classList.remove('hidden');
+                    });
+                });
+
+                const closeLightbox = () => {
+                    lightbox.modal.classList.add('hidden');
+                    lightbox.img.src = '';
+                };
+
+                lightbox.closeBtn?.addEventListener('click', closeLightbox);
+                lightbox.modal?.addEventListener('click', (e) => {
+                    if (e.target === lightbox.modal) closeLightbox();
+                });
             };
 
             // PDF Modal Handling
@@ -1095,6 +1127,7 @@
             yearSpan.textContent = new Date().getFullYear();
             setupNavigation();
             setupModals();
+            setupLightbox();
             
             // Render main resume thumbnail on load
             renderPDFThumbnail('Rajiv_Joshi_Resume.pdf', 'resume-canvas', 'loading-spinner');
