@@ -149,7 +149,7 @@
                         and is in the same folder as this file.
                         -->
                         <a href="#" id="resume-link" class="cursor-pointer block">
-                             <div class="relative w-full max-w-xs mx-auto aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2">
+                             <div class="relative w-full max-w-xs mx-auto aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2 hover:ring-2 hover:ring-teal-400 transition-all">
                                 <!-- Canvas for PDF Preview -->
                                 <canvas id="resume-canvas" class="rounded-lg transition-all duration-300 w-full"></canvas>
                                 <!-- Loading Spinner -->
@@ -308,15 +308,16 @@
 
     </div>
 
-    <!-- Resume Modal -->
-    <div id="resume-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <!-- Unified PDF Modal -->
+    <div id="pdf-viewer-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
         <div class="bg-[#062223] border-2 border-teal-600/30 rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-teal-600/30">
-                <h3 class="text-xl font-semibold text-white">Resume</h3>
+                <!-- Title changes dynamically -->
+                <h3 id="pdf-modal-title" class="text-xl font-semibold text-white">Document</h3>
                 <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
             </div>
             <div class="flex-grow p-1">
-                <iframe src="" class="w-full h-full border-0" title="Rajiv Joshi's Resume"></iframe>
+                <iframe id="pdf-frame" src="" class="w-full h-full border-0" title="Document Preview"></iframe>
             </div>
         </div>
     </div>
@@ -378,10 +379,12 @@
                 goToLearning: document.getElementById('go-to-learning-btn')
             };
 
-            // Resume Modal Elements
-            const resumeModal = {
+            // PDF Modal Elements (Renamed for clarity)
+            const pdfModal = {
                 trigger: document.getElementById('resume-link'),
-                modal: document.getElementById('resume-modal'),
+                modal: document.getElementById('pdf-viewer-modal'),
+                title: document.getElementById('pdf-modal-title'),
+                frame: document.getElementById('pdf-frame'),
                 closeBtn: document.getElementById('close-modal-btn')
             };
 
@@ -488,14 +491,15 @@
                 'haptic-design-title': {
                     title: 'Haptic Design Interfaces - Open-Source Haptic Device',
                     content: `
-                        <div class="flex flex-col md:flex-row gap-6 mb-6 items-center">
-                            <div class="w-full md:w-1/2">
-                                <img src="https://placehold.co/600x400/0A3031/FFFFFF?text=Haptic+Hand+CAD" alt="CAD Model of the Haptic Hand" class="w-full rounded-lg shadow-lg">
-                            </div>
-                            <div class="w-full md:w-1/2">
-                                <img src="https://placehold.co/600x400/0A3031/FFFFFF?text=Haptic+Visualization" alt="Visualization of the Haptic Hand GUI" class="w-full rounded-lg shadow-lg">
-                            </div>
+                        <!-- 1. Top Video -->
+                        <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
+                            <video controls class="w-full h-auto" preload="metadata">
+                                <source src="Haptic_Device/Haptics_Demp.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
                         </div>
+
                         <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
                         <p class="mb-4">This project aimed to design and implement a low-cost, 3D-printed haptic device to provide force feedback for hand interactions with virtual objects. The primary goal was to create an affordable, open-source, and easily manufactured device that makes haptics universally accessible for in-classroom interactive student learning. A novel contribution was a design that could render force in multiple directions (both closing and opening), unlike many existing systems.</p>
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Team Role and Responsibilities:</h4>
@@ -507,11 +511,40 @@
                             <li>Integrating three distinct mechanical subsystems (two fingers and a thumb) to interact with a single virtual object.</li>
                             <li>Creating a real-time GUI in Processing to visualize the user's hand interacting with virtual objects.</li>
                         </ol>
+                        
+                        <!-- 2. Side-by-Side Images (Above Mechanical Systems) -->
+                        <div class="grid grid-cols-2 gap-4 mb-4 mt-8">
+                            <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Haptic_Device/Haptics_Tumb.png" alt="Thumb Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
+                            </div>
+                            <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Haptic_Device/Haptics_Index.png" alt="Index Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
+                            </div>
+                        </div>
+
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                            <li><strong>Index & Middle Fingers:</strong> A dual-capstan drive was chosen for its smooth, low-backlash transmission. This 2-DOF system was designed to be compact, cost-effective, and easy to manufacture.</li>
                            <li><strong>Thumb:</strong> To achieve 3-DOF (including abduction/adduction), a delta mechanism was adopted, using compliant joints made from 3D-printed TPU based on the DeltaZ robot design.</li>
                         </ul>
+
+                        <!-- 3. Image Pyramid (Above Software) -->
+                        <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
+                            <!-- Top -->
+                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Haptic_Device/Haptics_GUI.png" alt="Haptics GUI" class="w-full h-auto object-contain hover:scale-[1.02] transition-transform duration-300">
+                            </div>
+                            <!-- Base -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                    <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="w-full h-auto object-contain hover:scale-[1.02] transition-transform duration-300">
+                                </div>
+                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                    <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="w-full h-auto object-contain hover:scale-[1.02] transition-transform duration-300">
+                                </div>
+                            </div>
+                        </div>
+
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Software & Visualization:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>Control:</strong> The integrated device was controlled by mBed C/C++ code, which handled calculations and sent data serially.</li>
@@ -527,6 +560,45 @@
                             <li><strong>Reduce System Friction & Weight:</strong> Implement counter-weights or redesign components to improve the user's tactile experience.</li>
                             <li><strong>Enhance Visualization:</strong> Correctly map the physical delta coordinates to the visualization to create a true 1-to-1 interaction.</li>
                         </ol>
+
+                        <!-- 4. Bottom Scrolling Image Wheel -->
+                        <div id="haptics-slider" class="grid grid-cols-1 relative w-full max-w-lg mx-auto aspect-video mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                            <!-- Images -->
+                            <img src="Haptic_Device/Haptics_Final_1.png" class="col-start-1 row-start-1 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_2.png" class="col-start-1 row-start-1 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_3.png" class="col-start-1 row-start-1 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            
+                            <!-- Navigation Buttons -->
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+
+                        <!-- 5. Final Report Canvas Preview -->
+                        <div class="mt-10 text-center border-t border-teal-800/50 pt-6">
+                            <h4 class="text-xl font-semibold text-teal-300 mb-4">Final Project Report:</h4>
+                            <a href="#" id="haptics-report-link" class="cursor-pointer block max-w-xs mx-auto">
+                                <div class="relative w-full aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2 group hover:ring-2 hover:ring-teal-400 transition-all">
+                                    <!-- Canvas for Report Preview -->
+                                    <canvas id="haptics-report-canvas" class="rounded-lg w-full"></canvas>
+                                    <!-- Loading Spinner -->
+                                    <div id="haptics-report-loading" class="absolute text-center">
+                                        <svg class="animate-spin h-8 w-8 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <p class="text-white mt-2 text-sm">Loading Report Preview...</p>
+                                    </div>
+                                    <!-- Overlay -->
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
+                                        <p class="text-white opacity-0 group-hover:opacity-100 font-bold bg-black/50 px-4 py-2 rounded-full">Click to Read</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     `
                 },
                 'mechatronics-project-title': {
@@ -635,29 +707,34 @@
                 navigateTo('home'); // Set initial page
             };
 
-            // Modals
+            // PDF Modal Handling
+            const openPDFModal = (url, title) => {
+                if (pdfModal.frame) {
+                    pdfModal.frame.src = url + '?t=' + new Date().getTime();
+                }
+                if (pdfModal.title) {
+                    pdfModal.title.textContent = title;
+                }
+                pdfModal.modal.classList.remove('hidden');
+            };
+
+            const closePDFModal = () => {
+                if (pdfModal.frame) {
+                    pdfModal.frame.src = ''; // Stop loading
+                }
+                pdfModal.modal.classList.add('hidden');
+            };
+
             const setupModals = () => {
-                // Resume Modal
-                resumeModal.trigger?.addEventListener('click', (e) => {
+                // Resume Modal (now generalized)
+                pdfModal.trigger?.addEventListener('click', (e) => {
                     e.preventDefault();
-                    const resumeIframe = document.querySelector('#resume-modal iframe');
-                    if (resumeIframe) {
-                        resumeIframe.src = 'Rajiv_Joshi_Resume.pdf?t=' + new Date().getTime();
-                    }
-                    resumeModal.modal.classList.remove('hidden');
+                    openPDFModal('Rajiv_Joshi_Resume.pdf', 'Resume');
                 });
-                const closeResumeModal = () => {
-                    const resumeIframe = document.querySelector('#resume-modal iframe');
-                    if (resumeIframe) {
-                        resumeIframe.src = ''; // Stop loading when modal is closed
-                    }
-                    resumeModal.modal.classList.add('hidden');
-                };
-                resumeModal.closeBtn?.addEventListener('click', closeResumeModal);
-                resumeModal.modal?.addEventListener('click', (e) => {
-                    if (e.target === resumeModal.modal) {
-                        closeResumeModal();
-                    }
+
+                pdfModal.closeBtn?.addEventListener('click', closePDFModal);
+                pdfModal.modal?.addEventListener('click', (e) => {
+                    if (e.target === pdfModal.modal) closePDFModal();
                 });
 
                 // Generic Item Modal
@@ -670,9 +747,31 @@
                             itemModal.title.textContent = details.title;
                             itemModal.content.innerHTML = details.content;
                             itemModal.modal.classList.remove('hidden');
+                            
+                            // Initialize sliders based on which modal is opened
                             if (trigger.id === 'knee-exo-title') {
-                                // Initialize only the main slider
                                 setupSlider('knee-slider');
+                            }
+                            if (trigger.id === 'haptic-design-title') {
+                                setupSlider('haptics-slider');
+                                
+                                // Render Report PDF Thumbnail
+                                renderPDFThumbnail(
+                                    'Haptic_Device/Haptics_Report.pdf',
+                                    'haptics-report-canvas',
+                                    'haptics-report-loading'
+                                );
+
+                                // Attach click listener for report modal
+                                setTimeout(() => {
+                                    const reportLink = document.getElementById('haptics-report-link');
+                                    if (reportLink) {
+                                        reportLink.addEventListener('click', (e) => {
+                                            e.preventDefault();
+                                            openPDFModal('Haptic_Device/Haptics_Report.pdf', 'Project Report');
+                                        });
+                                    }
+                                }, 100);
                             }
                         });
                     }
@@ -753,27 +852,35 @@
                 resetInterval();
             };
             
-            // PDF Preview
-            const initPDFPreview = async () => {
-                const url = 'Rajiv_Joshi_Resume.pdf?t=' + new Date().getTime();
-                const canvas = document.getElementById('resume-canvas');
-                const loadingSpinner = document.getElementById('loading-spinner');
+            // Reusable PDF Thumbnail Renderer
+            const renderPDFThumbnail = async (url, canvasId, loadingId) => {
+                const canvas = document.getElementById(canvasId);
+                const loadingSpinner = document.getElementById(loadingId);
                 if (!canvas) return;
+                
+                // Add cache busting
+                const safeUrl = url.includes('?') ? url : url + '?t=' + new Date().getTime();
+
                 try {
                     const { pdfjsLib } = globalThis;
+                    if (!pdfjsLib) throw new Error("PDF.js library not loaded");
+
                     pdfjsLib.GlobalWorkerOptions.workerSrc = `https://mozilla.github.io/pdf.js/build/pdf.worker.mjs`;
-                    const pdf = await pdfjsLib.getDocument(url).promise;
+                    const pdf = await pdfjsLib.getDocument(safeUrl).promise;
                     const page = await pdf.getPage(1);
                     const viewport = page.getViewport({ scale: 1.5 });
                     const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
                     await page.render({ canvasContext: context, viewport }).promise;
-                    canvas.classList.add('hover:shadow-teal-400/50', 'transform', 'hover:scale-105');
-                    loadingSpinner.style.display = 'none';
+                    
+                    // Success UI updates
+                    if (loadingSpinner) loadingSpinner.style.display = 'none';
                 } catch (error) {
-                    console.error('Error rendering PDF preview:', error);
-                    loadingSpinner.innerHTML = `<p class="text-red-400 text-center p-4 text-xs"><strong>Error:</strong> Could not load preview.<br>Please ensure <strong>${url.split('?')[0]}</strong> is in the same folder.</p>`;
+                    console.error('Error rendering PDF preview for ' + url, error);
+                    if (loadingSpinner) {
+                        loadingSpinner.innerHTML = `<p class="text-red-400 text-center p-4 text-xs"><strong>Error:</strong> Could not load preview.<br>Ensure file exists.</p>`;
+                    }
                 }
             };
             
@@ -988,7 +1095,10 @@
             yearSpan.textContent = new Date().getFullYear();
             setupNavigation();
             setupModals();
-            initPDFPreview();
+            
+            // Render main resume thumbnail on load
+            renderPDFThumbnail('Rajiv_Joshi_Resume.pdf', 'resume-canvas', 'loading-spinner');
+            
             initTypingAnimation();
         });
     </script>
