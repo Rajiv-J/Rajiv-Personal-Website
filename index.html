@@ -633,42 +633,106 @@
                 'mechatronics-project-title': {
                     title: 'ADV Mechatronics - Final Project',
                     content: `
-                        <div class="flex flex-col md:flex-row gap-6 mb-6 items-center">
-                            <div class="w-full md:w-1/2">
-                                <img src="https://placehold.co/600x400/0A3031/FFFFFF?text=Whac-A-Wacko+Game" alt="Whac-A-Wacko Arcade Game" class="w-full rounded-lg shadow-lg">
+                        <!-- 1. Top Video -->
+                        <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
+                            <video controls class="w-full h-auto" preload="metadata">
+                                <source src="Mechatronics_Resources/ADV_Mechatronics_Demo.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
+                        </div>
+
+                        <!-- REMOVED: Whac-A-Wacko Game and Game Schematic Image Containers -->
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <p class="mb-4">The field of engineering is often mischaracterized as "dull, gray, and concrete," focused solely on numbers and efficiency. To challenge this perception, our team embarked on a mission to create "Whac-A-Wacko," a project designed to inject joy, color, and interactivity into mechatronics. Inspired by the classic arcade game Whac-A-Mole, this system serves as a testament to how engineering can be both technically rigorous and creatively inspiring.</p>
+                        
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
+                        <p class="mb-4">Bringing this creative vision to life required a collaborative effort from our four-person team: Kiran Marques, Yuichi Hirose, Juee Chandrachud, and myself. Within this group, my primary focus was on the seamless integration of our diverse subsystems. Specifically, I was responsible for:</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-4">
+                            <li><strong>Mechatronic System Design:</strong> Integrating the mechanical structures with the electrical components to ensure the physical game board could support the electronic actuation.</li>
+                            <li><strong>Final Device Schematics:</strong> Co-authoring the comprehensive electrical schematics that served as the blueprint for all circuit connections and power distribution.</li>
+                            <li><strong>Bill of Materials (BOM) Management:</strong> Sourcing and tracking every component, from the microcontroller to the smallest resistor, ensuring all parts were available for assembly.</li>
+                            <li><strong>Documentation Lead:</strong> compiling the final project report, including the summarized description and the organization of all header and code files for future reference.</li>
+                        </ol>
+
+                        <!-- 2. Images above Mechanical Design -->
+                        <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Mechatronics_Resources/ADV_Mechatronics_Hardware.png" alt="Hardware Assembly" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
-                            <div class="w-full md:w-1/2">
-                               <img src="https://placehold.co/600x400/0A3031/FFFFFF?text=Game+Schematic" alt="Schematic of the game electronics" class="w-full rounded-lg shadow-lg">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Mechatronics_Resources/ADV_Mechatronics_Rendered.png" alt="Rendered Design" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
                         </div>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
-                        <p class="mb-4">For our Advanced Mechatronics final project, our team was tasked with creating a fully-integrated, robust, and creative mechatronic system. We embraced this challenge by developing "Whac-A-Wacko," an original arcade game inspired by the classic Whac-A-Mole. The goal was to design and build an engaging game from the ground up, demonstrating our collective skills in mechanical design, electronics, embedded systems, and software development.</p>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Team Role and Responsibilities:</h4>
-                        <p class="mb-4">As a member of a four-person team, I was involved in all stages of the project's development. My specific contributions and our shared responsibilities included:</p>
-                        <ol class="list-decimal list-inside space-y-2 mb-4">
-                            <li>Collaborating on the conceptual and mechanical design of the game cabinet and interactive elements.</li>
-                            <li>Designing the overall mechatronic system architecture, including sensor and actuator selection.</li>
-                            <li>Creating the final device schematics and contributing to the comprehensive Bill of Materials (BOM).</li>
-                            <li>Assisting in the development and debugging of the C++ code and the state machine logic that governed the game.</li>
-                            <li>Writing and compiling project documentation, including the summarized description and final report.</li>
-                        </ol>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical & Electrical Systems:</h4>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Design:</h4>
+                        <p class="mb-4">To withstand the enthusiastic impacts of gameplay, the system required a robust physical structure. This structure was realized through:</p>
                         <ul class="list-disc list-inside space-y-2 mb-4">
-                           <li><strong>Game Cabinet:</strong> Constructed from wood with a 3D-printed game board for durability and a professional finish.</li>
-                           <li><strong>"Wacko" Actuators:</strong> Utilized nine 12V solenoids to pop the alien targets up for the player to hit.</li>
-                           <li><strong>Player Input:</strong> Incorporated a 2-axis joystick for navigating the game board and a user button for starting the game.</li>
-                           <li><strong>Safety Feature:</strong> An emergency stop button was integrated to immediately halt the game and reset the system.</li>
+                           <li><strong>3D CAD Modeling:</strong> Detailed computer-aided designs were created to model the entire assembly before fabrication, ensuring all parts would fit together perfectly.</li>
+                           <li><strong>Custom Game Board:</strong> A specialized surface was fabricated to house the LED targets and sensors, providing a sturdy and reliable play area.</li>
+                           <li><strong>Lateral Movement Mechanism:</strong> A motorized system was designed to shift the entire game board left and right during gameplay, adding a dynamic layer of difficulty for the player.</li>
                         </ul>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Software & Control Architecture:</h4>
+
+                        <!-- 3. Images above Electrical -->
+                        <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
+                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Mechatronics_Resources/ADV_Mechatronics_Schematic.png" alt="System Schematic" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                            </div>
+                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <img src="Mechatronics_Resources/ADV_Mechatronics_Solder.png" alt="Soldering Work" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                            </div>
+                        </div>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electrical & Control Systems:</h4>
+                        <p class="mb-4">Powering these actions required a sophisticated network of electronics. This network was established by:</p>
                         <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li><strong>Microcontroller:</strong> The game was powered by an mBed LPC1768, which managed all game logic and I/O operations.</li>
-                            <li><strong>State Machine:</strong> The core of the software was a finite state machine (FSM) that controlled the game flow through states like IDLE, GAME_ACTIVE, and GAME_OVER.</li>
-                            <li><strong>Actuator Control:</strong> A MOSFET relay board was used to safely and effectively drive the high-current solenoids from the microcontroller.</li>
-                            <li><strong>User Feedback:</strong> A 7-segment display provided real-time feedback on the game timer and the player's score.</li>
+                            <li><strong>Target Detection System:</strong> Instead of physical buttons, the "Alien" targets utilized phototransistors paired with LEDs. Players "whacked" a target by covering the sensor (slapping it), which the system registered as a hit.</li>
+                            <li><strong>Motor Control:</strong> A driver circuit was implemented to control the lateral movement motor, allowing the game board to slide back and forth autonomously.</li>
+                            <li><strong>Component Integration:</strong> The electronic components listed in the BOM were physically integrated into the system, managing power distribution for the LEDs, sensors, and the board-moving motor.</li>
                         </ul>
+
+                        <!-- 4. Image above Software -->
+                        <div class="w-full max-w-lg mx-auto mb-6 mt-8 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <img src="Mechatronics_Resources/ADV_Mechatronics_States.png" alt="State Machine Diagram" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                        </div>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Software Architecture:</h4>
+                        <p class="mb-4">The systems software architecture followed an events and services framework where all the different systems, state machines, and hardware controls were abstracted to different layers of code. This logic was implemented using:</p>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li><strong>Finite State Machine (FSM):</strong> A formal state machine governed the game's logic, transitioning the system predictably between states such as IDLE (waiting for a player), GAMEPLAY (active target popping), and SCORE (displaying results).</li>
+                            <li><strong>Modular Code Organization:</strong> The codebase was split into distinct header and source files, logically separating functions like motor control, sensor reading, and high-level game management for easier debugging and maintenance.</li>
+                        </ul>
+
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Lessons Learned:</h4>
-                        <p class="mb-4">The project was a complete success, resulting in a fully functional, reliable, and entertaining "Whac-A-Wacko" arcade game that met all course requirements. The game was a hit during final presentations, showcasing a seamless integration of mechanical, electrical, and software components.</p>
-                        <p class="mb-4">Key lessons from this project included the critical importance of robust mechanical design for systems undergoing repeated physical stress, the challenges of debugging complex hardware-software interactions, and the power of a well-structured state machine for managing application logic. The experience was invaluable in reinforcing our end-to-end mechatronic design skills.</p>
+                        <p class="mb-4">The culmination of these efforts was a fully functional arcade game that successfully demonstrated the integration of mechanical, electrical, and software engineering. Through this process, the team learned valuable lessons about the importance of interdisciplinary collaboration and the complexities involved in integrating distinct subsystems into a cohesive, finalized product.</p>
+                        
+                        <!-- 5. Final Image and Report -->
+                        <div class="w-full mb-8 mt-8 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <img src="Mechatronics_Resources/ADV_Mechatronics_Final.png" alt="Final Project" class="w-full h-auto block">
+                        </div>
+
+                        <div class="mt-10 text-center border-t border-teal-800/50 pt-6">
+                            <h4 class="text-xl font-semibold text-teal-300 mb-4">Final Project Report:</h4>
+                            <a href="#" id="mechatronics-report-link" class="cursor-pointer block max-w-xs mx-auto">
+                                <div class="relative w-full aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2 group hover:ring-2 hover:ring-teal-400 transition-all">
+                                    <!-- Canvas for Report Preview -->
+                                    <canvas id="mechatronics-report-canvas" class="rounded-lg w-full"></canvas>
+                                    <!-- Loading Spinner -->
+                                    <div id="mechatronics-report-loading" class="absolute text-center">
+                                        <svg class="animate-spin h-8 w-8 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <p class="text-white mt-2 text-sm">Loading Report Preview...</p>
+                                    </div>
+                                    <!-- Overlay -->
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
+                                        <p class="text-white opacity-0 group-hover:opacity-100 font-bold bg-black/50 px-4 py-2 rounded-full">Click to Read</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     `
                 },
                 'solar-car-title': {
@@ -806,6 +870,25 @@
                                         reportLink.addEventListener('click', (e) => {
                                             e.preventDefault();
                                             openPDFModal('Haptic_Device/Haptics_Report.pdf', 'Project Report');
+                                        });
+                                    }
+                                }, 100);
+                            }
+                            if (trigger.id === 'mechatronics-project-title') {
+                                // Render Report PDF Thumbnail for Mechatronics
+                                renderPDFThumbnail(
+                                    'Mechatronics_Resources/ADV_Mechatronics_Report.pdf', // Assuming path
+                                    'mechatronics-report-canvas',
+                                    'mechatronics-report-loading'
+                                );
+
+                                // Attach click listener for report modal
+                                setTimeout(() => {
+                                    const reportLink = document.getElementById('mechatronics-report-link');
+                                    if (reportLink) {
+                                        reportLink.addEventListener('click', (e) => {
+                                            e.preventDefault();
+                                            openPDFModal('Mechatronics_Resources/ADV_Mechatronics_Report.pdf', 'Project Report');
                                         });
                                     }
                                 }, 100);
