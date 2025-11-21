@@ -398,9 +398,9 @@
                     title: 'MetaMobility Lab - Knee Exoskeleton',
                     content: `
                         <div id="knee-slider" class="relative w-full max-w-lg mx-auto aspect-square mb-6 rounded-lg overflow-hidden">
-                            <img src="Knee_IRL_Front.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100">
-                            <img src="Knee_IRL_Side.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
-                            <img src="Knee_IRL_Back.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
                         </div>
                         <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
                         <p class="mb-4">The overall goal of this project was to design, manufacture, and test a state-of-the-art robotic knee exoskeleton. This device is aimed at trying to assist people who suffer with gait impairment issues like cerebral palsy, stroke, osteoarthritis, and more. To actually realize this, multiple communication protocols, high torque density motors, and custom adjustable orthotic interfaces were designed and interfaced to adapt to the various body proportions of people. More than this, this project aims to advance current human locomotion understandings through adaptive, generalized, and personalized control.</p>
@@ -440,11 +440,11 @@
                         </ol>
                         <div class="flex flex-col md:flex-row gap-6 mt-6 items-center">
                             <div class="w-full md:w-2/5">
-                                <img src="Knee_Professional.jpg" alt="Professional photo of the Knee Exoskeleton" class="w-full rounded-lg shadow-lg">
+                                <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Professional photo of the Knee Exoskeleton" class="w-full rounded-lg shadow-lg">
                             </div>
                             <div class="w-full md:w-3/5">
                                 <video autoplay muted loop playsinline class="w-full rounded-lg shadow-lg">
-                                    <source src="Rajiv_Walk_knee_outside.mp4" type="video/mp4">
+                                    <source src="Knee_Exo_Resources/Rajiv_Walk_knee_outside.mp4" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
@@ -720,7 +720,7 @@
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
-                new GLTFLoader().load('knee_exoskeleton.glb', (gltf) => {
+                new GLTFLoader().load('Knee_Exo_Resources/knee_exoskeleton.glb', (gltf) => {
                     const model = gltf.scene;
                     const box = new THREE.Box3().setFromObject(model);
                     const size = box.getSize(new THREE.Vector3()).length();
@@ -913,4 +913,3 @@
     </script>
 </body>
 </html>
-
