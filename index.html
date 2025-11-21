@@ -352,6 +352,7 @@
                 hipExo3DInitialized: false,
                 hapticDevice3DInitialized: false,
                 sliderInterval: null,
+                electronicsSliderInterval: null, // New interval for the second slider
                 kneeExoControls: null,
                 hipExoControls: null,
                 hapticDeviceControls: null
@@ -420,6 +421,14 @@
                            <li><strong>Custom BOA Straps:</strong> For secure and easy fastening.</li>
                            <li><strong>Onyx:</strong> Utilized for 3D printing robust parts.</li>
                         </ul>
+
+                        <!-- New Electronics Slider -->
+                        <div id="knee-electronics-slider" class="relative w-full max-w-lg mx-auto aspect-video mb-6 mt-8 rounded-lg overflow-hidden shadow-lg border border-teal-800">
+                            <img src="Knee_Exo_Resources/Knee_Electronics.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100">
+                            <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                            <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" class="slider-image absolute top-0 left-0 w-full h-full object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0">
+                        </div>
+
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>Teensy 4.1:</strong> The core microcontroller for low-level control.</li>
@@ -640,7 +649,10 @@
                             itemModal.title.textContent = details.title;
                             itemModal.content.innerHTML = details.content;
                             itemModal.modal.classList.remove('hidden');
-                            if (trigger.id === 'knee-exo-title') initImageSlider();
+                            if (trigger.id === 'knee-exo-title') {
+                                initImageSlider();
+                                initElectronicsSlider(); // Initialize the second slider
+                            }
                         });
                     }
                 });
@@ -648,6 +660,7 @@
                 const closeItemModal = () => {
                     itemModal.modal.classList.add('hidden');
                     if (state.sliderInterval) clearInterval(state.sliderInterval);
+                    if (state.electronicsSliderInterval) clearInterval(state.electronicsSliderInterval); // Clear second slider
                 };
 
                 itemModal.closeBtn?.addEventListener('click', closeItemModal);
@@ -656,7 +669,7 @@
                 });
             };
 
-            // Image Slider
+            // Main Image Slider (Top)
             const initImageSlider = () => {
                 if (state.sliderInterval) clearInterval(state.sliderInterval);
                 const slider = document.getElementById('knee-slider');
@@ -665,6 +678,23 @@
                 if (images.length === 0) return;
                 let currentIndex = 0;
                 state.sliderInterval = setInterval(() => {
+                    images[currentIndex].classList.remove('opacity-100');
+                    images[currentIndex].classList.add('opacity-0');
+                    currentIndex = (currentIndex + 1) % images.length;
+                    images[currentIndex].classList.remove('opacity-0');
+                    images[currentIndex].classList.add('opacity-100');
+                }, 3000);
+            };
+
+            // Electronics Image Slider (Middle)
+            const initElectronicsSlider = () => {
+                if (state.electronicsSliderInterval) clearInterval(state.electronicsSliderInterval);
+                const slider = document.getElementById('knee-electronics-slider');
+                if (!slider) return;
+                const images = slider.querySelectorAll('.slider-image');
+                if (images.length === 0) return;
+                let currentIndex = 0;
+                state.electronicsSliderInterval = setInterval(() => {
                     images[currentIndex].classList.remove('opacity-100');
                     images[currentIndex].classList.add('opacity-0');
                     currentIndex = (currentIndex + 1) % images.length;
