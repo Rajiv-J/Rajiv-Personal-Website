@@ -518,7 +518,8 @@
                         <!-- 1. Top Video -->
                         <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
                             <video controls class="w-full h-auto" preload="metadata">
-                                <source src="Haptic_Device/Haptics_Demp.mp4" type="video/mp4">
+                                <!-- UPDATED FILENAME: Haptics_Demo.mp4 -->
+                                <source src="Haptic_Device/Haptics_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                             <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
@@ -537,13 +538,13 @@
                         </ol>
                         
                         <!-- 2. Side-by-Side Images (Above Mechanical Systems) -->
-                        <!-- Updated: removed grid constraint to let images size naturally -->
-                        <div class="flex flex-col md:flex-row gap-4 mb-4 mt-8 justify-center items-center">
+                        <!-- FIX: Removed strict height/aspect ratio constraints to prevent cropping -->
+                        <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
                             <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                <img src="Haptic_Device/Haptics_Thumb.png" alt="Thumb Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
+                                <img src="Haptic_Device/Haptics_Thumb.png" alt="Thumb Mechanism" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
                             <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                <img src="Haptic_Device/Haptics_Index.png" alt="Index Mechanism" class="w-full h-auto object-contain hover:scale-105 transition-transform duration-300">
+                                <img src="Haptic_Device/Haptics_Index.png" alt="Index Mechanism" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
                         </div>
 
@@ -554,18 +555,19 @@
                         </ul>
 
                         <!-- 3. Image Pyramid (Above Software) -->
+                        <!-- FIX: Removed strict height/aspect ratio constraints -->
                         <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
                             <!-- Top -->
                             <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                <img src="Haptic_Device/Haptics_GUI.png" alt="Haptics GUI" class="w-full h-auto object-contain hover:scale-[1.02] transition-transform duration-300">
+                                <img src="Haptic_Device/Haptics_GUI.png" alt="Haptics GUI" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                             </div>
                             <!-- Base -->
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                    <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="w-full h-auto object-contain hover:scale-[1.02] transition-transform duration-300">
+                                    <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                                 </div>
                                 <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                    <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="w-full h-auto object-contain hover:scale-[1.02] transition-transform duration-300">
+                                    <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                                 </div>
                             </div>
                         </div>
@@ -587,11 +589,13 @@
                         </ol>
 
                         <!-- 4. Bottom Scrolling Image Wheel -->
-                        <div id="haptics-slider" class="grid grid-cols-1 relative w-full max-w-lg mx-auto aspect-video mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                        <!-- FIX: Using relative positioning and h-96 (fixed height) or similar to ensure container exists 
+                             but images are fully contained. object-contain ensures full visibility. -->
+                        <div id="haptics-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
                             <!-- Images -->
-                            <img src="Haptic_Device/Haptics_Final_1.png" class="col-start-1 row-start-1 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
-                            <img src="Haptic_Device/Haptics_Final_2.png" class="col-start-1 row-start-1 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
-                            <img src="Haptic_Device/Haptics_Final_3.png" class="col-start-1 row-start-1 w-full h-full object-contain rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_1.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_2.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_3.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
                             <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
@@ -785,6 +789,7 @@
                                 setupSlider('knee-slider');
                             }
                             if (trigger.id === 'haptic-design-title') {
+                                // Updated ID reference to match HTML above
                                 setupSlider('haptics-slider');
                                 
                                 // Render Report PDF Thumbnail
