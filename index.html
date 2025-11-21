@@ -528,7 +528,58 @@
                 },
                 'hip-exo-title': {
                     title: 'MetaMobility Lab - Hip Exoskeleton',
-                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
+                    content: `
+                        <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
+                            <!-- Placeholder for Hip Exo Video/Image if available, using GLB container on main card for now -->
+                             <div class="p-12 text-center text-gray-400 italic">
+                                3D Interactive Model available on the main card.
+                            </div>
+                        </div>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <p class="mb-4">This project addresses the critical mobility challenges faced by stroke survivors and older adults by developing an autonomous robotic hip exoskeleton designed to counteract inefficient, hip-dominant compensatory walking. Because the hip lacks the natural elastic energy storage of the ankle, relying on it for propulsion significantly increases metabolic cost and fatigue; our solution targets this specific inefficiency using high-performance actuators and intelligent control strategies. Engineered for superior wearability and capable of dynamically adapting to user intent across diverse body types, this system bridges the gap between clinical rehabilitation and independent daily living.</p>
+                        
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
+                        <p class="mb-4">Having been part of this project since its conception I have worked on 3 variations of hip exoskeletons that have seen iterative design changes, electrical architecture alterations, and various controllers deployed. My specific responsibilities/contributions both as a sub-lead and researcher were as follows:</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-4">
+                            <li><strong>Weight Reduction of the System:</strong> Overall, the hip exoskeleton started around 5kg and through each generation has now reached about 3.4 kg in weight which is a huge reduction for improving metabolic benefit during use.</li>
+                            <li><strong>Reverse Engineering and Benchmarking:</strong> A large portion of my role in this team involves looking at literature and industry and reverse engineering the mechanical hardware’s of various other hip exoskeletons. Following reversing I merged our system control architecture to evaluate the hardware and iterate improvements to our system.</li>
+                            <li><strong>Electrical Architecture/PCB:</strong> Over the generations of the hip exoskeleton projects various sensors, communication protocols, and PCB footprints have been deployed. I personally worked on both designing and refining the PCB designs, retaining signal integrity, and packaging layouts of the mechatronic systems. From this the overall number of cables and connections required in the system has reduced significantly down to 3 key connections. I also helped design the main brain backpack module that can be connected to any of our exoskeleton systems for control and am actively working on the 2-tier communication architecture to offload low-level commands to a Teensy 4.1 MCU and high-level control to a Jetson Orin Nano.</li>
+                            <li><strong>Subject Testing:</strong> Through this project I was also both a subject for and assisted in the full data collection process of various controllers made by researchers in the lab. This included using Marker and Marker-less motion capture for calculating inverse kinematics and dynamics of people. Performing Metabolic studies to validate the benefit/effect of exoskeleton system. Being a subject for testing various controller studies and assisting in ideation of improvements or results analysis based on hardware, joint kinematics, and irregularities of device.</li>
+                        </ol>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                           <li><strong>Thigh Bars:</strong> Custom designed for user comfort and effective torque transfer from the actuator to the hip joint.</li>
+                           <li><strong>Pelvis Interface:</strong> Through leveraging human models and 3D scans, surface modeling was used to achieve idealized curvature that fits majority of users.</li>
+                           <li><strong>Variations of Bar Sizes:</strong> Allows for adaptable sizing between users.</li>
+                           <li><strong>Custom BOA Straps:</strong> For securing hardware to user with padding, easy latching/fastening, and ratcheting mechanisms for a tight-comfortable fit.</li>
+                           <li><strong>Onyx:</strong> A carbon fiber and Nylon reinforced filament utilized for 3D printing robust parts with high stress strain tolerance and temperature robustness.</li>
+                        </ul>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
+                        <ul class="list-disc list-inside space-y-2 mb-4">
+                            <li><strong>PCB:</strong> I am currently working to improve our current 2-layer PCB board to a 4-layer board that includes a sperate PWR plane for high current draw upwards of 40 Amps. This enables us to directly connect motors to the PCB, reducing the number of cables from 3 8 core cables down to just a single 8 core cable and a smaller overall PCB footprint.</li>
+                            <li><strong>Inertial Measurement Units (IMU):</strong> For tracking limb orientation, gait phase estimation, and velocity + acceleration of limbs.</li>
+                            <li><strong>AK80-9 and AKE60-8 Motors:</strong> High-torque density Quasi-Direct-Drive (QDD) motors for actuation and providing direct assistance in line with hip joint.</li>
+                            <li><strong>Teensy 4.1:</strong> A future variation will follow a simpler architecture to manage all the low-level commands like torque commands and sensor/actuator parameter tracking.</li>
+                            <li><strong>Jetson Orin Nano:</strong> Planned for high-level control and deploying trained ML and AI models onto the hardware. This is the second part of the 2-tier architecture with the Teensy 4.1.</li>
+                            <li><strong>CAN and CANFD:</strong> For robust communication between components and devices.</li>
+                            <li><strong>SPI/I2C:</strong> For sensor data acquisition at high frequency.</li>
+                            <li><strong>FSR:</strong> For detection of heal strikes and possible gait cycle segmentation.</li>
+                            <li><strong>EMG:</strong> Used to measure the muscle activity of lower limbs for controller validation and future Human in the Loop Control strategies.</li>
+                        </ul>
+
+                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
+                        <p class="mb-4">Overall, the current hip exoskeleton V2 hardware weighs around 4.3 kg and can provide assistance upwards of 22Nm to a user. This hardware has been used in multiple studies like perturbation assistance strategies, biological torque controller estimation, and deploying simulated data trained controllers onto real time hardware. The hardware is both comfortable and fits a variety of users in the lab and the Electrical framework is both robust and reliable now with little to no signal dropouts and high-speed communication.</p>
+                        <p class="mb-4">However, with all these improvements there are many active steps to come:</p>
+                        <ol class="list-decimal list-inside space-y-2 mb-6">
+                            <li><strong>V3 Hip exoskeleton:</strong> I, along with another master’s student in the lab, are actively developing a new generation of hip exoskeleton that currently weighs 3.4 kg and sees metabolic benefit of about 4% compared to the low benefit of the V2 hip exoskeleton.</li>
+                            <li><strong>PCB:</strong> I am working actively on design and validation of a new 4-layer PCB that aims to reduce the number of connections and maintain robust communication between the Jetons and all sensor peripherals.</li>
+                            <li><strong>Finalized 2 tier communication architecture:</strong> Something I have been working on is offloading only low-level commands (getting sensor values, commanding torque) to the teensy while a jetson Orin nano would handle the main controller (ML and AI trained models).</li>
+                            <li><strong>Controller Frameworks:</strong> I am actively a subject and working with helping a perturbation study and how we can develop optimal assistance strategies and better metrics for quantifying when a person is stable.</li>
+                        </ol>
+                    `
                 },
                 'haptic-design-title': {
                     title: 'Haptic Design Interfaces - Open-Source Haptic Device',
