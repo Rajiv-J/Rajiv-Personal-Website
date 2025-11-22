@@ -529,11 +529,13 @@
                 'hip-exo-title': {
                     title: 'MetaMobility Lab - Hip Exoskeleton',
                     content: `
+                        <!-- 1. Top Video -->
                         <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
-                            <!-- Placeholder for Hip Exo Video/Image if available, using GLB container on main card for now -->
-                             <div class="p-12 text-center text-gray-400 italic">
-                                3D Interactive Model available on the main card.
-                            </div>
+                            <video controls class="w-full h-auto" preload="metadata">
+                                <source src="Hip_Exo/Hip_Exo_Demo.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
                         </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
@@ -547,6 +549,22 @@
                             <li><strong>Electrical Architecture/PCB:</strong> Over the generations of the hip exoskeleton projects various sensors, communication protocols, and PCB footprints have been deployed. I personally worked on both designing and refining the PCB designs, retaining signal integrity, and packaging layouts of the mechatronic systems. From this the overall number of cables and connections required in the system has reduced significantly down to 3 key connections. I also helped design the main brain backpack module that can be connected to any of our exoskeleton systems for control and am actively working on the 2-tier communication architecture to offload low-level commands to a Teensy 4.1 MCU and high-level control to a Jetson Orin Nano.</li>
                             <li><strong>Subject Testing:</strong> Through this project I was also both a subject for and assisted in the full data collection process of various controllers made by researchers in the lab. This included using Marker and Marker-less motion capture for calculating inverse kinematics and dynamics of people. Performing Metabolic studies to validate the benefit/effect of exoskeleton system. Being a subject for testing various controller studies and assisting in ideation of improvements or results analysis based on hardware, joint kinematics, and irregularities of device.</li>
                         </ol>
+
+                        <!-- 2. Mechanical Image Carousel -->
+                        <div id="hip-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                            <!-- Images -->
+                            <img src="Hip_Exo/Hip_Exo_Angle.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Hip_Exo/Hip_Exo_Back.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Hip_Exo/Hip_Exo_Left.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            
+                            <!-- Navigation Buttons -->
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
@@ -569,6 +587,11 @@
                             <li><strong>FSR:</strong> For detection of heal strikes and possible gait cycle segmentation.</li>
                             <li><strong>EMG:</strong> Used to measure the muscle activity of lower limbs for controller validation and future Human in the Loop Control strategies.</li>
                         </ul>
+
+                        <!-- 3. Metabolics Image -->
+                        <div class="w-full mb-6 mt-8 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <img src="Hip_Exo/Hip_Exo_Metabolics.png" alt="Metabolic Data" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                        </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
                         <p class="mb-4">Overall, the current hip exoskeleton V2 hardware weighs around 4.3 kg and can provide assistance upwards of 22Nm to a user. This hardware has been used in multiple studies like perturbation assistance strategies, biological torque controller estimation, and deploying simulated data trained controllers onto real time hardware. The hardware is both comfortable and fits a variety of users in the lab and the Electrical framework is both robust and reliable now with little to no signal dropouts and high-speed communication.</p>
@@ -921,6 +944,9 @@
                             // Initialize sliders based on which modal is opened
                             if (trigger.id === 'knee-exo-title') {
                                 setupSlider('knee-slider');
+                            }
+                            if (trigger.id === 'hip-exo-title') {
+                                setupSlider('hip-slider');
                             }
                             if (trigger.id === 'haptic-design-title') {
                                 // Updated ID reference to match HTML above
