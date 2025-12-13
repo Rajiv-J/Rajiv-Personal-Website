@@ -69,6 +69,7 @@
             <a href="#" data-page="home" id="nav-home" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Home</a>
             <a href="#" data-page="projects" id="nav-projects" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Projects</a>
             <a href="#" data-page="gallery" id="nav-gallery" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Gallery</a>
+            <a href="#" id="nav-resume" class="px-4 py-2 text-lg font-semibold text-gray-400 hover:text-teal-300 transition-colors duration-300 border-b-2 border-transparent">Resume</a>
         </nav>
 
         <!-- Home Page Content -->
@@ -433,6 +434,8 @@
                 projects: document.getElementById('nav-projects'),
                 gallery: document.getElementById('nav-gallery')
             };
+            const navResume = document.getElementById('nav-resume'); // Separate ref for Resume link
+
             const pages = {
                 home: document.getElementById('home-page'),
                 projects: document.getElementById('projects-page'),
@@ -440,7 +443,7 @@
             };
             const navButtons = {
                 goToProjects: document.getElementById('go-to-projects-btn'),
-                goToGallery: document.getElementById('go-to-gallery-btn')  // New button reference
+                goToGallery: document.getElementById('go-to-gallery-btn')
             };
 
             // PDF Modal Elements (Renamed for clarity)
@@ -921,8 +924,29 @@
                 });
                 
                 navButtons.goToProjects.addEventListener('click', () => navigateTo('projects'));
-                navButtons.goToGallery.addEventListener('click', () => navigateTo('gallery')); // New event listener
+                navButtons.goToGallery.addEventListener('click', () => navigateTo('gallery')); 
                 
+                // Special Handler for Resume Navigation
+                if (navResume) {
+                    navResume.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        // 1. Go to Home Page
+                        navigateTo('home');
+                        
+                        // 2. Open Resume Modal
+                        openPDFModal('Rajiv_Joshi_Resume.pdf', 'Resume');
+
+                        // 3. Scroll to Resume Section (behind modal, for when closed)
+                        const resumeSection = document.getElementById('resume-link');
+                        if (resumeSection) {
+                            // Small delay to ensure page transition is rendered
+                            setTimeout(() => {
+                                resumeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }, 100);
+                        }
+                    });
+                }
+
                 navigateTo('home'); // Set initial page
             };
 
