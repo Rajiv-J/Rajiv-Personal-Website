@@ -561,7 +561,7 @@
                             <li><strong>Improved cuff interface strength:</strong> cuffs tabs that held the straps in are very thin and as a result at higher torques snap</li>
                             <li><strong>PCB:</strong> While our current system does “work” the Protoboard is really not robust. During long uses cables pull and eventually connections break.</li>
                             <li><strong>Finalized 2 tier communication architecture:</strong> Something I have been working on is offloading only low level commands (getting sensor values, commanding torque) to the teensy while a jetson Orin nano would handle the main controller.</li>
-                            <li><strong>Proper Controller for Validation:</strong> The main next step of this project will be developing some new novel controllers that actually push/challenge the current knowledge of lower body assistive knee exoskeletons (this is a future project).</li>
+                            <li><strong>Proper Controller for Validation:</strong> The main next step of this project will be developing a new novel controller the validates the hardware performance and pushes the exoskeleton field in terms of novel assistance strategies. I aim to leverage simulating a person's lower limb kinematics and kinetics using software like open sim where I can derive the joint impedances of the knee to train a Temporal Convolutional Neural Network to provide Impedance Based Assistance to the knee joint.</li>
                         </ol>
                         <div class="flex flex-col md:flex-row gap-6 mt-6 items-center">
                             <div class="w-full md:w-2/5">
