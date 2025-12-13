@@ -298,6 +298,20 @@
                         <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="Knee IMU" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                         <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Knee Thigh Electronics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                         <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Knee Professional Shot" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <!-- New PCB Images Added -->
+                        <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="Knee PCB 3D" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Knee PCB Top" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Hip Exo Section (NEW) -->
+                <div class="mb-12">
+                    <h3 class="text-2xl font-bold text-teal-300 mb-4">Hip Exoskeleton</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <img src="Hip_Exo/Hip_Exo_Angle.png" alt="Hip Exo Angle" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Back.png" alt="Hip Exo Back" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Left.png" alt="Hip Exo Left" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Metabolics.png" alt="Hip Exo Metabolics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                     </div>
                 </div>
 
@@ -507,14 +521,19 @@
                             <li><strong>SPI/I2C:</strong> For sensor data acquisition.</li>
                         </ul>
 
-                        <!-- New Side-by-Side PCB Images -->
-                        <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="3D View of Knee PCB" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
-                            </div>
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
-                                <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Top View of Knee PCB" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
-                            </div>
+                        <!-- New PCB Image Slider -->
+                        <div id="knee-pcb-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                            <!-- Images -->
+                            <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="3D View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Top View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            
+                            <!-- Navigation Buttons -->
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
                         </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
@@ -957,6 +976,7 @@
                             // Initialize sliders based on which modal is opened
                             if (trigger.id === 'knee-exo-title') {
                                 setupSlider('knee-slider');
+                                setupSlider('knee-pcb-slider'); // Initialize new PCB slider
                             }
                             if (trigger.id === 'hip-exo-title') {
                                 setupSlider('hip-slider');
