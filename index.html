@@ -506,10 +506,10 @@
                         </ol>
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
-                           <li><strong>Orthotic Cuffs:</strong> Custom designed for user comfort.</li>
-                           <li><strong>Linear Freedom Adjustments:</strong> Allows for adaptable sizing.</li>
-                           <li><strong>Custom BOA Straps:</strong> For secure and easy fastening.</li>
-                           <li><strong>Onyx:</strong> Utilized for 3D printing robust parts.</li>
+                           <li><strong>Orthotic Cuffs:</strong> Custom designed for user comfort. Form factor was designed to fit a variety of body types allowing universal fitting to many users.</li>
+                           <li><strong>Linear Freedom Adjustments:</strong> Allows for adaptable sizing across users.</li>
+                           <li><strong>Custom BOA Straps:</strong> For secure and easy fastening. These were custom designed and placed on pivots to allow straps to conform to the natural curvature of any user's leg. BOA ratchets were implemented in tangential with Velcro to create a tight and strong fitting.</li>
+                           <li><strong>Onyx:</strong> A Nylon based, carbon fiber reinforced, 3D printing filament utilized for 3D printing robust and flexible parts. The material properties of this FDM material enable our system to balance high torque performance with light weight system.</li>
                         </ul>
 
                         <!-- New Electronics Image Pyramid -->
@@ -531,12 +531,15 @@
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li><strong>Teensy 4.1:</strong> The core microcontroller for low-level control.</li>
-                            <li><strong>Inertial Measurement Units (IMU):</strong> For tracking limb orientation and gait phase.</li>
-                            <li><strong>AK80-9 Motors:</strong> High-torque density motors for actuation.</li>
-                            <li><strong>Jetson Orin Nano:</strong> Planned for high-level control and complex computations.</li>
-                            <li><strong>CAN and CANFD:</strong> For robust communication between components.</li>
-                            <li><strong>SPI/I2C:</strong> For sensor data acquisition.</li>
+                            <li><strong>PCB:</strong> I am currently working on a 4-layer board that includes a separate PWR plane for high current draw upwards of 40 Amps. This enables us to directly connect motors to the PCB, reducing cable clutter and emphasizing robust connections and communications between sensor and actuator peripherals.</li>
+                            <li><strong>Inertial Measurement Units (IMU):</strong> For tracking limb orientation, gait phase estimation, and velocity + acceleration of limbs.</li>
+                            <li><strong>AK80-9 Motors:</strong> High-torque density Quasi-Direct-Drive (QDD) motors for actuation and providing direct assistance in line with knee joint.</li>
+                            <li><strong>Teensy 4.1:</strong> A future variation will follow a simpler architecture to manage all the low-level commands like torque commands and sensor/actuator parameter tracking.</li>
+                            <li><strong>Jetson Orin Nano:</strong> Planned for high-level control and deploying trained ML and AI models onto the hardware. This is the second part of the 2-tier architecture with the Teensy 4.1.</li>
+                            <li><strong>CAN and CANFD:</strong> For robust communication between components and devices.</li>
+                            <li><strong>SPI/I2C:</strong> For sensor data acquisition at high frequency.</li>
+                            <li><strong>FSR:</strong> For detection of heel strikes and possible gait cycle segmentation.</li>
+                            <li><strong>EMG:</strong> Used to measure the muscle activity of lower limbs for controller validation and future Human in the Loop Control strategies.</li>
                         </ul>
 
                         <!-- New PCB Image Slider -->
@@ -555,7 +558,7 @@
                         </div>
 
                         <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
-                        <p class="mb-4">We were able to create a novel knee exoskeleton system that is able to translate 10-15 Nm of torque to users when wearing the system. The system was test on various people in the lab and was able to adapt seamlessly to all body shapes using the built-in adjustment mechanisms. Custom BOA strapping + neoprene foam padding proved to be sufficient in suspending the system off users thighs and shanks while providing a comfortable experience. Overall, the embedded systems we set up functionally, data was able to be collected and a simple impedance based controller was able to be deployed.</p>
+                        <p class="mb-4">We were able to create a novel knee exoskeleton system that is able to translate 10-15 Nm of torque to users when wearing the system. The system was test on various people in the lab and was able to adapt seamlessly to all body shapes using the built-in adjustment mechanisms. Custom BOA strapping + neoprene foam padding proved to be sufficient in suspending the system off users thighs and shanks while providing a comfortable experience. Overall, the embedded systems setup functioned as intended, data was able to be collected and plotted showing accurate biological kinematics, and a simple impedance-based controller was able to be deployed for initial validation.</p>
                         <p class="mb-4">However, with all these wins there are still many steps ahead:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-6">
                             <li><strong>Improved cuff interface strength:</strong> cuffs tabs that held the straps in are very thin and as a result at higher torques snap</li>
