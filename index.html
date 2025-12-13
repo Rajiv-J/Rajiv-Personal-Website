@@ -381,9 +381,22 @@
     </div>
 
     <!-- Lightbox Modal -->
-    <div id="lightbox-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 cursor-zoom-out">
-        <img id="lightbox-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl border-2 border-teal-500" alt="Full Size Image">
-        <button id="close-lightbox" class="absolute top-4 right-4 text-white text-4xl hover:text-teal-400">&times;</button>
+    <div id="lightbox-modal" class="hidden fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
+        <!-- Close Button -->
+        <button id="close-lightbox" class="absolute top-4 right-4 text-gray-400 hover:text-white text-5xl font-bold z-50 transition-colors">&times;</button>
+        
+        <!-- Navigation Buttons -->
+        <button id="lightbox-prev" class="absolute left-2 md:left-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
+            <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </button>
+        <button id="lightbox-next" class="absolute right-2 md:right-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
+            <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+        </button>
+
+        <!-- Image Container -->
+        <div class="relative w-full h-full flex items-center justify-center p-4 md:p-12">
+            <img id="lightbox-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl border border-teal-500/50 object-contain z-10" alt="Full Size Image">
+        </div>
     </div>
 
 
@@ -451,7 +464,9 @@
             const lightbox = {
                 modal: document.getElementById('lightbox-modal'),
                 img: document.getElementById('lightbox-img'),
-                closeBtn: document.getElementById('close-lightbox')
+                closeBtn: document.getElementById('close-lightbox'),
+                prevBtn: document.getElementById('lightbox-prev'),
+                nextBtn: document.getElementById('lightbox-next')
             };
             
             // --- DATA ---
@@ -913,22 +928,73 @@
 
             // Lightbox Logic
             const setupLightbox = () => {
-                const images = document.querySelectorAll('.gallery-img');
-                images.forEach(img => {
+                // Select all images designated for the gallery
+                const galleryImages = Array.from(document.querySelectorAll('.gallery-img'));
+                let currentIndex = 0;
+
+                const updateImage = () => {
+                    if (galleryImages.length > 0) {
+                        // Fade out effect could be added here
+                        lightbox.img.src = galleryImages[currentIndex].src;
+                        lightbox.img.alt = galleryImages[currentIndex].alt;
+                    }
+                };
+
+                // Add click events to gallery images
+                galleryImages.forEach((img, index) => {
                     img.addEventListener('click', (e) => {
-                        lightbox.img.src = e.target.src;
+                        currentIndex = index;
+                        updateImage();
                         lightbox.modal.classList.remove('hidden');
                     });
                 });
 
                 const closeLightbox = () => {
                     lightbox.modal.classList.add('hidden');
-                    lightbox.img.src = '';
+                    lightbox.img.src = ''; // Clear src to stop any loading
                 };
 
+                const nextImage = (e) => {
+                    if (e) e.stopPropagation();
+                    currentIndex = (currentIndex + 1) % galleryImages.length;
+                    updateImage();
+                };
+
+                const prevImage = (e) => {
+                    if (e) e.stopPropagation();
+                    currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+                    updateImage();
+                };
+
+                // Button Event Listeners
                 lightbox.closeBtn?.addEventListener('click', closeLightbox);
+                lightbox.nextBtn?.addEventListener('click', nextImage);
+                lightbox.prevBtn?.addEventListener('click', prevImage);
+                
+                // Close on background click
                 lightbox.modal?.addEventListener('click', (e) => {
-                    if (e.target === lightbox.modal) closeLightbox();
+                    // Ensure we don't close if clicking the image or buttons directly (though buttons stop prop)
+                    if (e.target === lightbox.modal || e.target.parentElement === lightbox.modal) {
+                        closeLightbox();
+                    }
+                });
+
+                // Keyboard Navigation
+                document.addEventListener('keydown', (e) => {
+                    // Only active if lightbox is visible
+                    if (lightbox.modal.classList.contains('hidden')) return;
+
+                    switch(e.key) {
+                        case 'ArrowRight':
+                            nextImage();
+                            break;
+                        case 'ArrowLeft':
+                            prevImage();
+                            break;
+                        case 'Escape':
+                            closeLightbox();
+                            break;
+                    }
                 });
             };
 
