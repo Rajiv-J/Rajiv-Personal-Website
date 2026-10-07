@@ -668,10 +668,13 @@
                                 <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Professional photo of the Knee Exoskeleton" class="w-full rounded-lg">
                             </div>
                             <div class="w-full md:w-3/5">
-                                <video autoplay muted loop playsinline class="w-full rounded-lg">
-                                    <source src="Knee_Exo_Resources/Rajiv_Walk_knee_outside.mp4" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
+                                <div class="video-loop relative rounded-lg overflow-hidden bg-page">
+                                    <video autoplay muted loop playsinline preload="metadata" class="block w-full h-auto">
+                                        <source src="Knee_Exo_Resources/Rajiv_Walk_knee_outside.mp4" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    <button type="button" class="video-toggle glass glass-btn absolute bottom-3 right-3 flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Pause video"></button>
+                                </div>
                             </div>
                         </div>
 
@@ -892,6 +895,16 @@
                             <li><strong class="text-ink">Takeaway:</strong> A controller trained entirely in simulation transferred to the physical device and gave meaningful assistance.</li>
                         </ul>
 
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Outdoor testing</h3>
+                        <div class="video-loop relative rounded-lg overflow-hidden bg-page">
+                            <video autoplay muted loop playsinline preload="metadata" class="block w-full h-auto">
+                                <source src="Knee_Exo_Resources/Knee_V2_Outdoor_Validation.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <button type="button" class="video-toggle glass glass-btn absolute bottom-3 right-3 flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Pause video"></button>
+                        </div>
+                        <p class="mt-2 text-sm text-center text-ink/60">PEAK outside the lab, on level ground and stairs</p>
+
                         <h2 class="text-2xl font-bold text-main mt-12 mb-4">Next steps</h2>
                         <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
                             <li>Testing the device across other types of locomotion and terrain to validate its performance.</li>
@@ -942,11 +955,12 @@
                             </div>
                         </dl>
 
-                        <div class="w-full mt-8 rounded-lg overflow-hidden bg-page">
-                            <video controls class="w-full h-auto" preload="metadata">
+                        <div class="video-loop relative w-full mt-8 rounded-lg overflow-hidden bg-page">
+                            <video autoplay muted loop playsinline preload="metadata" class="block w-full h-auto">
                                 <source src="Hip_Exo/Hip_Exo_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
+                            <button type="button" class="video-toggle glass glass-btn absolute bottom-3 right-3 flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Pause video"></button>
                         </div>
 
                         <h2 class="text-xl font-bold text-main mt-10 mb-4">My contributions</h2>
@@ -1405,6 +1419,7 @@
 
                     window.scrollTo(0, 0);
                     (config.sliders || []).forEach(setupSlider);
+                    startLoopVideos(projectPage.parts);
                     return true;
                 };
 
@@ -1913,6 +1928,45 @@
                 grid.replaceChildren(...Array.from(track.children, card => card.cloneNode(true)));
             };
 
+            // Looping clips on project pages: silent, on repeat, with one play / pause button.
+            // Markup: <div class="video-loop"> <video autoplay muted loop playsinline> + <button class="video-toggle">
+            const PAUSE_ICON = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"></path></svg>';
+            const PLAY_ICON = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>';
+
+            const updateVideoToggle = (video) => {
+                const button = video.closest('.video-loop')?.querySelector('.video-toggle');
+                if (!button) return;
+                button.innerHTML = video.paused ? PLAY_ICON : PAUSE_ICON;
+                button.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
+            };
+
+            // Call after adding write-up HTML to the page
+            const startLoopVideos = (root) => {
+                const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                root.querySelectorAll('.video-loop video').forEach(video => {
+                    video.muted = true; // never any sound
+                    if (reduceMotion) video.pause(); // visitors who ask for less motion start paused
+                    else video.play().catch(() => {});
+                    updateVideoToggle(video);
+                });
+            };
+
+            const setupLoopVideos = () => {
+                document.addEventListener('click', (e) => {
+                    const button = e.target instanceof Element ? e.target.closest('.video-toggle') : null;
+                    const video = button?.closest('.video-loop')?.querySelector('video');
+                    if (!video) return;
+                    if (video.paused) video.play().catch(() => {});
+                    else video.pause();
+                });
+                // play / pause events don't bubble, so listen in the capture phase to keep every button in sync
+                ['play', 'pause'].forEach(type => {
+                    document.addEventListener(type, (e) => {
+                        if (e.target instanceof HTMLVideoElement) updateVideoToggle(e.target);
+                    }, true);
+                });
+            };
+
             // Liquid glass: the highlight on glass elements follows the pointer
             const setupGlass = () => {
                 const selector = '.glass-btn, .glass-bar';
@@ -1935,6 +1989,7 @@
             setupProjectCarousel();
             setupProjectsGrid();
             setupGlass();
+            setupLoopVideos();
             openProjectFromAddress();
         });
     </script>
