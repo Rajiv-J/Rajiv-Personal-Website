@@ -9,15 +9,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         // Theme colors are defined once as CSS variables in the <style> block below.
-        // Use them in markup as: bg-page, bg-panel, text-main, text-accent, text-ink (etc).
+        // Use them in markup as: bg-page, bg-panel, text-main, text-main-light, text-ink (etc).
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         page:   'rgb(var(--page) / <alpha-value>)',
                         panel:  'rgb(var(--panel) / <alpha-value>)',
-                        main:   'rgb(var(--main) / <alpha-value>)',
-                        accent: 'rgb(var(--accent) / <alpha-value>)',
+                        main: {
+                            DEFAULT: 'rgb(var(--main) / <alpha-value>)',
+                            light:   'rgb(var(--main-light) / <alpha-value>)'
+                        },
                         ink:    'rgb(var(--ink) / <alpha-value>)'
                     }
                 }
@@ -42,11 +44,11 @@
         /* ---- Theme palette (edit here to re-theme the whole site) ----
            Values are space-separated RGB so Tailwind opacity modifiers (e.g. text-ink/70) work. */
         :root {
-            --page:   50 50 50;     /* #323232  page background */
-            --panel:  40 40 40;     /* #282828  panels, buttons, inputs */
-            --main:   168 123 93;   /* #a87b5d  headings, labels, icons */
-            --accent: 80 160 115;   /* #50a073  active / selected state */
-            --ink:    255 255 255;  /* #ffffff  body text */
+            --page:       50 50 50;     /* #323232  page background */
+            --panel:      40 40 40;     /* #282828  panels, inputs */
+            --main:       168 123 93;   /* #a87b5d  brown: headings, labels, selected state */
+            --main-light: 201 160 132;  /* #c9a084  lighter brown: hover, emphasis */
+            --ink:        255 255 255;  /* #ffffff  body text */
         }
 
         body {
@@ -57,14 +59,27 @@
             color: rgb(var(--ink));
         }
 
+        /* Soft brown / gray glows behind everything, so the glass has something to pick up */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(60vmax 55vmax at 8% -12%, rgb(var(--main) / .34), transparent 62%),
+                radial-gradient(45vmax 45vmax at 104% 30%, rgb(255 255 255 / .08), transparent 60%),
+                radial-gradient(70vmax 55vmax at 62% 118%, rgb(var(--main) / .24), transparent 62%);
+        }
+
         ::selection {
             background: rgb(var(--main));
             color: rgb(var(--panel));
         }
 
-        /* Visible keyboard focus in the active color */
+        /* Visible keyboard focus */
         :focus-visible {
-            outline: 2px solid rgb(var(--accent));
+            outline: 2px solid rgb(var(--main-light));
             outline-offset: 2px;
         }
 
@@ -83,154 +98,187 @@
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: rgb(var(--accent));
+            background: rgb(var(--main-light));
         }
 
-        /* Blinking cursor effect */
-        .blinking-cursor {
-            font-weight: 400;
-            color: rgb(var(--accent));
-            animation: blink 1s step-end infinite;
+        /* ---- Liquid glass ----
+           .glass      the material: frosted, rim-lit, floating (nav bar, standalone buttons)
+           .glass-btn  the behavior: a highlight that follows the pointer, and a press-in
+           Add both to make any button glass: class="glass glass-btn ..." */
+        @property --sheen {
+            syntax: '<number>';
+            inherits: false;
+            initial-value: 0;
         }
 
-        @keyframes blink {
-            from, to {
-                color: transparent;
+        .glass,
+        .glass-btn {
+            --sheen: 0;
+            --fill-top: 0;
+            --fill-bot: 0;
+            background-image:
+                radial-gradient(9rem circle at var(--gx, 50%) var(--gy, 0%), rgb(255 255 255 / var(--sheen)), transparent 70%),
+                linear-gradient(180deg, rgb(255 255 255 / var(--fill-top)), rgb(255 255 255 / var(--fill-bot)));
+        }
+
+        .glass {
+            --fill-top: .16;
+            --fill-bot: .04;
+            background-color: rgb(var(--panel) / .42);
+            border: 1px solid rgb(255 255 255 / .14);
+            box-shadow:
+                inset 0 1px 0 rgb(255 255 255 / .32),
+                inset 0 -1px 0 rgb(0 0 0 / .3),
+                inset 0 0 14px rgb(255 255 255 / .05),
+                0 10px 30px rgb(0 0 0 / .3);
+            -webkit-backdrop-filter: blur(18px) saturate(170%);
+            backdrop-filter: blur(18px) saturate(170%);
+        }
+
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .glass {
+                background-color: rgb(var(--panel) / .94);
             }
-            50% {
-                color: rgb(var(--accent));
-            }
+        }
+
+        .glass-btn {
+            cursor: pointer;
+            transition: --sheen .25s ease, scale .15s ease, opacity .2s ease, color .2s ease;
+        }
+        .glass-btn:hover {
+            --sheen: .26;
+        }
+        .glass.glass-btn:hover {
+            --fill-top: .24;
+            --fill-bot: .08;
+        }
+        .glass-btn:active {
+            scale: .96;
+        }
+
+        .glass-bar:hover {
+            --sheen: .1;
+        }
+
+        /* Nav links sit inside the glass bar: clear until hovered, brown glass when current */
+        .nav-link:hover {
+            --fill-top: .14;
+            --fill-bot: .05;
+        }
+        .nav-link.is-active {
+            color: #1f1f1f;
+            background-image:
+                radial-gradient(9rem circle at var(--gx, 50%) var(--gy, 0%), rgb(255 255 255 / var(--sheen)), transparent 70%),
+                linear-gradient(180deg, rgb(var(--main-light)), rgb(var(--main)));
+            box-shadow:
+                inset 0 1px 0 rgb(255 255 255 / .45),
+                inset 0 -1px 0 rgb(0 0 0 / .25),
+                0 4px 14px rgb(0 0 0 / .3);
+        }
+
+        /* Translucent content panels */
+        .surface {
+            background-color: rgb(var(--panel) / .62);
+            border: 1px solid rgb(255 255 255 / .06);
+        }
+
+        /* Corner marks around the portrait */
+        .photo-frame {
+            --mark: rgb(var(--main));
+            --len: 16px;
+            background:
+                linear-gradient(var(--mark), var(--mark)) top left / var(--len) 1px,
+                linear-gradient(var(--mark), var(--mark)) top left / 1px var(--len),
+                linear-gradient(var(--mark), var(--mark)) top right / var(--len) 1px,
+                linear-gradient(var(--mark), var(--mark)) top right / 1px var(--len),
+                linear-gradient(var(--mark), var(--mark)) bottom left / var(--len) 1px,
+                linear-gradient(var(--mark), var(--mark)) bottom left / 1px var(--len),
+                linear-gradient(var(--mark), var(--mark)) bottom right / var(--len) 1px,
+                linear-gradient(var(--mark), var(--mark)) bottom right / 1px var(--len);
+            background-repeat: no-repeat;
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .blinking-cursor {
-                animation: none;
+            .glass-btn {
+                transition: none;
             }
         }
     </style>
 </head>
 <body class="text-ink">
 
-    <div class="container mx-auto p-4 lg:p-8 max-w-3xl">
+    <div class="mx-auto p-4 lg:p-8 max-w-6xl">
         
-        <!-- Navigation Bar -->
-        <nav class="flex flex-wrap justify-center md:justify-end gap-2 mb-8">
-            <a href="#" data-page="home" id="nav-home" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200">Home</a>
-            <a href="#" data-page="projects" id="nav-projects" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200">Projects</a>
-            <a href="#" data-page="gallery" id="nav-gallery" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200">Gallery</a>
-            <a href="#" id="nav-resume" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200 bg-panel text-ink hover:bg-ink hover:text-panel">Resume</a>
+        <!-- Navigation Bar (floating glass toolbar) -->
+        <nav class="glass glass-bar sticky top-3 z-40 w-fit mx-auto flex items-center gap-1 p-1.5 mb-8 md:mb-14 rounded-full" aria-label="Main">
+            <a href="#" id="nav-brand" class="hidden sm:block pl-4 pr-3 text-lg font-bold text-ink">Rajiv Joshi</a>
+            <a href="#" data-page="home" id="nav-home" class="glass-btn nav-link px-3 sm:px-5 py-2 rounded-full text-base sm:text-lg font-semibold">Home</a>
+            <a href="#" data-page="projects" id="nav-projects" class="glass-btn nav-link px-3 sm:px-5 py-2 rounded-full text-base sm:text-lg font-semibold">Projects</a>
+            <a href="#" data-page="gallery" id="nav-gallery" class="glass-btn nav-link px-3 sm:px-5 py-2 rounded-full text-base sm:text-lg font-semibold">Gallery</a>
+            <a href="#" id="nav-resume" class="glass-btn nav-link px-3 sm:px-5 py-2 rounded-full text-base sm:text-lg font-semibold">Resume</a>
         </nav>
 
         <!-- Home Page Content -->
         <div id="home-page">
-            <!-- Profile Header Section -->
-            <header class="text-center mb-12">
-                <!-- 
+            <main class="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 items-start">
+
+                <!-- Portrait -->
+                <!--
                 🔴 IMPORTANT: Make sure the image file 'Rajiv_pfp.jpg' is in the same
                 folder as this index.html file for it to display correctly.
                 -->
-                <img src="Rajiv_pfp.jpg" alt="A photo of Rajiv" class="w-80 h-80 rounded-full mx-auto mb-6 border-4 border-main">
-                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-ink uppercase">
-                    RAJIV J.
-                </h1>
-                <p class="text-xl text-main font-semibold mt-2 h-7">
-                    <span id="typing-quote"></span><span class="blinking-cursor">|</span>
-                </p>
-            </header>
-
-            <!-- Main Content Section -->
-            <main>
-                
-                <!-- About Me Section -->
-                <div class="bg-panel p-8 rounded-xl mb-8">
-                    <h2 class="text-3xl font-bold text-main mb-4 border-b-2 border-main/30 pb-2">About Me:</h2>
-                    <p class="text-ink leading-relaxed text-lg mb-6">
-                        Welcome to my personal portfolio. My name is Rajiv Joshi and I am a mechanical engineer dedicated to building technologies that not only impact lives but shift perspectives in meaningful ways.
-                        <br><br>
-                        Beyond the engineering labels, I am defined by my curiosity to learn. Whether I am learning a new technical skill, sharing a compelling story, or attempting to master my mother’s traditional cooking recipes, I approach every challenge with enthusiasm. I hope this website offers an authentic glimpse into my journey of professional and personal growth.
-                    </p>
-
-                    <h3 class="text-2xl font-semibold text-main mt-8 mb-3">🏫 Academic History:</h3>
-                    <ul class="list-disc list-inside text-ink text-lg space-y-2">
-                        <li>Masters of Science in Mechanical Engineering - Research @ Carnegie Mellon University (Present)</li>
-                        <li>Bachelors of Science in Mechanical Engineering - Robotics and Mechatronics @ Virginia Tech (May 2024)</li>
-                        <li>Bachelors of Science in Mechanical Engineering - Mechanical @ Virginia Tech (May 2024)</li>
-                    </ul>
-
-                    <h3 class="text-2xl font-semibold text-main mt-6 mb-3">📔 Professional Interests:</h3>
-                    <p class="text-ink text-lg">
-                        Wearable robotics | Exoskeletons | Robotics | Mechatronics | Embedded Systems | Controls | CAD/Design | Mechanical Design | Leadership | Team Organization/Structure
-                    </p>
-
-                    <h3 class="text-2xl font-semibold text-main mt-6 mb-3">😎 Personal Interests:</h3>
-                    <p class="text-ink text-lg">
-                        🏐 Volleyball | 🎱 Billiards | ⚽ Soccer | 🛠 CAD/Design | 🐉 D&D
-                    </p>
-                </div>
-
-                <!-- Bottom Sections Wrapper -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Contact/Links Section -->
-                    <div class="bg-panel p-8 rounded-xl text-center flex flex-col justify-center">
-                        <h2 class="text-3xl font-bold text-main mb-6 border-b-2 border-main/30 pb-2">Connect With Me:</h2>
-                        <div class="flex items-center justify-center pt-2">
-                            <!-- LinkedIn -->
-                            <a href="https://www.linkedin.com/in/rajivj02/" target="_blank" class="text-main hover:text-accent transition-colors duration-200">
-                                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                                <span class="sr-only">LinkedIn</span>
-                            </a>
-                            <!-- Email -->
-                            <a href="mailto:rajivj2002@gmail.com" class="ml-8 text-main hover:text-accent transition-colors duration-200">
-                                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H2V8l10 7 10-7v10zM12 11L2 6h20l-10 5z"/></svg>
-                                <span class="sr-only">Email</span>
-                            </a>
-                        </div>
-                        <button id="go-to-projects-btn" class="mt-8 bg-page hover:bg-accent text-ink hover:text-panel font-bold py-3 px-6 rounded-lg transition-colors duration-200">
-                            Check out my Projects!
-                        </button>
-                        <!-- Added Gallery Button -->
-                        <button id="go-to-gallery-btn" class="mt-4 bg-page hover:bg-accent text-ink hover:text-panel font-bold py-3 px-6 rounded-lg transition-colors duration-200">
-                            Check out my Gallery!
-                        </button>
+                <figure class="md:col-span-5 w-full max-w-sm md:max-w-none mx-auto">
+                    <div class="photo-frame p-2.5">
+                        <img src="Rajiv_pfp.jpg" alt="Rajiv Joshi" class="w-full aspect-[4/5] object-cover rounded-2xl">
                     </div>
+                    <figcaption class="mt-3 px-2.5 text-sm text-ink/60">Mechanical Engineer</figcaption>
+                </figure>
 
-                    <!-- Resume Section -->
-                    <div class="bg-panel p-8 rounded-xl text-center">
-                        <h2 class="text-3xl font-bold text-main mb-6 border-b-2 border-main/30 pb-2">My Resume:</h2>
-                        <!-- 
-                        🔴 IMPORTANT: Make sure your resume PDF file is named 'Rajiv_Joshi_Resume.pdf' 
-                        and is in the same folder as this file.
-                        -->
-                        <a href="#" id="resume-link" class="cursor-pointer block">
-                             <div class="relative w-full max-w-xs mx-auto aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 hover:ring-2 hover:ring-accent transition-all">
-                                <!-- Canvas for PDF Preview -->
-                                <canvas id="resume-canvas" class="rounded-lg transition-all duration-300 w-full"></canvas>
-                                <!-- Loading Spinner -->
-                                <div id="loading-spinner" class="absolute text-center">
-                                    <svg class="animate-spin h-8 w-8 text-ink mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    <p class="text-ink mt-2 text-sm">Loading Preview...</p>
-                                </div>
-                            </div>
-                        </a>
+                <!-- About -->
+                <section class="md:col-span-7 md:pt-2">
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-ink">
+                        Building technology to help you <em class="text-main-light">move</em>.
+                    </h1>
+
+                    <div class="mt-8 space-y-5 text-lg leading-relaxed text-ink/85">
+                        <p>
+                            I earned my M.S. in Mechanical Engineering (Research) at Carnegie Mellon, advised by Inseung Kang in the MetaMobility Lab. Before that I earned two B.S. degrees at Virginia Tech, one in Mechanical Engineering and one in Robotics and Mechatronics.
+                        </p>
+                        <p>
+                            At the MetaMobility Lab I've worked on every layer of these devices, from hardware, embedded systems programming and electrical architecture to, now, reinforcement learning that trains digital twins. The question I'm working on: how can we train controllers without collecting large amounts of data, especially for impaired populations?
+                        </p>
                     </div>
-                </div>
+                </section>
+
+                <!-- Interests / Skills / Hobbies: three columns split by vertical bars (stacked on phones) -->
+                <dl class="md:col-span-12 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-ink/20 text-lg">
+                    <div class="py-6 md:py-1 md:pr-8 lg:pr-10">
+                        <dt class="mb-2 text-base font-bold text-main">Professional Interests</dt>
+                        <dd class="leading-relaxed text-ink/85">Wearable Robotics&nbsp;&middot; Exoskeletons&nbsp;&middot; Mechatronics&nbsp;&middot; Embedded Systems&nbsp;&middot; System Integration&nbsp;&middot; Reinforcement Learning</dd>
+                    </div>
+                    <div class="py-6 md:py-1 md:px-8 lg:px-10">
+                        <dt class="mb-2 text-base font-bold text-main">Skills</dt>
+                        <dd class="leading-relaxed text-ink/85">CAD&nbsp;&middot; FDM/SLS&nbsp;&middot; Machining&nbsp;&middot; PCBs/Circuits&nbsp;&middot; Soldering&nbsp;&middot; C/C++&nbsp;&middot; Python&nbsp;&middot; Linux&nbsp;&middot; Data Processing&nbsp;&middot; Git</dd>
+                    </div>
+                    <div class="py-6 md:py-1 md:pl-8 lg:pl-10">
+                        <dt class="mb-2 text-base font-bold text-main">Hobbies</dt>
+                        <dd class="leading-relaxed text-ink/85">Volleyball&nbsp;&middot; Billiards&nbsp;&middot; D&amp;D&nbsp;&middot; Hiking&nbsp;&middot; Traveling</dd>
+                    </div>
+                </dl>
 
             </main>
         </div>
 
         <!-- Projects Page Content -->
-        <div id="projects-page" class="hidden">
-            <div class="bg-panel p-8 rounded-xl">
+        <div id="projects-page" class="hidden max-w-3xl mx-auto">
+            <div class="surface p-5 sm:p-8 rounded-2xl">
                 <h2 class="text-3xl font-bold text-main mb-8 border-b-2 border-main/30 pb-2">My Projects:</h2>
                 
                 <!-- Grid for projects -->
                 <div class="space-y-12">
 
                     <!-- Project 1 Card -->
-                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- 3D Container -->
                         <div id="knee-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
@@ -250,7 +298,7 @@
                     </div>
 
                     <!-- Project 2 Card -->
-                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                          <!-- 3D Container -->
                         <div id="hip-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
@@ -270,7 +318,7 @@
                     </div>
 
                     <!-- Project 3 Card -->
-                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- 3D Container -->
                         <div id="haptic-device-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
@@ -290,7 +338,7 @@
                     </div>
 
                     <!-- Project 4 Card -->
-                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- Project Image -->
                         <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Mechatronics Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
@@ -303,7 +351,7 @@
                     </div>
 
                     <!-- Project 5 Card -->
-                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- Project Image -->
                         <img src="https://placehold.co/600x400/282828/a87b5d?text=Solar+Car" alt="Solar Car Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
@@ -316,7 +364,7 @@
                     </div>
 
                     <!-- Project 6 Card -->
-                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
+                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- Project Image -->
                         <img src="https://placehold.co/600x400/282828/a87b5d?text=Tennis+Robot" alt="Tennis Robot Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
@@ -333,8 +381,8 @@
         </div>
         
         <!-- Gallery Page Content -->
-        <div id="gallery-page" class="hidden">
-            <div class="bg-panel p-8 rounded-xl">
+        <div id="gallery-page" class="hidden max-w-3xl mx-auto">
+            <div class="surface p-5 sm:p-8 rounded-2xl">
                 <h2 class="text-3xl font-bold text-main mb-8 border-b-2 border-main/30 pb-2">Project Gallery:</h2>
                 
                 <!-- Knee Exo Section -->
@@ -397,19 +445,19 @@
 
 
         <!-- Footer -->
-        <footer class="text-center mt-12 py-4 border-t border-panel">
+        <footer class="text-center mt-12 py-4 border-t border-ink/10">
             <p class="text-ink/60">&copy; <span id="year"></span> Rajiv J. All rights reserved.</p>
         </footer>
 
     </div>
 
     <!-- Unified PDF Modal -->
-    <div id="pdf-viewer-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <div id="pdf-viewer-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-panel rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-page">
                 <!-- Title changes dynamically -->
                 <h3 id="pdf-modal-title" class="text-xl font-semibold text-main">Document</h3>
-                <button id="close-modal-btn" class="text-ink/70 hover:text-ink text-3xl font-bold">&times;</button>
+                <button id="close-modal-btn" aria-label="Close" class="glass glass-btn w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-2xl leading-none text-ink">&times;</button>
             </div>
             <div class="flex-grow p-1">
                 <iframe id="pdf-frame" src="" class="w-full h-full border-0" title="Document Preview"></iframe>
@@ -418,11 +466,11 @@
     </div>
     
     <!-- Item Detail Modal -->
-    <div id="item-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+    <div id="item-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
         <div class="bg-panel rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-page">
                 <h3 id="item-modal-title" class="text-2xl font-bold text-main">Details</h3>
-                <button id="close-item-modal-btn" class="text-ink/70 hover:text-ink text-3xl font-bold">&times;</button>
+                <button id="close-item-modal-btn" aria-label="Close" class="glass glass-btn w-10 h-10 shrink-0 rounded-full flex items-center justify-center text-2xl leading-none text-ink">&times;</button>
             </div>
             <div id="item-modal-content" class="flex-grow p-6 overflow-y-auto text-ink leading-relaxed">
                 <!-- Item details will be injected here -->
@@ -433,13 +481,13 @@
     <!-- Lightbox Modal -->
     <div id="lightbox-modal" class="hidden fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
         <!-- Close Button -->
-        <button id="close-lightbox" class="absolute top-4 right-4 text-ink/70 hover:text-ink text-5xl font-bold z-50 transition-colors">&times;</button>
+        <button id="close-lightbox" aria-label="Close" class="glass glass-btn absolute top-4 right-4 w-12 h-12 rounded-full flex items-center justify-center text-3xl leading-none text-ink z-50">&times;</button>
         
         <!-- Navigation Buttons -->
-        <button id="lightbox-prev" class="absolute left-2 md:left-8 top-1/2 transform -translate-y-1/2 text-ink/70 hover:text-ink hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
+        <button id="lightbox-prev" aria-label="Previous image" class="absolute left-2 md:left-8 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink rounded-full p-2 z-50">
             <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </button>
-        <button id="lightbox-next" class="absolute right-2 md:right-8 top-1/2 transform -translate-y-1/2 text-ink/70 hover:text-ink hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
+        <button id="lightbox-next" aria-label="Next image" class="absolute right-2 md:right-8 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink rounded-full p-2 z-50">
             <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
@@ -475,7 +523,6 @@
 
             // --- DOM ELEMENT SELECTIONS ---
             const yearSpan = document.getElementById('year');
-            const typingQuoteSpan = document.getElementById('typing-quote');
 
             // Navigation Elements
             const navLinks = {
@@ -484,20 +531,16 @@
                 gallery: document.getElementById('nav-gallery')
             };
             const navResume = document.getElementById('nav-resume'); // Separate ref for Resume link
+            const navBrand = document.getElementById('nav-brand');
 
             const pages = {
                 home: document.getElementById('home-page'),
                 projects: document.getElementById('projects-page'),
                 gallery: document.getElementById('gallery-page')
             };
-            const navButtons = {
-                goToProjects: document.getElementById('go-to-projects-btn'),
-                goToGallery: document.getElementById('go-to-gallery-btn')
-            };
 
             // PDF Modal Elements (Renamed for clarity)
             const pdfModal = {
-                trigger: document.getElementById('resume-link'),
                 modal: document.getElementById('pdf-viewer-modal'),
                 title: document.getElementById('pdf-modal-title'),
                 frame: document.getElementById('pdf-frame'),
@@ -534,10 +577,10 @@
                             <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
@@ -598,10 +641,10 @@
                             <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Top View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
@@ -660,10 +703,10 @@
                             <img src="Hip_Exo/Hip_Exo_Left.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
@@ -792,10 +835,10 @@
                             <img src="Haptic_Device/Haptics_Final_3.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
@@ -804,7 +847,7 @@
                         <div class="mt-10 text-center border-t border-page pt-6">
                             <h4 class="text-xl font-semibold text-main mb-4">Final Project Report:</h4>
                             <a href="#" id="haptics-report-link" class="cursor-pointer block max-w-xs mx-auto">
-                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-accent transition-all">
+                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-main-light transition-all">
                                     <!-- Canvas for Report Preview -->
                                     <canvas id="haptics-report-canvas" class="rounded-lg w-full"></canvas>
                                     <!-- Loading Spinner -->
@@ -817,7 +860,7 @@
                                     </div>
                                     <!-- Overlay -->
                                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold bg-panel/90 px-4 py-2 rounded-full">Click to Read</p>
+                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold glass px-4 py-2 rounded-full">Click to Read</p>
                                     </div>
                                 </div>
                             </a>
@@ -909,7 +952,7 @@
                         <div class="mt-10 text-center border-t border-page pt-6">
                             <h4 class="text-xl font-semibold text-main mb-4">Final Project Report:</h4>
                             <a href="#" id="mechatronics-report-link" class="cursor-pointer block max-w-xs mx-auto">
-                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-accent transition-all">
+                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-main-light transition-all">
                                     <!-- Canvas for Report Preview -->
                                     <canvas id="mechatronics-report-canvas" class="rounded-lg w-full"></canvas>
                                     <!-- Loading Spinner -->
@@ -922,7 +965,7 @@
                                     </div>
                                     <!-- Overlay -->
                                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold bg-panel/90 px-4 py-2 rounded-full">Click to Read</p>
+                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold glass px-4 py-2 rounded-full">Click to Read</p>
                                     </div>
                                 </div>
                             </a>
@@ -943,19 +986,19 @@
 
             // Navigation
             const setupNavigation = () => {
-                const activeClasses = 'bg-accent text-panel'.split(' ');
-                const inactiveClasses = 'bg-panel text-ink hover:bg-ink hover:text-panel'.split(' ');
+                const activeClass = 'is-active'; // styled in the <style> block (.nav-link.is-active)
 
                 const navigateTo = (pageKey) => {
                     Object.values(pages).forEach(page => page.classList.add('hidden'));
                     Object.values(navLinks).forEach(link => {
-                        link.classList.remove(...activeClasses);
-                        link.classList.add(...inactiveClasses);
+                        link.classList.remove(activeClass);
+                        link.removeAttribute('aria-current');
                     });
 
                     pages[pageKey].classList.remove('hidden');
-                    navLinks[pageKey].classList.add(...activeClasses);
-                    navLinks[pageKey].classList.remove(...inactiveClasses);
+                    navLinks[pageKey].classList.add(activeClass);
+                    navLinks[pageKey].setAttribute('aria-current', 'page');
+                    window.scrollTo(0, 0); // the nav is sticky, so start each page at the top
 
                     if (pageKey === 'projects') {
                         initKneeExo3D();
@@ -975,29 +1018,16 @@
                     });
                 });
                 
-                navButtons.goToProjects.addEventListener('click', () => navigateTo('projects'));
-                navButtons.goToGallery.addEventListener('click', () => navigateTo('gallery')); 
-                
-                // Special Handler for Resume Navigation
-                if (navResume) {
-                    navResume.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        // 1. Go to Home Page
-                        navigateTo('home');
-                        
-                        // 2. Open Resume Modal
-                        openPDFModal('Rajiv_Joshi_Resume.pdf', 'Resume');
+                navBrand?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navigateTo('home');
+                });
 
-                        // 3. Scroll to Resume Section (behind modal, for when closed)
-                        const resumeSection = document.getElementById('resume-link');
-                        if (resumeSection) {
-                            // Small delay to ensure page transition is rendered
-                            setTimeout(() => {
-                                resumeSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            }, 100);
-                        }
-                    });
-                }
+                // Resume opens in the PDF viewer on top of whatever page you're on
+                navResume?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openPDFModal('Rajiv_Joshi_Resume.pdf', 'Resume');
+                });
 
                 navigateTo('home'); // Set initial page
             };
@@ -1093,12 +1123,6 @@
             };
 
             const setupModals = () => {
-                // Resume Modal (now generalized)
-                pdfModal.trigger?.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    openPDFModal('Rajiv_Joshi_Resume.pdf', 'Resume');
-                });
-
                 pdfModal.closeBtn?.addEventListener('click', closePDFModal);
                 pdfModal.modal?.addEventListener('click', (e) => {
                     if (e.target === pdfModal.modal) closePDFModal();
@@ -1108,7 +1132,7 @@
                 const itemTriggers = document.querySelectorAll('[id$="-title"]');
                 itemTriggers.forEach(trigger => {
                     if (itemDetails[trigger.id]) {
-                        trigger.classList.add('cursor-pointer', 'hover:text-accent', 'transition-colors');
+                        trigger.classList.add('cursor-pointer', 'hover:text-main-light', 'transition-colors');
                         trigger.addEventListener('click', () => {
                             const details = itemDetails[trigger.id];
                             itemModal.title.textContent = details.title;
@@ -1454,44 +1478,26 @@
                 animate();
             };
             
-            // Typing Animation
-            const initTypingAnimation = async () => {
-                if (!typingQuoteSpan) return;
-                const quotes = [
-                    '"Measuring once 📏... Cutting twice ✂️..."',
-                    '"This will only take a minute⌛... *4 hours later*... It sorta works 😵..."',
-                    '"Copying my mom\'s cooking... burning all the food 🙅..."',
-                    ':3'
-                ];
-                const typeSpeed = 100, eraseSpeed = 50, pauseTime = 3000;
-                const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-                let quoteIndex = 0;
-                while (true) {
-                    const currentQuote = quotes[quoteIndex];
-                    for (let i = 0; i < currentQuote.length; i++) {
-                        typingQuoteSpan.textContent += currentQuote[i];
-                        await sleep(typeSpeed);
+            // Liquid glass: the highlight on glass elements follows the pointer
+            const setupGlass = () => {
+                const selector = '.glass-btn, .glass-bar';
+                document.addEventListener('pointermove', (e) => {
+                    let el = e.target instanceof Element ? e.target.closest(selector) : null;
+                    while (el) {
+                        const rect = el.getBoundingClientRect();
+                        el.style.setProperty('--gx', `${e.clientX - rect.left}px`);
+                        el.style.setProperty('--gy', `${e.clientY - rect.top}px`);
+                        el = el.parentElement ? el.parentElement.closest(selector) : null;
                     }
-                    await sleep(pauseTime);
-                    for (let i = currentQuote.length; i > 0; i--) {
-                        typingQuoteSpan.textContent = typingQuoteSpan.textContent.slice(0, -1);
-                        await sleep(eraseSpeed);
-                    }
-                    quoteIndex = (quoteIndex + 1) % quotes.length;
-                    await sleep(500);
-                }
+                }, { passive: true });
             };
-            
+
             // --- INITIALIZATION ---
             yearSpan.textContent = new Date().getFullYear();
             setupNavigation();
             setupModals();
             setupLightbox();
-            
-            // Render main resume thumbnail on load
-            renderPDFThumbnail('Rajiv_Joshi_Resume.pdf', 'resume-canvas', 'loading-spinner');
-            
-            initTypingAnimation();
+            setupGlass();
         });
     </script>
 </body>
