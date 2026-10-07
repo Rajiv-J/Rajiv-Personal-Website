@@ -1069,28 +1069,36 @@
                 'hip-exo-test-page': {
                     title: 'Hip Exo Project Test',
                     content: `
-                        <!-- DRAFT portfolio version of the hip write-up, used only by the "Hip Exo Project Test" page.
+                        <!-- Portfolio version of the hip write-up, used only by the "Hip Exo Project Test" page.
                              The original write-up above ('hip-exo-title') is unchanged. -->
-                        <p class="text-lg leading-relaxed">
-                            An autonomous robotic hip exoskeleton for stroke survivors and older adults, whose hip-dominant walking costs them extra energy. I worked on it from the first prototype through three hardware generations as a sub-lead in the MetaMobility Lab, across mechanical design, electronics and human-subject testing.
+                        <h2 class="text-xl font-bold text-main mb-4">Motivation</h2>
+                        <p class="text-ink/85">
+                            Stroke survivors and older adults often lose coordination at the distal joints and compensate by relying on the hip to power their gait. The hip is a less efficient power source than the ankle, which benefits from elastic energy storage in its tendons, so this compensation raises metabolic cost and reduces walking endurance. Targeted hip assistance addresses that inefficiency directly.
                         </p>
+                        <p class="mt-4 text-ink/85">The project's long-term goals:</p>
+                        <ul class="mt-2 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>An autonomous hip exoskeleton that responds to user intent and adapts across locomotor tasks, in clinical rehabilitation and in daily mobility.</li>
+                            <li>Hardware that is wearable, comfortable, and fits a wide range of body sizes and conditions.</li>
+                            <li>A deeper understanding of hip biomechanics in impaired populations, to drive personalized control algorithms.</li>
+                            <li>A modular design that integrates with other exoskeletons for full lower-limb assistance.</li>
+                        </ul>
 
                         <dl class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-4 sm:gap-x-0 sm:divide-x divide-ink/20">
                             <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
-                                <dt class="text-sm text-ink/60">System weight, V1 to V3</dt>
+                                <dt class="text-sm text-ink/60">System weight</dt>
                                 <dd class="mb-1 text-2xl font-bold text-ink">5 &rarr; 3.4 kg</dd>
                             </div>
                             <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
-                                <dt class="text-sm text-ink/60">Peak assistance (V2)</dt>
-                                <dd class="mb-1 text-2xl font-bold text-ink">22 Nm</dd>
+                                <dt class="text-sm text-ink/60">Assistance torque at the joint</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">18 Nm</dd>
                             </div>
                             <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
-                                <dt class="text-sm text-ink/60">Metabolic benefit (V3)</dt>
-                                <dd class="mb-1 text-2xl font-bold text-ink">~4%</dd>
+                                <dt class="text-sm text-ink/60">Approx. metabolic reduction</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">8&ndash;10%</dd>
                             </div>
                             <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
-                                <dt class="text-sm text-ink/60">Hardware generations</dt>
-                                <dd class="mb-1 text-2xl font-bold text-ink">3</dd>
+                                <dt class="text-sm text-ink/60">Hardware generation</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">Gen 2</dd>
                             </div>
                         </dl>
 
@@ -1101,29 +1109,31 @@
                             </video>
                         </div>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">What I did</h2>
-                        <dl class="space-y-5">
-                            <div>
-                                <dt class="font-bold text-ink">Mechanical design</dt>
-                                <dd class="mt-1 text-ink/85">Reworked the hardware in SolidWorks over three generations for fit and torque transfer, bringing the system from about 5 kg down to 3.4 kg. The thigh bars and pelvis interface were surfaced from 3D body scans and printed in Onyx, a carbon-fiber nylon.</dd>
-                            </div>
-                            <div>
-                                <dt class="font-bold text-ink">Electronics and PCB</dt>
-                                <dd class="mt-1 text-ink/85">Designed and refined the PCBs in KiCAD, integrating CAN and I2C peripherals while cutting the number of cables and connectors. Helped design the backpack control module that plugs into any of the lab's exoskeletons.</dd>
-                            </div>
-                            <div>
-                                <dt class="font-bold text-ink">Integration and debugging</dt>
-                                <dd class="mt-1 text-ink/85">Brought the PCBs, printed hardware and motor and sensor firmware together into a working device, and tracked down hardware and firmware faults with an oscilloscope, multimeter and logic analyzer.</dd>
-                            </div>
-                            <div>
-                                <dt class="font-bold text-ink">Benchmarking</dt>
-                                <dd class="mt-1 text-ink/85">Reverse engineered several commercial hip exoskeletons, ran them on our control architecture, and used the comparison to guide our own design changes.</dd>
-                            </div>
-                            <div>
-                                <dt class="font-bold text-ink">Human-subject testing</dt>
-                                <dd class="mt-1 text-ink/85">Helped run, and took part in, motion capture, metabolic and controller studies, then fed what we saw back into the hardware.</dd>
-                            </div>
-                        </dl>
+                        <h2 class="text-xl font-bold text-main mt-10 mb-4">My contributions</h2>
+                        <h3 class="mt-6 mb-2 font-bold text-ink">Mechanical design</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                                <li>Reworked the SolidWorks design across two generations to improve fit and torque transfer and to reduce weight.</li>
+                                <li>Built the models parametrically, so a part can be modified by changing values in a design table instead of remodeling it.</li>
+                                <li>Created the body interface by photographing the hip from multiple angles, constructing splines from those views into a 3D surface, and refining that surface into the final part.</li>
+                        </ul>
+                        <h3 class="mt-6 mb-2 font-bold text-ink">Embedded architecture</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                                <li>Designed and refined the embedded architecture to minimize cable count and routing, for a cleaner, more robust and maintainable setup.</li>
+                                <li>Integrated I2C communication for the IMUs and low-level CAN communication between the Jetson and the motors.</li>
+                                <li>Added abstraction layers that separate high-level from low-level control, and documented the structure of the codebase.</li>
+                                <li>Debugged CAN bus faults and IMU signal dropouts by probing signals with an oscilloscope and checking voltages and continuity with a multimeter, then documented the solutions.</li>
+                        </ul>
+                        <h3 class="mt-6 mb-2 font-bold text-ink">Human-subject testing</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                                <li>Assisted with experiments using Vicon motion capture, a K5 metabolic mask, Delsys EMG and a Bertec instrumented treadmill to capture gait mechanics and study how the exoskeleton and its controllers interact with able-bodied users.</li>
+                                <li>Took part as a subject, to experience the human-device interaction first-hand.</li>
+                                <li>Used the results to propose hardware modifications and to identify gaps and limitations in the controllers.</li>
+                        </ul>
+                        <h3 class="mt-6 mb-2 font-bold text-ink">Research engagement</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                                <li>Took part in literature discussions and locomotion seminars with PhD students, master's students and faculty, and presented my own work.</li>
+                                <li>Used those discussions to build a grounding in biomechanics and to weigh which solutions were worth exploring.</li>
+                        </ul>
 
                         <div id="hip-test-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mt-10 rounded-lg overflow-hidden group bg-page">
                             <img src="Hip_Exo/Hip_Exo_Angle.png" alt="Hip exoskeleton worn, angled view" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
@@ -1142,30 +1152,37 @@
                         <dl class="border-t border-ink/15">
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Actuation</dt>
-                                <dd class="sm:col-span-3 text-ink/85">AK80-9 and AKE60-8 quasi-direct-drive motors, mounted in line with the hip joint</dd>
+                                <dd class="sm:col-span-3 text-ink/85">AK80-9 V3.0 quasi-direct-drive motor, mounted in line with the hip joint</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Compute</dt>
-                                <dd class="sm:col-span-3 text-ink/85">Two-tier design: a Teensy 4.1 for low-level torque commands and sensing, a Jetson Orin Nano for high-level control and learned models</dd>
+                                <dd class="sm:col-span-3 text-ink/85">A single Jetson Orin Nano running both high-level and low-level control</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Sensing</dt>
-                                <dd class="sm:col-span-3 text-ink/85">IMUs for limb orientation and gait phase, FSRs for heel strike, EMG for muscle activity</dd>
+                                <dd class="sm:col-span-3 text-ink/85">Three IMUs (two thigh, one pelvis) for limb orientation and gait phase estimation; the motor encoders give a second source of joint angle and joint velocity</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Communication</dt>
-                                <dd class="sm:col-span-3 text-ink/85">CAN and CAN FD between devices, SPI and I2C for high-rate sensor data</dd>
+                                <dd class="sm:col-span-3 text-ink/85">CAN from the Jetson to the motors, I2C from the Jetson to the IMUs</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Structure</dt>
-                                <dd class="sm:col-span-3 text-ink/85">Onyx 3D-printed parts, swappable bar sizes, and BOA ratchet straps for fit</dd>
+                                <dd class="sm:col-span-3 text-ink/85">Fully 3D printed in Onyx, with swappable bar sizes and BOA ratcheting straps for a tight, custom fit</dd>
                             </div>
                         </dl>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Results</h2>
-                        <p>
-                            The V2 hardware (4.3 kg, up to 22 Nm) has been the test platform for several lab studies, including perturbation assistance, biological torque estimation, and running simulation-trained controllers on the real device. V3 came in at 3.4 kg and showed about a 4% metabolic benefit, where V2 showed little.
-                        </p>
+                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Next steps</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>Developing a lighter third generation with peers, to be shared with research collaborators in the field.</li>
+                            <li>Starting to evaluate the device with clinical populations, to find the gaps and limitations in fitting exoskeletons and their controllers to impaired users.</li>
+                            <li>Designing a new PCB interface that unifies the control architecture across all of the lab's systems, for a plug-and-play setup end to end.</li>
+                        </ul>
+
+                        <div class="mt-10 pt-6 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
+                            <p class="text-ink/85">To learn more about this device and the projects it has been used for:</p>
+                            <a href="https://metamobility.cmu.edu/research" target="_blank" rel="noopener noreferrer" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">MetaMobility Lab research</a>
+                        </div>
                     `
                 },
             };
