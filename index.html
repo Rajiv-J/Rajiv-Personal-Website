@@ -327,10 +327,10 @@
 
                     <div class="mt-8 space-y-5 text-lg leading-relaxed text-ink/85">
                         <p>
-                            Hi, I'm Rajiv. I'm an engineer who likes being part of the whole build: the hardware, the embedded systems, the programming and the controls. I've been lucky to work on all four, and every project still teaches me something new.
+                            Hi, my name is Rajiv and I am an engineer who enjoys impacting all aspects of a project: the hardware, embedded systems, low-level programming, and high-level controllers. I've been lucky to work on all four aspects, and each project teaches me something new.
                         </p>
                         <p>
-                            I studied at Virginia Tech, where I earned B.S. degrees in Mechanical Engineering and in Robotics and Mechatronics, then completed my M.S. in Mechanical Engineering at Carnegie Mellon, advised by Inseung Kang in the MetaMobility Lab. There I worked on wearable robots that help people walk and move, starting with hardware and electronics and most recently training controllers with reinforcement learning and digital twins.
+                            I completed my M.S. in Mechanical Engineering at Carnegie Mellon, advised by Inseung Kang in the MetaMobility Lab. Before that, I earned B.S. degrees in Mechanical Engineering and in Robotics and Mechatronics at Virginia Tech. Currently, I'm working on reinforcement learning with digital twins, to train controllers without collecting large amounts of data, especially for impaired populations.
                         </p>
                     </div>
                 </section>
@@ -352,7 +352,7 @@
                 </dl>
 
                 <!-- Projects carousel: three cards visible, arrows step one project at a time.
-                     Each card opens the same details pop-up as the matching title on the Projects page (data-item). -->
+                     Each card opens its details pop-up (data-item = key in itemDetails), and the Projects page reuses these cards. -->
                 <section class="md:col-span-12 min-w-0" aria-labelledby="home-projects-heading">
                     <h2 id="home-projects-heading" class="mb-6 text-2xl font-bold text-main">Projects</h2>
                     <div class="relative">
@@ -403,114 +403,12 @@
         </div>
 
         <!-- Projects Page Content -->
-        <div id="projects-page" class="hidden max-w-3xl mx-auto">
-            <div class="surface p-5 sm:p-8 rounded-2xl">
-                <h2 class="text-3xl font-bold text-main mb-8 border-b-2 border-main/30 pb-2">My Projects:</h2>
-                
-                <!-- Grid for projects -->
-                <div class="space-y-12">
-
-                    <!-- Project 1 Card -->
-                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
-                        <!-- 3D Container -->
-                        <div id="knee-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
-                        <!-- Project Details -->
-                        <div class="flex-1">
-                            <h3 id="knee-exo-title" class="text-2xl font-bold text-main">MetaMobility Lab - Knee Exoskeleton</h3>
-                            <div class="mt-4 bg-panel p-3 rounded-lg">
-                                <p class="font-semibold text-main">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-ink mt-1 text-sm space-y-1">
-                                    <li><strong>Click + Drag:</strong> Rotate</li>
-                                    <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
-                                </ul>
-                            </div>
-                            <p class="text-ink/70 mt-4 leading-relaxed">
-                                A lightweight, high-torque knee exoskeleton designed to assist individuals with gait impairment. Click the title for a more detailed project breakdown.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Project 2 Card -->
-                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
-                         <!-- 3D Container -->
-                        <div id="hip-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
-                        <!-- Project Details -->
-                        <div class="flex-1">
-                            <h3 id="hip-exo-title" class="text-2xl font-bold text-main">MetaMobility Lab - Hip Exoskeleton</h3>
-                            <div class="mt-4 bg-panel p-3 rounded-lg">
-                                <p class="font-semibold text-main">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-ink mt-1 text-sm space-y-1">
-                                    <li><strong>Click + Drag:</strong> Rotate</li>
-                                    <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
-                                </ul>
-                            </div>
-                            <p class="text-ink/70 mt-4 leading-relaxed">
-                               An assistive device focused on reducing user hip work through an adaptive control strategy based on real-time gait cycle estimation. Click the title for more details.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Project 3 Card -->
-                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
-                        <!-- 3D Container -->
-                        <div id="haptic-device-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
-                        <!-- Project Details -->
-                        <div class="flex-1">
-                            <h3 id="haptic-design-title" class="text-2xl font-bold text-main">Haptic Design Interfaces - Open-Source Haptic Device</h3>
-                            <div class="mt-4 bg-panel p-3 rounded-lg">
-                                <p class="font-semibold text-main">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-ink mt-1 text-sm space-y-1">
-                                    <li><strong>Click + Drag:</strong> Rotate</li>
-                                    <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
-                                </ul>
-                            </div>
-                            <p class="text-ink/70 mt-4 leading-relaxed">
-                                An open-source teaching tool for learning forward kinematics, biological sensors, and haptics. Click for more details.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Project 4 Card -->
-                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
-                        <!-- Project Image -->
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Mechatronics Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
-                        <!-- Project Details -->
-                        <div class="flex-1">
-                            <h3 id="mechatronics-project-title" class="text-2xl font-bold text-main">ADV Mechatronics - Final Project</h3>
-                            <p class="text-ink/70 mt-3 leading-relaxed">
-                                A robust arcade game demonstrating depth of knowledge in mechatronic system design. Click for more details.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Project 5 Card -->
-                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
-                        <!-- Project Image -->
-                        <img src="https://placehold.co/600x400/282828/a87b5d?text=Solar+Car" alt="Solar Car Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
-                        <!-- Project Details -->
-                        <div class="flex-1">
-                            <h3 id="solar-car-title" class="text-2xl font-bold text-main">Solar Car at Virginia Tech</h3>
-                            <p class="text-ink/70 mt-3 leading-relaxed">
-                                Contributions to the design and manufacturing of a solar-powered vehicle for competitive racing. Click for more details.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Project 6 Card -->
-                    <div class="bg-page/70 rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
-                        <!-- Project Image -->
-                        <img src="https://placehold.co/600x400/282828/a87b5d?text=Tennis+Robot" alt="Tennis Robot Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
-                        <!-- Project Details -->
-                        <div class="flex-1">
-                            <h3 id="assistive-robotics-title" class="text-2xl font-bold text-main">Assistive Robotics Lab - Tennis Training Robot</h3>
-                            <p class="text-ink/70 mt-3 leading-relaxed">
-                                Development of an autonomous robotic system for tennis training and practice. Click for more details.
-                            </p>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
+        <div id="projects-page" class="hidden">
+            <h2 class="mb-6 text-2xl font-bold text-main">Projects</h2>
+            <!-- The cards here are copies of the home page carousel cards (#projects-track),
+                 made by setupProjectsGrid() in the script. Edit a project once, in the carousel,
+                 and it updates in both places. -->
+            <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
         </div>
         
         <!-- Gallery Page Content -->
@@ -1262,7 +1160,7 @@
                     if (e.target === pdfModal.modal) closePDFModal();
                 });
 
-                // Generic Item Modal: opened by project titles (Projects page) and project cards (home carousel)
+                // Generic Item Modal: opened by the project cards (home carousel and Projects page)
                 const openItemModal = (itemId) => {
                     const details = itemDetails[itemId];
                     if (!details) return;
@@ -1321,15 +1219,10 @@
                     }
                 };
 
-                const itemTriggers = document.querySelectorAll('[id$="-title"]');
-                itemTriggers.forEach(trigger => {
-                    if (itemDetails[trigger.id]) {
-                        trigger.classList.add('cursor-pointer', 'hover:text-main-light', 'transition-colors');
-                        trigger.addEventListener('click', () => openItemModal(trigger.id));
-                    }
-                });
-                document.querySelectorAll('[data-item]').forEach(card => {
-                    card.addEventListener('click', () => openItemModal(card.dataset.item));
+                // Any element with data-item="<key in itemDetails>" opens that project's details
+                document.addEventListener('click', (e) => {
+                    const card = e.target instanceof Element ? e.target.closest('[data-item]') : null;
+                    if (card) openItemModal(card.dataset.item);
                 });
                 
                 const closeItemModal = () => {
@@ -1647,6 +1540,14 @@
                 updateArrows();
             };
 
+            // Projects page: fill the grid with copies of the home carousel cards
+            const setupProjectsGrid = () => {
+                const track = document.getElementById('projects-track');
+                const grid = document.getElementById('projects-grid');
+                if (!track || !grid) return;
+                grid.replaceChildren(...Array.from(track.children, card => card.cloneNode(true)));
+            };
+
             // Liquid glass: the highlight on glass elements follows the pointer
             const setupGlass = () => {
                 const selector = '.glass-btn, .glass-bar';
@@ -1667,6 +1568,7 @@
             setupModals();
             setupLightbox();
             setupProjectCarousel();
+            setupProjectsGrid();
             setupGlass();
         });
     </script>
