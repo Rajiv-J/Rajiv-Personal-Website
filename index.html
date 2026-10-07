@@ -4,12 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rajiv J. - Personal Website</title>
+    <meta name="theme-color" content="#323232">
     <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
+    <script>
+        // Theme colors are defined once as CSS variables in the <style> block below.
+        // Use them in markup as: bg-page, bg-panel, text-main, text-accent, text-ink (etc).
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        page:   'rgb(var(--page) / <alpha-value>)',
+                        panel:  'rgb(var(--panel) / <alpha-value>)',
+                        main:   'rgb(var(--main) / <alpha-value>)',
+                        accent: 'rgb(var(--accent) / <alpha-value>)',
+                        ink:    'rgb(var(--ink) / <alpha-value>)'
+                    }
+                }
+            }
+        };
+    </script>
+    <!-- Google Fonts: Ubuntu Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://www.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <!-- Three.js Import Map -->
     <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
     <script type="importmap">
@@ -21,32 +39,57 @@
       }
     </script>
     <style>
-        /* Applying the Inter font to the whole page */
+        /* ---- Theme palette (edit here to re-theme the whole site) ----
+           Values are space-separated RGB so Tailwind opacity modifiers (e.g. text-ink/70) work. */
+        :root {
+            --page:   50 50 50;     /* #323232  page background */
+            --panel:  40 40 40;     /* #282828  panels, buttons, inputs */
+            --main:   168 123 93;   /* #a87b5d  headings, labels, icons */
+            --accent: 80 160 115;   /* #50a073  active / selected state */
+            --ink:    255 255 255;  /* #ffffff  body text */
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Ubuntu Mono', ui-monospace, 'Cascadia Mono', Consolas, 'Liberation Mono', monospace;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            background-color: #0A3031; /* New Darker Teal Background */
+            background-color: rgb(var(--page));
+            color: rgb(var(--ink));
         }
-        /* Custom scrollbar for a more modern look */
+
+        ::selection {
+            background: rgb(var(--main));
+            color: rgb(var(--panel));
+        }
+
+        /* Visible keyboard focus in the active color */
+        :focus-visible {
+            outline: 2px solid rgb(var(--accent));
+            outline-offset: 2px;
+        }
+
+        /* Custom scrollbar */
+        html {
+            scrollbar-color: rgb(var(--main)) rgb(var(--panel));
+        }
         ::-webkit-scrollbar {
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #062223; /* Darker version of new background */
+            background: rgb(var(--panel));
         }
         ::-webkit-scrollbar-thumb {
-            background: #2dd4bf; /* Teal-400 */
+            background: rgb(var(--main));
             border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #5eead4; /* Teal-300 */
+            background: rgb(var(--accent));
         }
 
         /* Blinking cursor effect */
         .blinking-cursor {
-            font-weight: 500;
-            color: #5eead4; /* Teal-300 */
+            font-weight: 400;
+            color: rgb(var(--accent));
             animation: blink 1s step-end infinite;
         }
 
@@ -55,21 +98,27 @@
                 color: transparent;
             }
             50% {
-                color: #5eead4; /* Teal-300 */
+                color: rgb(var(--accent));
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blinking-cursor {
+                animation: none;
             }
         }
     </style>
 </head>
-<body class="text-gray-200">
+<body class="text-ink">
 
     <div class="container mx-auto p-4 lg:p-8 max-w-3xl">
         
         <!-- Navigation Bar -->
-        <nav class="flex justify-center md:justify-end mb-8">
-            <a href="#" data-page="home" id="nav-home" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Home</a>
-            <a href="#" data-page="projects" id="nav-projects" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Projects</a>
-            <a href="#" data-page="gallery" id="nav-gallery" class="px-4 py-2 text-lg font-semibold transition-colors duration-300">Gallery</a>
-            <a href="#" id="nav-resume" class="px-4 py-2 text-lg font-semibold text-gray-400 hover:text-teal-300 transition-colors duration-300 border-b-2 border-transparent">Resume</a>
+        <nav class="flex flex-wrap justify-center md:justify-end gap-2 mb-8">
+            <a href="#" data-page="home" id="nav-home" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200">Home</a>
+            <a href="#" data-page="projects" id="nav-projects" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200">Projects</a>
+            <a href="#" data-page="gallery" id="nav-gallery" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200">Gallery</a>
+            <a href="#" id="nav-resume" class="px-3 sm:px-5 py-2 rounded-lg text-base sm:text-lg font-semibold transition-colors duration-200 bg-panel text-ink hover:bg-ink hover:text-panel">Resume</a>
         </nav>
 
         <!-- Home Page Content -->
@@ -80,11 +129,11 @@
                 🔴 IMPORTANT: Make sure the image file 'Rajiv_pfp.jpg' is in the same
                 folder as this index.html file for it to display correctly.
                 -->
-                <img src="Rajiv_pfp.jpg" alt="A photo of Rajiv" class="w-80 h-80 rounded-full mx-auto mb-6 border-4 border-teal-400 shadow-2xl">
-                <h1 class="text-4xl md:text-6xl font-black tracking-tight text-white uppercase">
+                <img src="Rajiv_pfp.jpg" alt="A photo of Rajiv" class="w-80 h-80 rounded-full mx-auto mb-6 border-4 border-main">
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-ink uppercase">
                     RAJIV J.
                 </h1>
-                <p class="text-xl text-teal-300 font-semibold mt-2 h-7">
+                <p class="text-xl text-main font-semibold mt-2 h-7">
                     <span id="typing-quote"></span><span class="blinking-cursor">|</span>
                 </p>
             </header>
@@ -93,28 +142,28 @@
             <main>
                 
                 <!-- About Me Section -->
-                <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 mb-8 backdrop-blur-sm">
-                    <h2 class="text-3xl font-bold text-white mb-4 border-b-2 border-teal-400 pb-2">About Me:</h2>
-                    <p class="text-gray-300 leading-relaxed text-lg mb-6">
+                <div class="bg-panel p-8 rounded-xl mb-8">
+                    <h2 class="text-3xl font-bold text-main mb-4 border-b-2 border-main/30 pb-2">About Me:</h2>
+                    <p class="text-ink leading-relaxed text-lg mb-6">
                         Welcome to my personal portfolio. My name is Rajiv Joshi and I am a mechanical engineer dedicated to building technologies that not only impact lives but shift perspectives in meaningful ways.
                         <br><br>
                         Beyond the engineering labels, I am defined by my curiosity to learn. Whether I am learning a new technical skill, sharing a compelling story, or attempting to master my mother’s traditional cooking recipes, I approach every challenge with enthusiasm. I hope this website offers an authentic glimpse into my journey of professional and personal growth.
                     </p>
 
-                    <h3 class="text-2xl font-semibold text-white mt-8 mb-3">🏫 Academic History:</h3>
-                    <ul class="list-disc list-inside text-gray-300 text-lg space-y-2">
+                    <h3 class="text-2xl font-semibold text-main mt-8 mb-3">🏫 Academic History:</h3>
+                    <ul class="list-disc list-inside text-ink text-lg space-y-2">
                         <li>Masters of Science in Mechanical Engineering - Research @ Carnegie Mellon University (Present)</li>
                         <li>Bachelors of Science in Mechanical Engineering - Robotics and Mechatronics @ Virginia Tech (May 2024)</li>
                         <li>Bachelors of Science in Mechanical Engineering - Mechanical @ Virginia Tech (May 2024)</li>
                     </ul>
 
-                    <h3 class="text-2xl font-semibold text-white mt-6 mb-3">📔 Professional Interests:</h3>
-                    <p class="text-gray-300 text-lg">
+                    <h3 class="text-2xl font-semibold text-main mt-6 mb-3">📔 Professional Interests:</h3>
+                    <p class="text-ink text-lg">
                         Wearable robotics | Exoskeletons | Robotics | Mechatronics | Embedded Systems | Controls | CAD/Design | Mechanical Design | Leadership | Team Organization/Structure
                     </p>
 
-                    <h3 class="text-2xl font-semibold text-white mt-6 mb-3">😎 Personal Interests:</h3>
-                    <p class="text-gray-300 text-lg">
+                    <h3 class="text-2xl font-semibold text-main mt-6 mb-3">😎 Personal Interests:</h3>
+                    <p class="text-ink text-lg">
                         🏐 Volleyball | 🎱 Billiards | ⚽ Soccer | 🛠 CAD/Design | 🐉 D&D
                     </p>
                 </div>
@@ -122,47 +171,47 @@
                 <!-- Bottom Sections Wrapper -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Contact/Links Section -->
-                    <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 text-center flex flex-col justify-center backdrop-blur-sm">
-                        <h2 class="text-3xl font-bold text-white mb-6 border-b-2 border-teal-400 pb-2">Connect With Me:</h2>
+                    <div class="bg-panel p-8 rounded-xl text-center flex flex-col justify-center">
+                        <h2 class="text-3xl font-bold text-main mb-6 border-b-2 border-main/30 pb-2">Connect With Me:</h2>
                         <div class="flex items-center justify-center pt-2">
                             <!-- LinkedIn -->
-                            <a href="https://www.linkedin.com/in/rajivj02/" target="_blank" class="text-gray-400 hover:text-teal-300 transition-colors duration-300 transform hover:scale-110">
+                            <a href="https://www.linkedin.com/in/rajivj02/" target="_blank" class="text-main hover:text-accent transition-colors duration-200">
                                 <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                                 <span class="sr-only">LinkedIn</span>
                             </a>
                             <!-- Email -->
-                            <a href="mailto:rajivj2002@gmail.com" class="ml-8 text-gray-400 hover:text-teal-300 transition-colors duration-300 transform hover:scale-110">
+                            <a href="mailto:rajivj2002@gmail.com" class="ml-8 text-main hover:text-accent transition-colors duration-200">
                                 <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 4H2C.9 4 0 4.9 0 6v12c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H2V8l10 7 10-7v10zM12 11L2 6h20l-10 5z"/></svg>
                                 <span class="sr-only">Email</span>
                             </a>
                         </div>
-                        <button id="go-to-projects-btn" class="mt-8 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                        <button id="go-to-projects-btn" class="mt-8 bg-page hover:bg-accent text-ink hover:text-panel font-bold py-3 px-6 rounded-lg transition-colors duration-200">
                             Check out my Projects!
                         </button>
                         <!-- Added Gallery Button -->
-                        <button id="go-to-gallery-btn" class="mt-4 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 transform hover:scale-105">
+                        <button id="go-to-gallery-btn" class="mt-4 bg-page hover:bg-accent text-ink hover:text-panel font-bold py-3 px-6 rounded-lg transition-colors duration-200">
                             Check out my Gallery!
                         </button>
                     </div>
 
                     <!-- Resume Section -->
-                    <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 text-center backdrop-blur-sm">
-                        <h2 class="text-3xl font-bold text-white mb-6 border-b-2 border-teal-400 pb-2">My Resume:</h2>
+                    <div class="bg-panel p-8 rounded-xl text-center">
+                        <h2 class="text-3xl font-bold text-main mb-6 border-b-2 border-main/30 pb-2">My Resume:</h2>
                         <!-- 
                         🔴 IMPORTANT: Make sure your resume PDF file is named 'Rajiv_Joshi_Resume.pdf' 
                         and is in the same folder as this file.
                         -->
                         <a href="#" id="resume-link" class="cursor-pointer block">
-                             <div class="relative w-full max-w-xs mx-auto aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2 hover:ring-2 hover:ring-teal-400 transition-all">
+                             <div class="relative w-full max-w-xs mx-auto aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 hover:ring-2 hover:ring-accent transition-all">
                                 <!-- Canvas for PDF Preview -->
                                 <canvas id="resume-canvas" class="rounded-lg transition-all duration-300 w-full"></canvas>
                                 <!-- Loading Spinner -->
                                 <div id="loading-spinner" class="absolute text-center">
-                                    <svg class="animate-spin h-8 w-8 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <svg class="animate-spin h-8 w-8 text-ink mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    <p class="text-white mt-2 text-sm">Loading Preview...</p>
+                                    <p class="text-ink mt-2 text-sm">Loading Preview...</p>
                                 </div>
                             </div>
                         </a>
@@ -174,106 +223,106 @@
 
         <!-- Projects Page Content -->
         <div id="projects-page" class="hidden">
-            <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 backdrop-blur-sm">
-                <h2 class="text-3xl font-bold text-white mb-8 border-b-2 border-teal-400 pb-2">My Projects:</h2>
+            <div class="bg-panel p-8 rounded-xl">
+                <h2 class="text-3xl font-bold text-main mb-8 border-b-2 border-main/30 pb-2">My Projects:</h2>
                 
                 <!-- Grid for projects -->
                 <div class="space-y-12">
 
                     <!-- Project 1 Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- 3D Container -->
-                        <div id="knee-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-gray-800/50 self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
+                        <div id="knee-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
                         <div class="flex-1">
-                            <h3 id="knee-exo-title" class="text-2xl font-bold text-teal-300">MetaMobility Lab - Knee Exoskeleton</h3>
-                            <div class="mt-4 bg-gray-800/40 p-3 rounded-lg border border-teal-700/50">
-                                <p class="font-semibold text-teal-200">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-gray-300 mt-1 text-sm space-y-1">
+                            <h3 id="knee-exo-title" class="text-2xl font-bold text-main">MetaMobility Lab - Knee Exoskeleton</h3>
+                            <div class="mt-4 bg-panel p-3 rounded-lg">
+                                <p class="font-semibold text-main">Interact with the 3D model!</p>
+                                <ul class="list-disc list-inside text-ink mt-1 text-sm space-y-1">
                                     <li><strong>Click + Drag:</strong> Rotate</li>
                                     <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
                                 </ul>
                             </div>
-                            <p class="text-gray-400 mt-4 leading-relaxed">
+                            <p class="text-ink/70 mt-4 leading-relaxed">
                                 A lightweight, high-torque knee exoskeleton designed to assist individuals with gait impairment. Click the title for a more detailed project breakdown.
                             </p>
                         </div>
                     </div>
 
                     <!-- Project 2 Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                          <!-- 3D Container -->
-                        <div id="hip-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-gray-800/50 self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
+                        <div id="hip-exo-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
                         <div class="flex-1">
-                            <h3 id="hip-exo-title" class="text-2xl font-bold text-teal-300">MetaMobility Lab - Hip Exoskeleton</h3>
-                            <div class="mt-4 bg-gray-800/40 p-3 rounded-lg border border-teal-700/50">
-                                <p class="font-semibold text-teal-200">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-gray-300 mt-1 text-sm space-y-1">
+                            <h3 id="hip-exo-title" class="text-2xl font-bold text-main">MetaMobility Lab - Hip Exoskeleton</h3>
+                            <div class="mt-4 bg-panel p-3 rounded-lg">
+                                <p class="font-semibold text-main">Interact with the 3D model!</p>
+                                <ul class="list-disc list-inside text-ink mt-1 text-sm space-y-1">
                                     <li><strong>Click + Drag:</strong> Rotate</li>
                                     <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
                                 </ul>
                             </div>
-                            <p class="text-gray-400 mt-4 leading-relaxed">
+                            <p class="text-ink/70 mt-4 leading-relaxed">
                                An assistive device focused on reducing user hip work through an adaptive control strategy based on real-time gait cycle estimation. Click the title for more details.
                             </p>
                         </div>
                     </div>
 
                     <!-- Project 3 Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- 3D Container -->
-                        <div id="haptic-device-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-gray-800/50 self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
+                        <div id="haptic-device-3d-container" class="w-full md:w-5/12 h-64 md:h-auto rounded-lg bg-panel self-center min-h-[250px] cursor-grab active:cursor-grabbing"></div>
                         <!-- Project Details -->
                         <div class="flex-1">
-                            <h3 id="haptic-design-title" class="text-2xl font-bold text-teal-300">Haptic Design Interfaces - Open-Source Haptic Device</h3>
-                            <div class="mt-4 bg-gray-800/40 p-3 rounded-lg border border-teal-700/50">
-                                <p class="font-semibold text-teal-200">Interact with the 3D model!</p>
-                                <ul class="list-disc list-inside text-gray-300 mt-1 text-sm space-y-1">
+                            <h3 id="haptic-design-title" class="text-2xl font-bold text-main">Haptic Design Interfaces - Open-Source Haptic Device</h3>
+                            <div class="mt-4 bg-panel p-3 rounded-lg">
+                                <p class="font-semibold text-main">Interact with the 3D model!</p>
+                                <ul class="list-disc list-inside text-ink mt-1 text-sm space-y-1">
                                     <li><strong>Click + Drag:</strong> Rotate</li>
                                     <li><strong>Scroll Wheel:</strong> Zoom in & out</li>
                                 </ul>
                             </div>
-                            <p class="text-gray-400 mt-4 leading-relaxed">
+                            <p class="text-ink/70 mt-4 leading-relaxed">
                                 An open-source teaching tool for learning forward kinematics, biological sensors, and haptics. Click for more details.
                             </p>
                         </div>
                     </div>
 
                     <!-- Project 4 Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- Project Image -->
                         <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Mechatronics Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
                         <div class="flex-1">
-                            <h3 id="mechatronics-project-title" class="text-2xl font-bold text-teal-300">ADV Mechatronics - Final Project</h3>
-                            <p class="text-gray-400 mt-3 leading-relaxed">
+                            <h3 id="mechatronics-project-title" class="text-2xl font-bold text-main">ADV Mechatronics - Final Project</h3>
+                            <p class="text-ink/70 mt-3 leading-relaxed">
                                 A robust arcade game demonstrating depth of knowledge in mechatronic system design. Click for more details.
                             </p>
                         </div>
                     </div>
 
                     <!-- Project 5 Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- Project Image -->
-                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Solar+Car" alt="Solar Car Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <img src="https://placehold.co/600x400/282828/a87b5d?text=Solar+Car" alt="Solar Car Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
                         <div class="flex-1">
-                            <h3 id="solar-car-title" class="text-2xl font-bold text-teal-300">Solar Car at Virginia Tech</h3>
-                            <p class="text-gray-400 mt-3 leading-relaxed">
+                            <h3 id="solar-car-title" class="text-2xl font-bold text-main">Solar Car at Virginia Tech</h3>
+                            <p class="text-ink/70 mt-3 leading-relaxed">
                                 Contributions to the design and manufacturing of a solar-powered vehicle for competitive racing. Click for more details.
                             </p>
                         </div>
                     </div>
 
                     <!-- Project 6 Card -->
-                    <div class="bg-gray-900/30 rounded-xl shadow-lg overflow-hidden flex flex-col md:flex-row gap-6 p-6 border border-teal-800/50">
+                    <div class="bg-page rounded-xl overflow-hidden flex flex-col md:flex-row gap-6 p-6">
                         <!-- Project Image -->
-                        <img src="https://placehold.co/600x400/0A3031/2dd4bf?text=Tennis+Robot" alt="Tennis Robot Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
+                        <img src="https://placehold.co/600x400/282828/a87b5d?text=Tennis+Robot" alt="Tennis Robot Project" class="w-full md:w-5/12 h-auto rounded-lg object-cover self-center">
                         <!-- Project Details -->
                         <div class="flex-1">
-                            <h3 id="assistive-robotics-title" class="text-2xl font-bold text-teal-300">Assistive Robotics Lab - Tennis Training Robot</h3>
-                            <p class="text-gray-400 mt-3 leading-relaxed">
+                            <h3 id="assistive-robotics-title" class="text-2xl font-bold text-main">Assistive Robotics Lab - Tennis Training Robot</h3>
+                            <p class="text-ink/70 mt-3 leading-relaxed">
                                 Development of an autonomous robotic system for tennis training and practice. Click for more details.
                             </p>
                         </div>
@@ -285,62 +334,62 @@
         
         <!-- Gallery Page Content -->
         <div id="gallery-page" class="hidden">
-            <div class="bg-black/20 p-8 rounded-xl shadow-lg border-2 border-teal-600/30 backdrop-blur-sm">
-                <h2 class="text-3xl font-bold text-white mb-8 border-b-2 border-teal-400 pb-2">Project Gallery:</h2>
+            <div class="bg-panel p-8 rounded-xl">
+                <h2 class="text-3xl font-bold text-main mb-8 border-b-2 border-main/30 pb-2">Project Gallery:</h2>
                 
                 <!-- Knee Exo Section -->
                 <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-teal-300 mb-4">Knee Exoskeleton</h3>
+                    <h3 class="text-2xl font-bold text-main mb-4">Knee Exoskeleton</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" alt="Knee Front" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" alt="Knee Side" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" alt="Knee Back" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_Electronics.jpg" alt="Knee Electronics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="Knee IMU" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Knee Thigh Electronics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Knee Professional Shot" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" alt="Knee Front" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" alt="Knee Side" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" alt="Knee Back" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Electronics.jpg" alt="Knee Electronics" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="Knee IMU" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Knee Thigh Electronics" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Knee Professional Shot" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                         <!-- New PCB Images Added -->
-                        <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="Knee PCB 3D" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Knee PCB Top" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="Knee PCB 3D" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Knee PCB Top" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                     </div>
                 </div>
 
                 <!-- Hip Exo Section (NEW) -->
                 <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-teal-300 mb-4">Hip Exoskeleton</h3>
+                    <h3 class="text-2xl font-bold text-main mb-4">Hip Exoskeleton</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <img src="Hip_Exo/Hip_Exo_Angle.png" alt="Hip Exo Angle" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Hip_Exo/Hip_Exo_Back.png" alt="Hip Exo Back" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Hip_Exo/Hip_Exo_Left.png" alt="Hip Exo Left" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Hip_Exo/Hip_Exo_Metabolics.png" alt="Hip Exo Metabolics" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Angle.png" alt="Hip Exo Angle" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Back.png" alt="Hip Exo Back" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Left.png" alt="Hip Exo Left" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Hip_Exo/Hip_Exo_Metabolics.png" alt="Hip Exo Metabolics" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                     </div>
                 </div>
 
                 <!-- Haptics Section -->
                 <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-teal-300 mb-4">Haptic Device</h3>
+                    <h3 class="text-2xl font-bold text-main mb-4">Haptic Device</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <img src="Haptic_Device/Haptics_Thumb.png" alt="Haptic Thumb" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_Index.png" alt="Haptic Index" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_GUI.png" alt="Haptic GUI" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_Final_1.png" alt="Haptics Final 1" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_Final_2.png" alt="Haptics Final 2" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="Haptic_Device/Haptics_Final_3.png" alt="Haptics Final 3" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Thumb.png" alt="Haptic Thumb" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Index.png" alt="Haptic Index" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_GUI.png" alt="Haptic GUI" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Final_1.png" alt="Haptics Final 1" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Final_2.png" alt="Haptics Final 2" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="Haptic_Device/Haptics_Final_3.png" alt="Haptics Final 3" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                     </div>
                 </div>
 
                 <!-- ADV Mechatronics Section -->
                 <div class="mb-12">
-                    <h3 class="text-2xl font-bold text-teal-300 mb-4">ADV Mechatronics</h3>
+                    <h3 class="text-2xl font-bold text-main mb-4">ADV Mechatronics</h3>
                     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_Hardware.png" alt="Hardware Assembly" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_Rendered.png" alt="Rendered Design" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_Schematic.png" alt="System Schematic" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_Solder.png" alt="Soldering Work" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_States.png" alt="State Machine Diagram" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
-                        <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Final Project" class="gallery-img rounded-lg border border-teal-800/50 hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="ADV_Mechatronics/ADV_Mechatronics_Hardware.png" alt="Hardware Assembly" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="ADV_Mechatronics/ADV_Mechatronics_Rendered.png" alt="Rendered Design" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="ADV_Mechatronics/ADV_Mechatronics_Schematic.png" alt="System Schematic" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="ADV_Mechatronics/ADV_Mechatronics_Solder.png" alt="Soldering Work" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="ADV_Mechatronics/ADV_Mechatronics_States.png" alt="State Machine Diagram" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
+                        <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Final Project" class="gallery-img rounded-lg hover:scale-105 transition cursor-pointer h-48 w-full object-cover">
                     </div>
                 </div>
             </div>
@@ -348,19 +397,19 @@
 
 
         <!-- Footer -->
-        <footer class="text-center mt-12 py-4 border-t border-teal-600/30">
-            <p class="text-gray-500">&copy; <span id="year"></span> Rajiv J. All rights reserved.</p>
+        <footer class="text-center mt-12 py-4 border-t border-panel">
+            <p class="text-ink/60">&copy; <span id="year"></span> Rajiv J. All rights reserved.</p>
         </footer>
 
     </div>
 
     <!-- Unified PDF Modal -->
     <div id="pdf-viewer-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-        <div class="bg-[#062223] border-2 border-teal-600/30 rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-teal-600/30">
+        <div class="bg-panel rounded-lg shadow-2xl w-full max-w-4xl h-full max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-page">
                 <!-- Title changes dynamically -->
-                <h3 id="pdf-modal-title" class="text-xl font-semibold text-white">Document</h3>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+                <h3 id="pdf-modal-title" class="text-xl font-semibold text-main">Document</h3>
+                <button id="close-modal-btn" class="text-ink/70 hover:text-ink text-3xl font-bold">&times;</button>
             </div>
             <div class="flex-grow p-1">
                 <iframe id="pdf-frame" src="" class="w-full h-full border-0" title="Document Preview"></iframe>
@@ -370,12 +419,12 @@
     
     <!-- Item Detail Modal -->
     <div id="item-detail-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-        <div class="bg-[#062223] border-2 border-teal-600/30 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
-            <div class="flex justify-between items-center p-4 border-b border-teal-600/30">
-                <h3 id="item-modal-title" class="text-2xl font-bold text-white">Details</h3>
-                <button id="close-item-modal-btn" class="text-gray-400 hover:text-white text-3xl font-bold">&times;</button>
+        <div class="bg-panel rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-page">
+                <h3 id="item-modal-title" class="text-2xl font-bold text-main">Details</h3>
+                <button id="close-item-modal-btn" class="text-ink/70 hover:text-ink text-3xl font-bold">&times;</button>
             </div>
-            <div id="item-modal-content" class="flex-grow p-6 overflow-y-auto text-gray-300 leading-relaxed">
+            <div id="item-modal-content" class="flex-grow p-6 overflow-y-auto text-ink leading-relaxed">
                 <!-- Item details will be injected here -->
             </div>
         </div>
@@ -384,19 +433,19 @@
     <!-- Lightbox Modal -->
     <div id="lightbox-modal" class="hidden fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
         <!-- Close Button -->
-        <button id="close-lightbox" class="absolute top-4 right-4 text-gray-400 hover:text-white text-5xl font-bold z-50 transition-colors">&times;</button>
+        <button id="close-lightbox" class="absolute top-4 right-4 text-ink/70 hover:text-ink text-5xl font-bold z-50 transition-colors">&times;</button>
         
         <!-- Navigation Buttons -->
-        <button id="lightbox-prev" class="absolute left-2 md:left-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
+        <button id="lightbox-prev" class="absolute left-2 md:left-8 top-1/2 transform -translate-y-1/2 text-ink/70 hover:text-ink hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
             <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
         </button>
-        <button id="lightbox-next" class="absolute right-2 md:right-8 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
+        <button id="lightbox-next" class="absolute right-2 md:right-8 top-1/2 transform -translate-y-1/2 text-ink/70 hover:text-ink hover:bg-white/10 rounded-full p-2 transition-all z-50 focus:outline-none">
             <svg class="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
         </button>
 
         <!-- Image Container -->
         <div class="relative w-full h-full flex items-center justify-center p-4 md:p-12">
-            <img id="lightbox-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl border border-teal-500/50 object-contain z-10" alt="Full Size Image">
+            <img id="lightbox-img" src="" class="max-w-full max-h-full rounded-lg shadow-2xl object-contain z-10" alt="Full Size Image">
         </div>
     </div>
 
@@ -485,17 +534,17 @@
                             <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2">Project Motivation:</h4>
                         <p class="mb-4">The overall goal of this project was to design, manufacture, and test a state-of-the-art robotic knee exoskeleton. This device is aimed at trying to assist people who suffer with gait impairment issues like cerebral palsy, stroke, osteoarthritis, and more. To actually realize this, multiple communication protocols, high torque density motors, and custom adjustable orthotic interfaces were designed and interfaced to adapt to the various body proportions of people. More than this, this project aims to advance current human locomotion understandings through adaptive, generalized, and personalized control.</p>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">My Role and Responsibilities:</h4>
                         <p class="mb-4">As the project lead, I was responsible for coordinating a team of five researchers in a 2-3 month summer design and baseline control validation sprint. My duties included and were not limited to:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-4">
                             <li>Setting project milestones/timeline</li>
@@ -504,7 +553,7 @@
                             <li>Full software/hardware integration of sensors + motor control</li>
                             <li>Baseline data collection for validation of sensor readings</li>
                         </ol>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Mechanical Systems:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                            <li><strong>Orthotic Cuffs:</strong> Custom designed for user comfort. Form factor was designed to fit a variety of body types allowing universal fitting to many users.</li>
                            <li><strong>Linear Freedom Adjustments:</strong> Allows for adaptable sizing across users.</li>
@@ -515,21 +564,21 @@
                         <!-- New Electronics Image Pyramid -->
                         <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
                             <!-- Top of Pyramid -->
-                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
+                            <div class="w-full rounded-lg overflow-hidden bg-page transition-transform duration-300 hover:scale-[1.02]">
                                 <img src="Knee_Exo_Resources/Knee_Electronics.jpg" alt="Main Electronics Board" class="w-full h-auto object-contain">
                             </div>
                             <!-- Base of Pyramid -->
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
+                                <div class="rounded-lg overflow-hidden bg-page transition-transform duration-300 hover:scale-[1.02]">
                                     <img src="Knee_Exo_Resources/Knee_Electronics_IMU.jpg" alt="Knee IMU" class="w-full h-auto object-contain">
                                 </div>
-                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50 transition-transform duration-300 hover:scale-[1.02]">
+                                <div class="rounded-lg overflow-hidden bg-page transition-transform duration-300 hover:scale-[1.02]">
                                     <img src="Knee_Exo_Resources/Knee_Electronics_thigh.jpg" alt="Thigh Electronics" class="w-full h-auto object-contain">
                                 </div>
                             </div>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Electronics Architecture:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>PCB:</strong> I am currently working on a 4-layer board that includes a separate PWR plane for high current draw upwards of 40 Amps. This enables us to directly connect motors to the PCB, reducing cable clutter and emphasizing robust connections and communications between sensor and actuator peripherals.</li>
                             <li><strong>Inertial Measurement Units (IMU):</strong> For tracking limb orientation, gait phase estimation, and velocity + acceleration of limbs.</li>
@@ -543,21 +592,21 @@
                         </ul>
 
                         <!-- New PCB Image Slider -->
-                        <div id="knee-pcb-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                        <div id="knee-pcb-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 mb-6 mt-8 rounded-lg overflow-hidden group bg-page">
                             <!-- Images -->
                             <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="3D View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
                             <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Top View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Outcomes & Next Steps:</h4>
                         <p class="mb-4">We were able to create a novel knee exoskeleton system that is able to translate 10-15 Nm of torque to users when wearing the system. The system was test on various people in the lab and was able to adapt seamlessly to all body shapes using the built-in adjustment mechanisms. Custom BOA strapping + neoprene foam padding proved to be sufficient in suspending the system off users thighs and shanks while providing a comfortable experience. Overall, the embedded systems setup functioned as intended, data was able to be collected and plotted showing accurate biological kinematics, and a simple impedance-based controller was able to be deployed for initial validation.</p>
                         <p class="mb-4">However, with all these wins there are still many steps ahead:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-6">
@@ -568,10 +617,10 @@
                         </ol>
                         <div class="flex flex-col md:flex-row gap-6 mt-6 items-center">
                             <div class="w-full md:w-2/5">
-                                <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Professional photo of the Knee Exoskeleton" class="w-full rounded-lg shadow-lg">
+                                <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="Professional photo of the Knee Exoskeleton" class="w-full rounded-lg">
                             </div>
                             <div class="w-full md:w-3/5">
-                                <video autoplay muted loop playsinline class="w-full rounded-lg shadow-lg">
+                                <video autoplay muted loop playsinline class="w-full rounded-lg">
                                     <source src="Knee_Exo_Resources/Rajiv_Walk_knee_outside.mp4" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
@@ -583,18 +632,18 @@
                     title: 'MetaMobility Lab - Hip Exoskeleton',
                     content: `
                         <!-- 1. Top Video -->
-                        <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
+                        <div class="w-full mb-8 rounded-lg overflow-hidden bg-page">
                             <video controls class="w-full h-auto" preload="metadata">
                                 <source src="Hip_Exo/Hip_Exo_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
-                            <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
+                            <p class="text-sm text-ink/70 text-center py-2 italic">Click play to watch the demo</p>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2">Project Motivation:</h4>
                         <p class="mb-4">This project addresses the critical mobility challenges faced by stroke survivors and older adults by developing an autonomous robotic hip exoskeleton designed to counteract inefficient, hip-dominant compensatory walking. Because the hip lacks the natural elastic energy storage of the ankle, relying on it for propulsion significantly increases metabolic cost and fatigue; our solution targets this specific inefficiency using high-performance actuators and intelligent control strategies. Engineered for superior wearability and capable of dynamically adapting to user intent across diverse body types, this system bridges the gap between clinical rehabilitation and independent daily living.</p>
                         
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">My Role and Responsibilities:</h4>
                         <p class="mb-4">Having been part of this project since its conception I have worked on 3 variations of hip exoskeletons that have seen iterative design changes, electrical architecture alterations, and various controllers deployed. My specific responsibilities/contributions both as a sub-lead and researcher were as follows:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-4">
                             <li><strong>Weight Reduction of the System:</strong> Overall, the hip exoskeleton started around 5kg and through each generation has now reached about 3.4 kg in weight which is a huge reduction for improving metabolic benefit during use.</li>
@@ -604,22 +653,22 @@
                         </ol>
 
                         <!-- 2. Mechanical Image Carousel -->
-                        <div id="hip-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                        <div id="hip-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group bg-page">
                             <!-- Images -->
                             <img src="Hip_Exo/Hip_Exo_Angle.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
                             <img src="Hip_Exo/Hip_Exo_Back.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             <img src="Hip_Exo/Hip_Exo_Left.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Mechanical Systems:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                            <li><strong>Thigh Bars:</strong> Custom designed for user comfort and effective torque transfer from the actuator to the hip joint.</li>
                            <li><strong>Pelvis Interface:</strong> Through leveraging human models and 3D scans, surface modeling was used to achieve idealized curvature that fits majority of users.</li>
@@ -628,7 +677,7 @@
                            <li><strong>Onyx:</strong> A carbon fiber and Nylon reinforced filament utilized for 3D printing robust parts with high stress strain tolerance and temperature robustness.</li>
                         </ul>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electronics Architecture:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Electronics Architecture:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>PCB:</strong> I am currently working to improve our current 2-layer PCB board to a 4-layer board that includes a sperate PWR plane for high current draw upwards of 40 Amps. This enables us to directly connect motors to the PCB, reducing the number of cables from 3 8 core cables down to just a single 8 core cable and a smaller overall PCB footprint.</li>
                             <li><strong>Inertial Measurement Units (IMU):</strong> For tracking limb orientation, gait phase estimation, and velocity + acceleration of limbs.</li>
@@ -642,11 +691,11 @@
                         </ul>
 
                         <!-- 3. Metabolics Image -->
-                        <div class="w-full mb-6 mt-8 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                        <div class="w-full mb-6 mt-8 rounded-lg overflow-hidden bg-page">
                             <img src="Hip_Exo/Hip_Exo_Metabolics.png" alt="Metabolic Data" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Outcomes & Next Steps:</h4>
                         <p class="mb-4">Overall, the current hip exoskeleton V2 hardware weighs around 4.3 kg and can provide assistance upwards of 22Nm to a user. This hardware has been used in multiple studies like perturbation assistance strategies, biological torque controller estimation, and deploying simulated data trained controllers onto real time hardware. The hardware is both comfortable and fits a variety of users in the lab and the Electrical framework is both robust and reliable now with little to no signal dropouts and high-speed communication.</p>
                         <p class="mb-4">However, with all these improvements there are many active steps to come:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-6">
@@ -661,18 +710,18 @@
                     title: 'Haptic Design Interfaces - Open-Source Haptic Device',
                     content: `
                         <!-- 1. Top Video -->
-                        <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
+                        <div class="w-full mb-8 rounded-lg overflow-hidden bg-page">
                             <video controls class="w-full h-auto" preload="metadata">
                                 <!-- UPDATED FILENAME: Haptics_Demo.mp4 -->
                                 <source src="Haptic_Device/Haptics_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
-                            <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
+                            <p class="text-sm text-ink/70 text-center py-2 italic">Click play to watch the demo</p>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2">Project Motivation:</h4>
                         <p class="mb-4">This project aimed to design and implement a low-cost, 3D-printed haptic device to provide force feedback for hand interactions with virtual objects. The primary goal was to create an affordable, open-source, and easily manufactured device that makes haptics universally accessible for in-classroom interactive student learning. A novel contribution was a design that could render force in multiple directions (both closing and opening), unlike many existing systems.</p>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Team Role and Responsibilities:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Team Role and Responsibilities:</h4>
                         <p class="mb-4">As part of a collaborative team, I contributed to the entire project lifecycle, from conceptual design to implementation and testing. Our collective responsibilities included:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-4">
                             <li>Researching and selecting appropriate mechanical systems for multi-finger force feedback.</li>
@@ -685,15 +734,15 @@
                         <!-- 2. Side-by-Side Images (Above Mechanical Systems) -->
                         <!-- FIX: Removed strict height/aspect ratio constraints to prevent cropping -->
                         <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
                                 <img src="Haptic_Device/Haptics_Thumb.png" alt="Thumb Mechanism" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
                                 <img src="Haptic_Device/Haptics_Index.png" alt="Index Mechanism" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Systems:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Mechanical Systems:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                            <li><strong>Index & Middle Fingers:</strong> A dual-capstan drive was chosen for its smooth, low-backlash transmission. This 2-DOF system was designed to be compact, cost-effective, and easy to manufacture.</li>
                            <li><strong>Thumb:</strong> To achieve 3-DOF (including abduction/adduction), a delta mechanism was adopted, using compliant joints made from 3D-printed TPU based on the DeltaZ robot design.</li>
@@ -703,27 +752,27 @@
                         <!-- FIX: Removed strict height/aspect ratio constraints -->
                         <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
                             <!-- Top -->
-                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full rounded-lg overflow-hidden bg-page">
                                 <img src="Haptic_Device/Haptics_GUI.png" alt="Haptics GUI" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                             </div>
                             <!-- Base -->
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <div class="rounded-lg overflow-hidden bg-page">
                                     <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                                 </div>
-                                <div class="rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                                <div class="rounded-lg overflow-hidden bg-page">
                                     <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                                 </div>
                             </div>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Software & Visualization:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Software & Visualization:</h4>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>Control:</strong> The integrated device was controlled by mBed C/C++ code, which handled calculations and sent data serially.</li>
                             <li><strong>Kinematics:</strong> Forward kinematics were used to determine end-effector positions from motor encoders, while the system Jacobian was used to map desired forces back into motor torques for force feedback.</li>
                             <li><strong>Visualization:</strong> A custom GUI built in Processing parsed the serial data to render a real-time 3D representation of the user's fingers, the device, and the virtual sphere they were interacting with.</li>
                         </ul>
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Next Steps:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Outcomes & Next Steps:</h4>
                         <p class="mb-4">The project successfully served as a proof-of-concept for a low-cost, multi-finger haptic device. The finger system with the capstan drive performed well. However, the thumb's delta mechanism was unstable, largely due to the low resolution of the motor encoders (48 CPR), which affected the precision of both forward and inverse kinematics.</p>
                         <p class="mb-4">Future work to improve the system includes:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-6">
@@ -736,39 +785,39 @@
                         <!-- 4. Bottom Scrolling Image Wheel -->
                         <!-- FIX: Using relative positioning and h-96 (fixed height) or similar to ensure container exists 
                              but images are fully contained. object-contain ensures full visibility. -->
-                        <div id="haptics-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group border border-teal-800 bg-black/50">
+                        <div id="haptics-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group bg-page">
                             <!-- Images -->
                             <img src="Haptic_Device/Haptics_Final_1.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
                             <img src="Haptic_Device/Haptics_Final_2.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             <img src="Haptic_Device/Haptics_Final_3.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             
                             <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-r-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/30 hover:bg-black/60 text-white p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 bg-panel/80 hover:bg-accent text-ink hover:text-panel p-2 rounded-l-md transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
 
                         <!-- 5. Final Report Canvas Preview -->
-                        <div class="mt-10 text-center border-t border-teal-800/50 pt-6">
-                            <h4 class="text-xl font-semibold text-teal-300 mb-4">Final Project Report:</h4>
+                        <div class="mt-10 text-center border-t border-page pt-6">
+                            <h4 class="text-xl font-semibold text-main mb-4">Final Project Report:</h4>
                             <a href="#" id="haptics-report-link" class="cursor-pointer block max-w-xs mx-auto">
-                                <div class="relative w-full aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2 group hover:ring-2 hover:ring-teal-400 transition-all">
+                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-accent transition-all">
                                     <!-- Canvas for Report Preview -->
                                     <canvas id="haptics-report-canvas" class="rounded-lg w-full"></canvas>
                                     <!-- Loading Spinner -->
                                     <div id="haptics-report-loading" class="absolute text-center">
-                                        <svg class="animate-spin h-8 w-8 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg class="animate-spin h-8 w-8 text-ink mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        <p class="text-white mt-2 text-sm">Loading Report Preview...</p>
+                                        <p class="text-ink mt-2 text-sm">Loading Report Preview...</p>
                                     </div>
                                     <!-- Overlay -->
                                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                                        <p class="text-white opacity-0 group-hover:opacity-100 font-bold bg-black/50 px-4 py-2 rounded-full">Click to Read</p>
+                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold bg-panel/90 px-4 py-2 rounded-full">Click to Read</p>
                                     </div>
                                 </div>
                             </a>
@@ -779,20 +828,20 @@
                     title: 'ADV Mechatronics - Final Project',
                     content: `
                         <!-- 1. Top Video -->
-                        <div class="w-full mb-8 rounded-lg overflow-hidden shadow-lg border border-teal-800 bg-black/50">
+                        <div class="w-full mb-8 rounded-lg overflow-hidden bg-page">
                             <video controls class="w-full h-auto" preload="metadata">
                                 <source src="ADV_Mechatronics/ADV_Mechatronics_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
-                            <p class="text-sm text-gray-400 text-center py-2 italic">Click play to watch the demo</p>
+                            <p class="text-sm text-ink/70 text-center py-2 italic">Click play to watch the demo</p>
                         </div>
 
                         <!-- REMOVED: Whac-A-Wacko Game and Game Schematic Image Containers -->
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2">Project Motivation:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2">Project Motivation:</h4>
                         <p class="mb-4">The field of engineering is often mischaracterized as "dull, gray, and concrete," focused solely on numbers and efficiency. To challenge this perception, our team embarked on a mission to create "Whac-A-Wacko," a project designed to inject joy, color, and interactivity into mechatronics. Inspired by the classic arcade game Whac-A-Mole, this system serves as a testament to how engineering can be both technically rigorous and creatively inspiring.</p>
                         
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">My Role and Responsibilities:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">My Role and Responsibilities:</h4>
                         <p class="mb-4">Bringing this creative vision to life required a collaborative effort from our four-person team: Kiran Marques, Yuichi Hirose, Juee Chandrachud, and myself. Within this group, my primary focus was on the seamless integration of our diverse subsystems. Specifically, I was responsible for:</p>
                         <ol class="list-decimal list-inside space-y-2 mb-4">
                             <li><strong>Mechatronic System Design:</strong> Integrating the mechanical structures with the electrical components to ensure the physical game board could support the electronic actuation.</li>
@@ -803,15 +852,15 @@
 
                         <!-- 2. Images above Mechanical Design -->
                         <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
                                 <img src="ADV_Mechatronics/ADV_Mechatronics_Hardware.png" alt="Hardware Assembly" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
                                 <img src="ADV_Mechatronics/ADV_Mechatronics_Rendered.png" alt="Rendered Design" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
                             </div>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Mechanical Design:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Mechanical Design:</h4>
                         <p class="mb-4">To withstand the enthusiastic impacts of gameplay, the system required a robust physical structure. This structure was realized through:</p>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                            <li><strong>3D CAD Modeling:</strong> Detailed computer-aided designs were created to model the entire assembly before fabrication, ensuring all parts would fit together perfectly.</li>
@@ -821,15 +870,15 @@
 
                         <!-- 3. Images above Electrical -->
                         <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
-                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full rounded-lg overflow-hidden bg-page">
                                 <img src="ADV_Mechatronics/ADV_Mechatronics_Schematic.png" alt="System Schematic" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                             </div>
-                            <div class="w-full rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                            <div class="w-full rounded-lg overflow-hidden bg-page">
                                 <img src="ADV_Mechatronics/ADV_Mechatronics_Solder.png" alt="Soldering Work" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                             </div>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Electrical & Control Systems:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Electrical & Control Systems:</h4>
                         <p class="mb-4">Powering these actions required a sophisticated network of electronics. This network was established by:</p>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>Target Detection System:</strong> Instead of physical buttons, the "Alien" targets utilized phototransistors paired with LEDs. Players "whacked" a target by covering the sensor (slapping it), which the system registered as a hit.</li>
@@ -838,42 +887,42 @@
                         </ul>
 
                         <!-- 4. Image above Software -->
-                        <div class="w-full max-w-lg mx-auto mb-6 mt-8 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                        <div class="w-full max-w-lg mx-auto mb-6 mt-8 rounded-lg overflow-hidden bg-page">
                             <img src="ADV_Mechatronics/ADV_Mechatronics_States.png" alt="State Machine Diagram" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                         </div>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Software Architecture:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Software Architecture:</h4>
                         <p class="mb-4">The systems software architecture followed an events and services framework where all the different systems, state machines, and hardware controls were abstracted to different layers of code. This logic was implemented using:</p>
                         <ul class="list-disc list-inside space-y-2 mb-4">
                             <li><strong>Finite State Machine (FSM):</strong> A formal state machine governed the game's logic, transitioning the system predictably between states such as IDLE (waiting for a player), GAMEPLAY (active target popping), and SCORE (displaying results).</li>
                             <li><strong>Modular Code Organization:</strong> The codebase was split into distinct header and source files, logically separating functions like motor control, sensor reading, and high-level game management for easier debugging and maintenance.</li>
                         </ul>
 
-                        <h4 class="text-xl font-semibold text-teal-300 mb-2 mt-4">Outcomes & Lessons Learned:</h4>
+                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Outcomes & Lessons Learned:</h4>
                         <p class="mb-4">The culmination of these efforts was a fully functional arcade game that successfully demonstrated the integration of mechanical, electrical, and software engineering. Through this process, my team learned valuable lessons about the importance of interdisciplinary collaboration and the complexities involved in integrating distinct subsystems into a cohesive, finalized product. From this I gained the foundations of mechatronics and embedded systems that I continue to foster and deepen through being a teaching assistant of this course in the Fall 2025 Semester at Carnegie Mellon University.</p>
                         
                         <!-- 5. Final Image and Report -->
-                        <div class="w-full mb-8 mt-8 rounded-lg overflow-hidden border border-teal-800 shadow-lg bg-black/50">
+                        <div class="w-full mb-8 mt-8 rounded-lg overflow-hidden bg-page">
                             <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Final Project" class="w-full h-auto block">
                         </div>
 
-                        <div class="mt-10 text-center border-t border-teal-800/50 pt-6">
-                            <h4 class="text-xl font-semibold text-teal-300 mb-4">Final Project Report:</h4>
+                        <div class="mt-10 text-center border-t border-page pt-6">
+                            <h4 class="text-xl font-semibold text-main mb-4">Final Project Report:</h4>
                             <a href="#" id="mechatronics-report-link" class="cursor-pointer block max-w-xs mx-auto">
-                                <div class="relative w-full aspect-[8.5/11] bg-gray-700 rounded-lg shadow-md flex items-center justify-center p-2 group hover:ring-2 hover:ring-teal-400 transition-all">
+                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-accent transition-all">
                                     <!-- Canvas for Report Preview -->
                                     <canvas id="mechatronics-report-canvas" class="rounded-lg w-full"></canvas>
                                     <!-- Loading Spinner -->
                                     <div id="mechatronics-report-loading" class="absolute text-center">
-                                        <svg class="animate-spin h-8 w-8 text-white mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <svg class="animate-spin h-8 w-8 text-ink mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        <p class="text-white mt-2 text-sm">Loading Report Preview...</p>
+                                        <p class="text-ink mt-2 text-sm">Loading Report Preview...</p>
                                     </div>
                                     <!-- Overlay -->
                                     <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                                        <p class="text-white opacity-0 group-hover:opacity-100 font-bold bg-black/50 px-4 py-2 rounded-full">Click to Read</p>
+                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold bg-panel/90 px-4 py-2 rounded-full">Click to Read</p>
                                     </div>
                                 </div>
                             </a>
@@ -894,8 +943,8 @@
 
             // Navigation
             const setupNavigation = () => {
-                const activeClasses = 'text-teal-300 border-b-2 border-teal-400'.split(' ');
-                const inactiveClasses = 'text-gray-400 hover:text-teal-300 border-b-2 border-transparent'.split(' ');
+                const activeClasses = 'bg-accent text-panel'.split(' ');
+                const inactiveClasses = 'bg-panel text-ink hover:bg-ink hover:text-panel'.split(' ');
 
                 const navigateTo = (pageKey) => {
                     Object.values(pages).forEach(page => page.classList.add('hidden'));
@@ -1059,7 +1108,7 @@
                 const itemTriggers = document.querySelectorAll('[id$="-title"]');
                 itemTriggers.forEach(trigger => {
                     if (itemDetails[trigger.id]) {
-                        trigger.classList.add('cursor-pointer', 'hover:text-teal-200', 'transition-colors');
+                        trigger.classList.add('cursor-pointer', 'hover:text-accent', 'transition-colors');
                         trigger.addEventListener('click', () => {
                             const details = itemDetails[trigger.id];
                             itemModal.title.textContent = details.title;
