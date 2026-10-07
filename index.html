@@ -230,10 +230,24 @@
             z-index: 10;
             display: flex;
             align-items: center;
-            width: 3rem;
-            color: rgb(var(--ink) / .6);
-            filter: drop-shadow(0 1px 2px rgb(0 0 0 / .7));
+            width: 4rem;
+            color: rgb(var(--ink) / .9);
             transition: color .2s ease;
+        }
+        /* the chevron sits on a dark disc so it reads over any photo */
+        .carousel-arrow svg {
+            width: 2.75rem;
+            height: 2.75rem;
+            padding: .5rem;
+            border-radius: 9999px;
+            background: rgb(var(--panel) / .82);
+            border: 1px solid rgb(255 255 255 / .25);
+            box-shadow: 0 4px 14px rgb(0 0 0 / .4);
+            transition: background-color .2s ease;
+        }
+        .carousel-arrow:hover svg,
+        .carousel-arrow:focus-visible svg {
+            background: rgb(var(--main));
         }
         .carousel-arrow[hidden] {
             display: none;
@@ -247,14 +261,14 @@
             justify-content: flex-start;
             padding-left: .25rem;
             border-radius: 1rem 0 0 1rem;
-            background: linear-gradient(90deg, rgb(var(--page) / .5), transparent);
+            background: linear-gradient(90deg, rgb(var(--page) / .65), transparent);
         }
         .carousel-arrow.is-next {
             right: 0;
             justify-content: flex-end;
             padding-right: .25rem;
             border-radius: 0 1rem 1rem 0;
-            background: linear-gradient(270deg, rgb(var(--page) / .5), transparent);
+            background: linear-gradient(270deg, rgb(var(--page) / .65), transparent);
         }
 
         /* 3D viewer on a project page: a soft light behind the model so dark parts stay readable */
@@ -378,13 +392,13 @@
                                 <span class="block mt-1 px-1 text-sm text-ink/60">MetaMobility Lab</span>
                                 <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An assistive device that reduces hip work with an adaptive controller based on real-time gait cycle estimation.</span>
                             </button>
-                            <button type="button" data-item="haptic-design-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                            <button type="button" data-project-page="haptic-device" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
                                 <img src="Haptic_Device/Haptics_Final_1.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
                                 <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Open-Source Haptic Device</span>
                                 <span class="block mt-1 px-1 text-sm text-ink/60">Haptic Design Interfaces</span>
                                 <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An open-source teaching tool for learning forward kinematics, biological sensors, and haptics.</span>
                             </button>
-                            <button type="button" data-item="mechatronics-project-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                            <button type="button" data-project-page="whac-a-wacko" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
                                 <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
                                 <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Whac-A-Wacko Arcade Game</span>
                                 <span class="block mt-1 px-1 text-sm text-ink/60">ADV Mechatronics</span>
@@ -547,8 +561,6 @@
     </div>
 
 
-    <!-- PDF.js Library -->
-    <script src="https://mozilla.github.io/pdf.js/build/pdf.mjs" type="module"></script>
 
     <script type="module">
         import * as THREE from 'three';
@@ -560,10 +572,8 @@
             
             // --- STATE MANAGEMENT ---
             const state = {
-                hapticDevice3DInitialized: false,
                 // Sliders state maps: 'sliderID' -> { interval, currentIndex, totalImages }
                 sliders: {},
-                hapticDeviceControls: null,
                 openProject: null,          // key of the project page being shown, if any
                 lastPage: 'home',           // last main page shown (where Back returns to)
                 projectOpenedInApp: false   // true when the project page was reached by clicking a card
@@ -895,7 +905,8 @@
                             <li><strong class="text-ink">Takeaway:</strong> A controller trained entirely in simulation transferred to the physical device and gave meaningful assistance.</li>
                         </ul>
 
-                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Outdoor testing</h3>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-2">Outdoor testing</h3>
+                        <p class="mb-4 text-sm text-ink/70"><strong class="text-ink">Note:</strong> this clip uses a different controller, one another student is developing to be task-agnostic and more generalizable.</p>
                         <div class="video-loop relative rounded-lg overflow-hidden bg-page">
                             <video autoplay muted loop playsinline preload="metadata" class="block w-full h-auto">
                                 <source src="Knee_Exo_Resources/Knee_V2_Outdoor_Validation.mp4" type="video/mp4">
@@ -903,7 +914,7 @@
                             </video>
                             <button type="button" class="video-toggle glass glass-btn absolute bottom-3 right-3 flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Pause video"></button>
                         </div>
-                        <p class="mt-2 text-sm text-center text-ink/60">PEAK outside the lab, on level ground and stairs</p>
+                        <p class="mt-2 text-sm text-center text-ink/60">PEAK outside the lab, on level ground, ramps, and stairs</p>
 
                         <h2 class="text-2xl font-bold text-main mt-12 mb-4">Next steps</h2>
                         <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
@@ -916,7 +927,10 @@
                         <!-- The paper opens in the site's PDF viewer (data-pdf); the href is the fallback -->
                         <div class="mt-10 pt-6 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
                             <p class="text-ink/85">For the full design, controller, and experimental details:</p>
-                            <a href="Knee_Exo_Resources/Knee_Exoskeleton_Paper.pdf" target="_blank" rel="noopener" data-pdf="Knee_Exo_Resources/Knee_Exoskeleton_Paper.pdf" data-pdf-title="A Holistic Design Framework for a Modular Knee Exoskeleton System" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">Read the paper (PDF)</a>
+                            <div class="flex flex-wrap gap-3">
+                                <a href="Knee_Exo_Resources/Knee_Exoskeleton_Paper.pdf" target="_blank" rel="noopener" data-pdf="Knee_Exo_Resources/Knee_Exoskeleton_Paper.pdf" data-pdf-title="A Holistic Design Framework for a Modular Knee Exoskeleton System" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">Read the paper (PDF)</a>
+                                <a href="https://metamobility.cmu.edu/research" target="_blank" rel="noopener noreferrer" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">MetaMobility Lab research</a>
+                            </div>
                         </div>
                     `
                 },
@@ -1042,223 +1056,260 @@
                 'haptic-design-title': {
                     title: 'Haptic Design Interfaces - Open-Source Haptic Device',
                     content: `
-                        <!-- 1. Top Video -->
-                        <div class="w-full mb-8 rounded-lg overflow-hidden bg-page">
-                            <video controls class="w-full h-auto" preload="metadata">
-                                <!-- UPDATED FILENAME: Haptics_Demo.mp4 -->
+                        <h2 class="text-xl font-bold text-main mb-4">Objective</h2>
+                        <p class="text-ink/85">
+                            Build a low-cost, 3D-printed, open-source haptic device that lets the thumb, index finger, and middle finger feel a virtual object through force feedback. The aim is to make haptics affordable enough for hands-on classroom learning, and, unlike many devices, to render force in both the closing and opening directions.
+                        </p>
+                        <p class="mt-4 text-ink/85">
+                            It is a first step toward a haptic interface for controlling a three-fingered robotic hand. This version lets the user feel and see a virtual sphere.
+                        </p>
+                        <dl class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-4 sm:gap-x-0 sm:divide-x divide-ink/20">
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Fingers with force feedback</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">3</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Degrees of freedom</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">7</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Team members</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">6</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Gearbox-free motors</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">12 V</dd>
+                            </div>
+                        </dl>
+
+                        <div class="video-loop relative mt-8 rounded-lg overflow-hidden bg-page">
+                            <video autoplay muted loop playsinline preload="metadata" class="block w-full h-auto">
                                 <source src="Haptic_Device/Haptics_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
-                            <p class="text-sm text-ink/70 text-center py-2 italic">Click play to watch the demo</p>
-                        </div>
-
-                        <h4 class="text-xl font-semibold text-main mb-2">Project Motivation:</h4>
-                        <p class="mb-4">This project aimed to design and implement a low-cost, 3D-printed haptic device to provide force feedback for hand interactions with virtual objects. The primary goal was to create an affordable, open-source, and easily manufactured device that makes haptics universally accessible for in-classroom interactive student learning. A novel contribution was a design that could render force in multiple directions (both closing and opening), unlike many existing systems.</p>
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Team Role and Responsibilities:</h4>
-                        <p class="mb-4">As part of a collaborative team, I contributed to the entire project lifecycle, from conceptual design to implementation and testing. Our collective responsibilities included:</p>
-                        <ol class="list-decimal list-inside space-y-2 mb-4">
-                            <li>Researching and selecting appropriate mechanical systems for multi-finger force feedback.</li>
-                            <li>Designing and manufacturing the device components, primarily using 3D printing.</li>
-                            <li>Developing the software for kinematics, force rendering (using Jacobians), and hardware control.</li>
-                            <li>Integrating three distinct mechanical subsystems (two fingers and a thumb) to interact with a single virtual object.</li>
-                            <li>Creating a real-time GUI in Processing to visualize the user's hand interacting with virtual objects.</li>
-                        </ol>
-                        
-                        <!-- 2. Side-by-Side Images (Above Mechanical Systems) -->
-                        <!-- FIX: Removed strict height/aspect ratio constraints to prevent cropping -->
-                        <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
-                                <img src="Haptic_Device/Haptics_Thumb.png" alt="Thumb Mechanism" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
-                            </div>
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
-                                <img src="Haptic_Device/Haptics_Index.png" alt="Index Mechanism" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-3 right-3 flex gap-2">
+                                <button type="button" class="video-mute glass glass-btn flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Unmute video"></button>
+                                <button type="button" class="video-toggle glass glass-btn flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Pause video"></button>
                             </div>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Mechanical Systems:</h4>
-                        <ul class="list-disc list-inside space-y-2 mb-4">
-                           <li><strong>Index & Middle Fingers:</strong> A dual-capstan drive was chosen for its smooth, low-backlash transmission. This 2-DOF system was designed to be compact, cost-effective, and easy to manufacture.</li>
-                           <li><strong>Thumb:</strong> To achieve 3-DOF (including abduction/adduction), a delta mechanism was adopted, using compliant joints made from 3D-printed TPU based on the DeltaZ robot design.</li>
+                        <h2 class="text-xl font-bold text-main mt-10 mb-4">My contributions</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Finger firmware:</strong> Implemented event-driven code on an STM32 that controls the four finger motors. It uses the forward kinematics of the capstan mechanism to locate each fingertip from the encoders, and the Jacobian to turn a desired force into motor torques.</li>
+                            <li><strong class="text-ink">Finger mechanism:</strong> Helped design and build the two 3D-printed finger modules around a dual-capstan drive.</li>
+                            <li><strong class="text-ink">System integration:</strong> Helped bring the two fingers and the thumb into one system, so all three interact with the same virtual object.</li>
                         </ul>
 
-                        <!-- 3. Image Pyramid (Above Software) -->
-                        <!-- FIX: Removed strict height/aspect ratio constraints -->
-                        <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
-                            <!-- Top -->
-                            <div class="w-full rounded-lg overflow-hidden bg-page">
-                                <img src="Haptic_Device/Haptics_GUI.png" alt="Haptics GUI" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Device at a glance</h2>
+                        <dl class="border-t border-ink/15">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Fingers</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Index and middle finger, each a 2-DOF dual-capstan drive with 65 mm and 55 mm links. Both share one mechanism and one set of kinematics.</dd>
                             </div>
-                            <!-- Base -->
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="rounded-lg overflow-hidden bg-page">
-                                    <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Code Structure" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
-                                </div>
-                                <div class="rounded-lg overflow-hidden bg-page">
-                                    <img src="Haptic_Device/Haptics_Spaces.png" alt="Haptics Spaces" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
-                                </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Thumb</dt>
+                                <dd class="sm:col-span-3 text-ink/85">3-DOF delta mechanism with compliant, 3D-printed TPU joints, based on the DeltaZ robot</dd>
                             </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Actuation</dt>
+                                <dd class="sm:col-span-3 text-ink/85">12 V Pololu motors without gearboxes, which avoids the backlash that would blur fine force feedback</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Sensing</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Quadrature motor encoders at 48 counts per revolution; the capstan drive raises the effective resolution at the fingertip</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Control</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Mbed C/C++ on an STM32: forward kinematics for fingertip position, the Jacobian for force-to-torque mapping</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Force rendering</dt>
+                                <dd class="sm:col-span-3 text-ink/85">A virtual sphere modeled as a spring: the further a fingertip presses in, the harder it is pushed back out</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Visualization</dt>
+                                <dd class="sm:col-span-3 text-ink/85">A Processing GUI draws the fingers, the device, and the sphere in real time from serial data</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Structure</dt>
+                                <dd class="sm:col-span-3 text-ink/85">3D printed for low cost and easy in-house manufacturing</dd>
+                            </div>
+                        </dl>
+                        <div class="mt-8 flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+                            <figure class="sm:flex-[1.271_1_0%] min-w-0 w-full sm:w-auto">
+                                <img src="Haptic_Device/Haptics_Index.png" alt="CAD of the finger module with its dual-capstan drive" loading="lazy" class="w-full h-auto rounded-lg">
+                                <figcaption class="mt-2 text-sm text-center text-ink/60">Finger module: dual-capstan drive</figcaption>
+                            </figure>
+                            <figure class="sm:flex-[1.205_1_0%] min-w-0 w-full sm:w-auto">
+                                <img src="Haptic_Device/Haptics_Thumb.png" alt="CAD of the thumb module with its delta mechanism" loading="lazy" class="w-full h-auto rounded-lg">
+                                <figcaption class="mt-2 text-sm text-center text-ink/60">Thumb module: delta mechanism</figcaption>
+                            </figure>
                         </div>
-
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Software & Visualization:</h4>
-                        <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li><strong>Control:</strong> The integrated device was controlled by mBed C/C++ code, which handled calculations and sent data serially.</li>
-                            <li><strong>Kinematics:</strong> Forward kinematics were used to determine end-effector positions from motor encoders, while the system Jacobian was used to map desired forces back into motor torques for force feedback.</li>
-                            <li><strong>Visualization:</strong> A custom GUI built in Processing parsed the serial data to render a real-time 3D representation of the user's fingers, the device, and the virtual sphere they were interacting with.</li>
-                        </ul>
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Outcomes & Next Steps:</h4>
-                        <p class="mb-4">The project successfully served as a proof-of-concept for a low-cost, multi-finger haptic device. The finger system with the capstan drive performed well. However, the thumb's delta mechanism was unstable, largely due to the low resolution of the motor encoders (48 CPR), which affected the precision of both forward and inverse kinematics.</p>
-                        <p class="mb-4">Future work to improve the system includes:</p>
-                        <ol class="list-decimal list-inside space-y-2 mb-6">
-                            <li><strong>Improve Thumb Resolution:</strong> Integrate higher-resolution encoders or add a capstan drive to the delta mechanism to amplify the existing encoder resolution.</li>
-                            <li><strong>Optimize Finger Workspace:</strong> Refine capstan handle lengths to allow for interaction with larger virtual objects.</li>
-                            <li><strong>Reduce System Friction & Weight:</strong> Implement counter-weights or redesign components to improve the user's tactile experience.</li>
-                            <li><strong>Enhance Visualization:</strong> Correctly map the physical delta coordinates to the visualization to create a true 1-to-1 interaction.</li>
-                        </ol>
-
-                        <!-- 4. Bottom Scrolling Image Wheel -->
-                        <!-- FIX: Using relative positioning and h-96 (fixed height) or similar to ensure container exists 
-                             but images are fully contained. object-contain ensures full visibility. -->
-                        <div id="haptics-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 lg:h-96 mb-6 mt-8 rounded-lg overflow-hidden group bg-page">
-                            <!-- Images -->
-                            <img src="Haptic_Device/Haptics_Final_1.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
-                            <img src="Haptic_Device/Haptics_Final_2.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
-                            <img src="Haptic_Device/Haptics_Final_3.png" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
-                            
-                            <!-- Navigation Buttons -->
-                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                        <div id="haptics-slider" class="relative w-full max-w-2xl mx-auto h-64 md:h-80 lg:h-96 mt-10 rounded-lg overflow-hidden group bg-page">
+                            <img src="Haptic_Device/Haptics_Final_1.png" alt="The haptic device in use beside its live visualization" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_2.png" alt="A hand in the finger modules of the haptic device" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Haptic_Device/Haptics_Final_3.png" alt="The assembled haptic device" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10" aria-label="Previous image">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
-                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10">
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10" aria-label="Next image">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
+                        </div>
+                        <div id="haptics-software-slider" class="relative w-full max-w-2xl mx-auto h-64 md:h-80 lg:h-96 mt-10 rounded-lg overflow-hidden group bg-page">
+                            <img src="Haptic_Device/Haptics_GUI.png" alt="The Processing visualization of fingertips touching a virtual sphere" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Haptic_Device/Haptics_Spaces.png" alt="Diagram of the reference space and hardware space used in the finger code" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Haptic_Device/Haptics_Code_Structure.png" alt="Diagram of the code structure from firmware to visualization" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10" aria-label="Previous image">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10" aria-label="Next image">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
 
-                        <!-- 5. Final Report Canvas Preview -->
-                        <div class="mt-10 text-center border-t border-page pt-6">
-                            <h4 class="text-xl font-semibold text-main mb-4">Final Project Report:</h4>
-                            <a href="#" id="haptics-report-link" class="cursor-pointer block max-w-xs mx-auto">
-                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-main-light transition-all">
-                                    <!-- Canvas for Report Preview -->
-                                    <canvas id="haptics-report-canvas" class="rounded-lg w-full"></canvas>
-                                    <!-- Loading Spinner -->
-                                    <div id="haptics-report-loading" class="absolute text-center">
-                                        <svg class="animate-spin h-8 w-8 text-ink mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        <p class="text-ink mt-2 text-sm">Loading Report Preview...</p>
-                                    </div>
-                                    <!-- Overlay -->
-                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold glass px-4 py-2 rounded-full">Click to Read</p>
-                                    </div>
-                                </div>
-                            </a>
+                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Outcomes</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>The device worked as a proof of concept for a low-cost, multi-finger haptic interface.</li>
+                            <li>The capstan-driven fingers performed well.</li>
+                            <li>The thumb was unstable. Its motors drive the delta arms directly, so the 48-count encoders resolve only 7.5&deg; steps, too coarse for the kinematics.</li>
+                        </ul>
+
+                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Next steps</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Thumb resolution:</strong> Use higher-resolution encoders, or add a capstan stage to the delta mechanism to amplify the existing ones.</li>
+                            <li><strong class="text-ink">Finger workspace:</strong> Refine the capstan handle lengths so the fingers can reach larger virtual objects.</li>
+                            <li><strong class="text-ink">Friction and weight:</strong> Add counterweights or rebalance the parts so the user feels less of the mechanism itself.</li>
+                            <li><strong class="text-ink">Visualization:</strong> Map the delta coordinates to the display one-to-one.</li>
+                        </ul>
+                        <div class="mt-10 pt-6 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
+                            <p class="text-ink/85">For the full design, kinematics, and evaluation:</p>
+                            <a href="Haptic_Device/Haptics_Report.pdf" target="_blank" rel="noopener" data-pdf="Haptic_Device/Haptics_Report.pdf" data-pdf-title="Haptic Hand: Haplink Fingers and Delta Thumb" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">Read the report (PDF)</a>
                         </div>
                     `
                 },
                 'mechatronics-project-title': {
-                    title: 'ADV Mechatronics - Final Project',
+                    title: 'ADV Mechatronics - Whac-A-Wacko Arcade Game',
                     content: `
-                        <!-- 1. Top Video -->
-                        <div class="w-full mb-8 rounded-lg overflow-hidden bg-page">
-                            <video controls class="w-full h-auto" preload="metadata">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                            <div>
+                        <h2 class="text-xl font-bold text-main mb-4">Objective</h2>
+                        <p class="text-ink/85">
+                            Whac-A-Wacko is a light-based take on Whac-A-Mole, built by a team of four as the final project for Advanced Mechatronic Design at Carnegie Mellon. The goal was a complete mechatronic system, mechanical, electrical, and software, that is also fun to play.
+                        </p>
+                        <p class="mt-4 text-ink/85">
+                            Eight &ldquo;alien&rdquo; targets light up on a board that slides from side to side. A player scores by covering a lit target to block its light, and running the board faster multiplies the score.
+                        </p>
+                        <dl class="mt-8 grid grid-cols-2 gap-x-6 gap-y-5">
+                            <div class="flex flex-col-reverse justify-end ">
+                                <dt class="text-sm text-ink/60">Light-sensing targets</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">8</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end ">
+                                <dt class="text-sm text-ink/60">State machines</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">3</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end ">
+                                <dt class="text-sm text-ink/60">Bare-metal C firmware</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">STM32</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end ">
+                                <dt class="text-sm text-ink/60">Team members</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">4</dd>
+                            </div>
+                        </dl>
+                            </div>
+                        <div class="video-loop relative rounded-lg overflow-hidden bg-page">
+                            <video autoplay muted loop playsinline preload="metadata" class="block w-full h-auto">
                                 <source src="ADV_Mechatronics/ADV_Mechatronics_Demo.mp4" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
-                            <p class="text-sm text-ink/70 text-center py-2 italic">Click play to watch the demo</p>
-                        </div>
-
-                        <!-- REMOVED: Whac-A-Wacko Game and Game Schematic Image Containers -->
-
-                        <h4 class="text-xl font-semibold text-main mb-2">Project Motivation:</h4>
-                        <p class="mb-4">The field of engineering is often mischaracterized as "dull, gray, and concrete," focused solely on numbers and efficiency. To challenge this perception, our team embarked on a mission to create "Whac-A-Wacko," a project designed to inject joy, color, and interactivity into mechatronics. Inspired by the classic arcade game Whac-A-Mole, this system serves as a testament to how engineering can be both technically rigorous and creatively inspiring.</p>
-                        
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">My Role and Responsibilities:</h4>
-                        <p class="mb-4">Bringing this creative vision to life required a collaborative effort from our four-person team: Kiran Marques, Yuichi Hirose, Juee Chandrachud, and myself. Within this group, my primary focus was on the seamless integration of our diverse subsystems. Specifically, I was responsible for:</p>
-                        <ol class="list-decimal list-inside space-y-2 mb-4">
-                            <li><strong>Mechatronic System Design:</strong> Integrating the mechanical structures with the electrical components to ensure the physical game board could support the electronic actuation.</li>
-                            <li><strong>Final Device Schematics:</strong> Co-authoring the comprehensive electrical schematics that served as the blueprint for all circuit connections and power distribution.</li>
-                            <li><strong>Bill of Materials (BOM) Management:</strong> Sourcing and tracking every component, from the microcontroller to the smallest resistor, ensuring all parts were available for assembly.</li>
-                            <li><strong>Documentation Lead:</strong> compiling the final project report, including the summarized description and the organization of all header and code files for future reference.</li>
-                        </ol>
-
-                        <!-- 2. Images above Mechanical Design -->
-                        <div class="flex flex-col md:flex-row gap-4 mb-6 mt-8 justify-center items-start">
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
-                                <img src="ADV_Mechatronics/ADV_Mechatronics_Hardware.png" alt="Hardware Assembly" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
-                            </div>
-                            <div class="w-full md:w-1/2 rounded-lg overflow-hidden bg-page">
-                                <img src="ADV_Mechatronics/ADV_Mechatronics_Rendered.png" alt="Rendered Design" class="w-full h-auto block hover:scale-105 transition-transform duration-300">
+                            <div class="absolute bottom-3 right-3 flex gap-2">
+                                <button type="button" class="video-mute glass glass-btn flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Unmute video"></button>
+                                <button type="button" class="video-toggle glass glass-btn flex items-center justify-center w-10 h-10 rounded-full text-ink" aria-label="Pause video"></button>
                             </div>
                         </div>
+                        </div>
 
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Mechanical Design:</h4>
-                        <p class="mb-4">To withstand the enthusiastic impacts of gameplay, the system required a robust physical structure. This structure was realized through:</p>
-                        <ul class="list-disc list-inside space-y-2 mb-4">
-                           <li><strong>3D CAD Modeling:</strong> Detailed computer-aided designs were created to model the entire assembly before fabrication, ensuring all parts would fit together perfectly.</li>
-                           <li><strong>Custom Game Board:</strong> A specialized surface was fabricated to house the LED targets and sensors, providing a sturdy and reliable play area.</li>
-                           <li><strong>Lateral Movement Mechanism:</strong> A motorized system was designed to shift the entire game board left and right during gameplay, adding a dynamic layer of difficulty for the player.</li>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mt-12">
+                            <div>
+                        <h2 class="text-xl font-bold text-main mb-4">My contributions</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Motor drive circuit:</strong> Designed and built the circuit that slides the game board: an L293B H-bridge that sets direction, a PWM signal that sets speed, protection diodes for direction changes, and a speed knob fed from a stable 3.3 V reference I built from a voltage divider and voltage follower.</li>
+                            <li><strong class="text-ink">Embedded firmware:</strong> Co-developed the event-driven C firmware on the STM32, covering GPIO, timers, event queues, PWM signals, and motor control.</li>
+                            <li><strong class="text-ink">Schematics:</strong> Co-authored the final KiCad schematics for the motor driver and the switch debounce circuits.</li>
+                            <li><strong class="text-ink">System integration:</strong> Integrated the mechanical structure with the electronics, so the moving board could carry its lights, sensors, and wiring.</li>
+                            <li><strong class="text-ink">BOM and documentation:</strong> Managed the bill of materials with a teammate and led the final report, including the reference for every header and source file.</li>
                         </ul>
-
-                        <!-- 3. Images above Electrical -->
-                        <div class="flex flex-col gap-4 mb-6 mt-8 max-w-lg mx-auto">
-                            <div class="w-full rounded-lg overflow-hidden bg-page">
-                                <img src="ADV_Mechatronics/ADV_Mechatronics_Schematic.png" alt="System Schematic" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
                             </div>
-                            <div class="w-full rounded-lg overflow-hidden bg-page">
-                                <img src="ADV_Mechatronics/ADV_Mechatronics_Solder.png" alt="Soldering Work" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                            <div>
+                        <h2 class="text-xl font-bold text-main mb-4">Whac-A-Wacko at a glance</h2>
+                        <dl class="border-t border-ink/15">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Gameplay</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Cover a lit target to score during a timed round; a faster board multiplies the score</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Targets</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Eight LED and phototransistor pairs, each amplified by an op-amp and digitized by a Schmitt trigger</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Motion</dt>
+                                <dd class="sm:col-span-3 text-ink/85">A sliding table on a belt drive, moved by a 12 V DC gearmotor; a microswitch at each end reverses its direction</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Motor drive</dt>
+                                <dd class="sm:col-span-3 text-ink/85">L293B H-bridge in drive-coast mode with a 30 kHz PWM; speed is set by a potentiometer read through the ADC</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Controller</dt>
+                                <dd class="sm:col-span-3 text-ink/85">STM32 Nucleo board programmed in C</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Software</dt>
+                                <dd class="sm:col-span-3 text-ink/85">An event queue feeding three state machines: game and LEDs, motor, and game timer</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Display</dt>
+                                <dd class="sm:col-span-3 text-ink/85">A Processing app shows the game clock and final score, sent over serial</dd>
+                            </div>
+                        </dl>
                             </div>
                         </div>
-
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Electrical & Control Systems:</h4>
-                        <p class="mb-4">Powering these actions required a sophisticated network of electronics. This network was established by:</p>
-                        <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li><strong>Target Detection System:</strong> Instead of physical buttons, the "Alien" targets utilized phototransistors paired with LEDs. Players "whacked" a target by covering the sensor (slapping it), which the system registered as a hit.</li>
-                            <li><strong>Motor Control:</strong> A driver circuit was implemented to control the lateral movement motor, allowing the game board to slide back and forth autonomously.</li>
-                            <li><strong>Component Integration:</strong> The electronic components listed in the BOM were physically integrated into the system, managing power distribution for the LEDs, sensors, and the board-moving motor.</li>
-                        </ul>
-
-                        <!-- 4. Image above Software -->
-                        <div class="w-full max-w-lg mx-auto mb-6 mt-8 rounded-lg overflow-hidden bg-page">
-                            <img src="ADV_Mechatronics/ADV_Mechatronics_States.png" alt="State Machine Diagram" class="w-full h-auto block hover:scale-[1.02] transition-transform duration-300">
+                        <div id="adv-slider" class="relative w-full max-w-2xl mx-auto h-64 md:h-96 lg:h-[28rem] mt-10 rounded-lg overflow-hidden group bg-page">
+                            <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="The finished Whac-A-Wacko arcade game" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="ADV_Mechatronics/ADV_Mechatronics_Rendered.png" alt="CAD renderings of the game board and its sliding mechanism" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="ADV_Mechatronics/ADV_Mechatronics_Hardware.png" alt="Dimensioned drawing of the game" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="ADV_Mechatronics/ADV_Mechatronics_Solder.png" alt="Soldered protoboard circuits" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="ADV_Mechatronics/ADV_Mechatronics_Schematic.png" alt="KiCad schematics of the switch debounce circuits" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="ADV_Mechatronics/ADV_Mechatronics_States.png" alt="Whiteboard diagram of the state machines" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10" aria-label="Previous image">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                            </button>
+                            <button class="next-btn absolute right-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-l-xl opacity-0 group-hover:opacity-100 focus:opacity-100 z-10" aria-label="Next image">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                            </button>
                         </div>
 
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Software Architecture:</h4>
-                        <p class="mb-4">The systems software architecture followed an events and services framework where all the different systems, state machines, and hardware controls were abstracted to different layers of code. This logic was implemented using:</p>
-                        <ul class="list-disc list-inside space-y-2 mb-4">
-                            <li><strong>Finite State Machine (FSM):</strong> A formal state machine governed the game's logic, transitioning the system predictably between states such as IDLE (waiting for a player), GAMEPLAY (active target popping), and SCORE (displaying results).</li>
-                            <li><strong>Modular Code Organization:</strong> The codebase was split into distinct header and source files, logically separating functions like motor control, sensor reading, and high-level game management for easier debugging and maintenance.</li>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start mt-12">
+                            <div>
+                        <h2 class="text-xl font-bold text-main mb-4">Outcome</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>A fully working arcade game that brought mechanical, electrical, and software subsystems together into one finished product.</li>
+                            <li>It gave me the foundations in mechatronics and embedded systems that I later built on as a teaching assistant for the same course in Fall 2025.</li>
                         </ul>
-
-                        <h4 class="text-xl font-semibold text-main mb-2 mt-4">Outcomes & Lessons Learned:</h4>
-                        <p class="mb-4">The culmination of these efforts was a fully functional arcade game that successfully demonstrated the integration of mechanical, electrical, and software engineering. Through this process, my team learned valuable lessons about the importance of interdisciplinary collaboration and the complexities involved in integrating distinct subsystems into a cohesive, finalized product. From this I gained the foundations of mechatronics and embedded systems that I continue to foster and deepen through being a teaching assistant of this course in the Fall 2025 Semester at Carnegie Mellon University.</p>
-                        
-                        <!-- 5. Final Image and Report -->
-                        <div class="w-full mb-8 mt-8 rounded-lg overflow-hidden bg-page">
-                            <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="Final Project" class="w-full h-auto block">
+                            </div>
+                            <div>
+                        <h2 class="text-xl font-bold text-main mb-4">What I would change</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Drive-brake motor control:</strong> Drive-coast lets the table coast before it reverses. At high speed it can hold a limit switch down long enough to re-trigger the interrupt. Actively braking would stop it sooner.</li>
+                            <li><strong class="text-ink">Brighter lighting:</strong> The phototransistors needed more light than expected, so we added a lamp. A brighter LED strip, dimmed with PWM, would have kept the look clean.</li>
+                        </ul>
+                            </div>
                         </div>
-
-                        <div class="mt-10 text-center border-t border-page pt-6">
-                            <h4 class="text-xl font-semibold text-main mb-4">Final Project Report:</h4>
-                            <a href="#" id="mechatronics-report-link" class="cursor-pointer block max-w-xs mx-auto">
-                                <div class="relative w-full aspect-[8.5/11] bg-page rounded-lg flex items-center justify-center p-2 group hover:ring-2 hover:ring-main-light transition-all">
-                                    <!-- Canvas for Report Preview -->
-                                    <canvas id="mechatronics-report-canvas" class="rounded-lg w-full"></canvas>
-                                    <!-- Loading Spinner -->
-                                    <div id="mechatronics-report-loading" class="absolute text-center">
-                                        <svg class="animate-spin h-8 w-8 text-ink mx-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                        </svg>
-                                        <p class="text-ink mt-2 text-sm">Loading Report Preview...</p>
-                                    </div>
-                                    <!-- Overlay -->
-                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors rounded-lg flex items-center justify-center">
-                                        <p class="text-ink opacity-0 group-hover:opacity-100 font-bold glass px-4 py-2 rounded-full">Click to Read</p>
-                                    </div>
-                                </div>
-                            </a>
+                        <div class="mt-10 pt-6 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
+                            <p class="text-ink/85">For the full design, schematics, and source code:</p>
+                            <a href="ADV_Mechatronics/ADV_Mechatronics_Report.pdf" target="_blank" rel="noopener" data-pdf="ADV_Mechatronics/ADV_Mechatronics_Report.pdf" data-pdf-title="Whac-A-Wacko: Final Project Report" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">Read the report (PDF)</a>
                         </div>
                     `
                 },
@@ -1277,7 +1328,8 @@
                 'knee-v1': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V1.0 model' },
                 // PLACEHOLDER: point `url` at the V2.0 model file when it is ready, then drop the note from `label`
                 'knee-v2': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V2.0 model (placeholder: showing the V1.0 model for now)' },
-                'hip':     { url: 'Hip_Exo/Hip_Exo_V2_Rajiv.glb', label: '' }
+                'hip':     { url: 'Hip_Exo/Hip_Exo_V2_Rajiv.glb', label: '' },
+                'haptic':  { url: 'Haptic_Device/Open_Source_Haptic_Device.glb', label: '' }
             };
 
             // Projects that open as their own page (cards with data-project-page="<key>").
@@ -1298,6 +1350,19 @@
                     sliders: ['hip-slider'],
                     parts: [
                         { detailsKey: 'hip-exo-title', model: 'hip' }
+                    ]
+                },
+                'haptic-device': {
+                    sliders: ['haptics-slider', 'haptics-software-slider'],
+                    parts: [
+                        { detailsKey: 'haptic-design-title', model: 'haptic' }
+                    ]
+                },
+                // No 3D model, so the write-up takes the full width
+                'whac-a-wacko': {
+                    sliders: ['adv-slider'],
+                    parts: [
+                        { detailsKey: 'mechatronics-project-title' }
                     ]
                 }
             };
@@ -1587,48 +1652,6 @@
                     itemModal.content.innerHTML = details.content;
                     itemModal.modal.classList.remove('hidden');
                     
-                    // Set up whatever the opened write-up needs
-                    if (itemId === 'haptic-design-title') {
-                        // Updated ID reference to match HTML above
-                        setupSlider('haptics-slider');
-                        
-                        // Render Report PDF Thumbnail
-                        renderPDFThumbnail(
-                            'Haptic_Device/Haptics_Report.pdf',
-                            'haptics-report-canvas',
-                            'haptics-report-loading'
-                        );
-
-                        // Attach click listener for report modal
-                        setTimeout(() => {
-                            const reportLink = document.getElementById('haptics-report-link');
-                            if (reportLink) {
-                                reportLink.addEventListener('click', (e) => {
-                                    e.preventDefault();
-                                    openPDFModal('Haptic_Device/Haptics_Report.pdf', 'Project Report');
-                                });
-                            }
-                        }, 100);
-                    }
-                    if (itemId === 'mechatronics-project-title') {
-                        // Render Report PDF Thumbnail for Mechatronics
-                        renderPDFThumbnail(
-                            'ADV_Mechatronics/ADV_Mechatronics_Report.pdf', // Assuming path
-                            'mechatronics-report-canvas',
-                            'mechatronics-report-loading'
-                        );
-
-                        // Attach click listener for report modal
-                        setTimeout(() => {
-                            const reportLink = document.getElementById('mechatronics-report-link');
-                            if (reportLink) {
-                                reportLink.addEventListener('click', (e) => {
-                                    e.preventDefault();
-                                    openPDFModal('ADV_Mechatronics/ADV_Mechatronics_Report.pdf', 'Project Report');
-                                });
-                            }
-                        }, 100);
-                    }
                 };
 
                 // Any element with data-item="<key in itemDetails>" opens that project's details
@@ -1712,37 +1735,6 @@
                 resetInterval();
             };
             
-            // Reusable PDF Thumbnail Renderer
-            const renderPDFThumbnail = async (url, canvasId, loadingId) => {
-                const canvas = document.getElementById(canvasId);
-                const loadingSpinner = document.getElementById(loadingId);
-                if (!canvas) return;
-                
-                // Add cache busting
-                const safeUrl = url.includes('?') ? url : url + '?t=' + new Date().getTime();
-
-                try {
-                    const { pdfjsLib } = globalThis;
-                    if (!pdfjsLib) throw new Error("PDF.js library not loaded");
-
-                    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://mozilla.github.io/pdf.js/build/pdf.worker.mjs`;
-                    const pdf = await pdfjsLib.getDocument(safeUrl).promise;
-                    const page = await pdf.getPage(1);
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-                    await page.render({ canvasContext: context, viewport }).promise;
-                    
-                    // Success UI updates
-                    if (loadingSpinner) loadingSpinner.style.display = 'none';
-                } catch (error) {
-                    console.error('Error rendering PDF preview for ' + url, error);
-                    if (loadingSpinner) {
-                        loadingSpinner.innerHTML = `<p class="text-red-400 text-center p-4 text-xs"><strong>Error:</strong> Could not load preview.<br>Ensure file exists.</p>`;
-                    }
-                }
-            };
             
             // 3D Scene
             // 3D viewers for project pages. A viewer is built the first time its model is needed and then
@@ -1831,68 +1823,6 @@
                 modelViewers[modelKey] = { el, controls, fit };
             };
 
-            const initHapticDevice3D = () => {
-                if (state.hapticDevice3DInitialized) return;
-                const container = document.getElementById('haptic-device-3d-container');
-                if (!container) return;
-                state.hapticDevice3DInitialized = true;
-
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                renderer.setSize(container.clientWidth, container.clientHeight);
-                container.appendChild(renderer.domElement);
-                
-                const controls = new OrbitControls(camera, renderer.domElement);
-                controls.enableDamping = true;
-                state.hapticDeviceControls = controls; // Store controls
-
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-                scene.add(ambientLight);
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-                directionalLight.position.set(5, 10, 7.5);
-                scene.add(directionalLight);
-
-                // UPDATED PATH: Now looking inside the Haptic_Device folder
-                new GLTFLoader().load('Haptic_Device/Open_Source_Haptic_Device.glb', (gltf) => {
-                    const model = gltf.scene;
-                    const box = new THREE.Box3().setFromObject(model);
-                    const size = box.getSize(new THREE.Vector3()).length();
-                    const center = box.getCenter(new THREE.Vector3());
-                    model.position.sub(center);
-                    camera.position.set(size * 0.6, size * 0.4, size);
-                    controls.target.set(0, 0, 0);
-                    camera.lookAt(0, 0, 0);
-                    controls.minDistance = size / 5;
-                    controls.maxDistance = size * 5;
-                    camera.near = size / 100;
-                    camera.far = size * 100;
-                    camera.updateProjectionMatrix();
-                    scene.add(model);
-                    controls.update();
-                    controls.saveState();
-                }, undefined, (error) => {
-                    console.error(error);
-                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.<br>Check 'Haptic_Device' folder.</div>`;
-                });
-
-                window.addEventListener('resize', () => {
-                    if (!container) return;
-                    camera.aspect = container.clientWidth / container.clientHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(container.clientWidth, container.clientHeight);
-                }, false);
-
-                const animate = () => {
-                    requestAnimationFrame(animate);
-                    controls.update();
-                    renderer.render(scene, camera);
-                };
-                animate();
-            };
-            
-            // Home page projects carousel: arrows step one project at a time,
-            // and each arrow disappears when there is nothing further in that direction.
             const setupProjectCarousel = () => {
                 const track = document.getElementById('projects-track');
                 const prevBtn = document.getElementById('projects-prev');
@@ -1928,23 +1858,36 @@
                 grid.replaceChildren(...Array.from(track.children, card => card.cloneNode(true)));
             };
 
-            // Looping clips on project pages: silent, on repeat, with one play / pause button.
-            // Markup: <div class="video-loop"> <video autoplay muted loop playsinline> + <button class="video-toggle">
+            // Looping clips on project pages: they start silent and on repeat, with a play / pause button.
+            // Markup: <div class="video-loop"> <video autoplay muted loop playsinline> + <button class="video-toggle">,
+            // plus <button class="video-mute"> on clips whose sound can be switched on.
             const PAUSE_ICON = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"></path></svg>';
             const PLAY_ICON = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"></path></svg>';
 
+            const SOUND_OFF_ICON = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="currentColor"></path><path d="M22 9l-6 6M16 9l6 6"></path></svg>';
+            const SOUND_ON_ICON = '<svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4V5z" fill="currentColor"></path><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"></path></svg>';
+
+            // Keep a clip's buttons in step with the clip. The sound button exists only on clips that allow sound.
             const updateVideoToggle = (video) => {
-                const button = video.closest('.video-loop')?.querySelector('.video-toggle');
-                if (!button) return;
-                button.innerHTML = video.paused ? PLAY_ICON : PAUSE_ICON;
-                button.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
+                const wrapper = video.closest('.video-loop');
+                if (!wrapper) return;
+                const button = wrapper.querySelector('.video-toggle');
+                if (button) {
+                    button.innerHTML = video.paused ? PLAY_ICON : PAUSE_ICON;
+                    button.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
+                }
+                const soundButton = wrapper.querySelector('.video-mute');
+                if (soundButton) {
+                    soundButton.innerHTML = video.muted ? SOUND_OFF_ICON : SOUND_ON_ICON;
+                    soundButton.setAttribute('aria-label', video.muted ? 'Unmute video' : 'Mute video');
+                }
             };
 
             // Call after adding write-up HTML to the page
             const startLoopVideos = (root) => {
                 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
                 root.querySelectorAll('.video-loop video').forEach(video => {
-                    video.muted = true; // never any sound
+                    video.muted = true; // every clip starts silent
                     if (reduceMotion) video.pause(); // visitors who ask for less motion start paused
                     else video.play().catch(() => {});
                     updateVideoToggle(video);
@@ -1959,8 +1902,13 @@
                     if (video.paused) video.play().catch(() => {});
                     else video.pause();
                 });
-                // play / pause events don't bubble, so listen in the capture phase to keep every button in sync
-                ['play', 'pause'].forEach(type => {
+                document.addEventListener('click', (e) => {
+                    const button = e.target instanceof Element ? e.target.closest('.video-mute') : null;
+                    const video = button?.closest('.video-loop')?.querySelector('video');
+                    if (video) video.muted = !video.muted;
+                });
+                // These media events don't bubble, so listen in the capture phase to keep every button in sync
+                ['play', 'pause', 'volumechange'].forEach(type => {
                     document.addEventListener(type, (e) => {
                         if (e.target instanceof HTMLVideoElement) updateVideoToggle(e.target);
                     }, true);
