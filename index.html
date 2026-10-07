@@ -257,6 +257,11 @@
             background: linear-gradient(270deg, rgb(var(--page) / .5), transparent);
         }
 
+        /* 3D viewer on a project page: a soft light behind the model so dark parts stay readable */
+        .project-model {
+            background: radial-gradient(ellipse at 50% 45%, rgb(255 255 255 / .2), rgb(255 255 255 / .04) 72%);
+        }
+
         /* Translucent content panels */
         .surface {
             background-color: rgb(var(--panel) / .62);
@@ -396,6 +401,14 @@
                                 <span class="block mt-1 px-1 text-sm text-ink/60">Assistive Robotics Lab</span>
                                 <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An autonomous robotic system for tennis training and practice.</span>
                             </button>
+                            <!-- TEST: opens the new full project page (data-project-page = key in projectPages)
+                                 instead of the pop-up. Delete this card when the format is settled. -->
+                            <button type="button" data-project-page="hip-exo-test" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <img src="Hip_Exo/Hip_Exo_Angle.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Hip Exo Project Test</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">MetaMobility Lab</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">Test of the new project page: write-up on the left, interactive 3D model on the right.</span>
+                            </button>
                         </div>
                         <button type="button" id="projects-prev" class="carousel-arrow is-prev" aria-label="Previous project" hidden><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
                         <button type="button" id="projects-next" class="carousel-arrow is-next" aria-label="Next project"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
@@ -414,6 +427,31 @@
             <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
         </div>
         
+        <!-- Single Project Page (opened by cards with data-project-page; see projectPages in the script)
+             Left 2/3: the project write-up. Right 1/3: its 3D model, which stays in view while you scroll. -->
+        <div id="project-page" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
+                <div id="project-page-header" class="md:col-span-2 flex flex-wrap items-center gap-x-5 gap-y-3">
+                    <button type="button" id="project-back" class="glass glass-btn flex items-center gap-1 pl-2.5 pr-4 py-1.5 rounded-full font-bold text-ink">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                        Projects
+                    </button>
+                    <h1 id="project-page-title" class="text-2xl sm:text-3xl font-bold text-main"></h1>
+                </div>
+                <!-- Sits in the right-hand column on desktop (pinned while scrolling), between the title and the write-up on phones -->
+                <aside id="project-page-model" class="md:col-start-3 md:row-start-1 md:row-span-2 md:sticky md:top-24">
+                    <div class="surface p-3 rounded-2xl">
+                        <!-- One container per project model; only the open project's is shown -->
+                        <div id="hip-exo-3d-container" class="project-model relative w-full h-72 md:h-[calc(100vh-13rem)] md:max-h-[44rem] rounded-xl cursor-grab active:cursor-grabbing">
+                            <p class="model-loading absolute inset-0 flex items-center justify-center text-sm text-ink/60">Loading 3D model…</p>
+                        </div>
+                        <p class="mt-2 text-sm text-center text-ink/60">Drag to rotate. Scroll or pinch to zoom.</p>
+                    </div>
+                </aside>
+                <article id="project-page-content" class="surface md:col-span-2 min-w-0 p-5 sm:p-8 rounded-2xl leading-relaxed text-ink"></article>
+            </div>
+        </div>
+
         <!-- Gallery Page Content -->
         <div id="gallery-page" class="hidden max-w-3xl mx-auto">
             <div class="surface p-5 sm:p-8 rounded-2xl">
@@ -552,7 +590,10 @@
                 sliders: {},
                 kneeExoControls: null,
                 hipExoControls: null,
-                hapticDeviceControls: null
+                hapticDeviceControls: null,
+                openProject: null,          // key of the project page being shown, if any
+                lastPage: 'home',           // last main page shown (where Back returns to)
+                projectOpenedInApp: false   // true when the project page was reached by clicking a card
             };
 
             // --- DOM ELEMENT SELECTIONS ---
@@ -579,6 +620,16 @@
                 title: document.getElementById('pdf-modal-title'),
                 frame: document.getElementById('pdf-frame'),
                 closeBtn: document.getElementById('close-modal-btn')
+            };
+
+            // Single project page
+            const projectPage = {
+                page: document.getElementById('project-page'),
+                header: document.getElementById('project-page-header'),
+                title: document.getElementById('project-page-title'),
+                content: document.getElementById('project-page-content'),
+                model: document.getElementById('project-page-model'),
+                backBtn: document.getElementById('project-back')
             };
 
             // Generic Item Modal Elements
@@ -1015,6 +1066,23 @@
                     content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
                 },
             };
+
+            // Projects that open as their own page (cards with data-project-page="<key>").
+            //   detailsKey     which itemDetails entry supplies the write-up
+            //   sliders        ids of image sliders inside that write-up
+            //   modelContainer id of this project's 3D container in #project-page-model (omit if no model)
+            //   initModel      starts the 3D viewer the first time the page is opened
+            //   controlsKey    where that viewer stores its OrbitControls in `state`
+            const projectPages = {
+                'hip-exo-test': {
+                    title: 'Hip Exo Project Test',
+                    detailsKey: 'hip-exo-title',
+                    sliders: ['hip-slider'],
+                    modelContainer: 'hip-exo-3d-container',
+                    initModel: () => initHipExo3D(),
+                    controlsKey: 'hipExoControls'
+                }
+            };
             
             // --- FUNCTIONS ---
 
@@ -1022,7 +1090,33 @@
             const setupNavigation = () => {
                 const activeClass = 'is-active'; // styled in the <style> block (.nav-link.is-active)
 
+                const stopSliders = () => {
+                    Object.values(state.sliders).forEach(sl => clearInterval(sl.interval));
+                    state.sliders = {};
+                };
+
+                // Drop a #project/... address without adding a history entry
+                const clearProjectHash = () => {
+                    if (!location.hash.startsWith('#project/')) return;
+                    try {
+                        history.replaceState(null, '', location.pathname + location.search);
+                    } catch (err) {
+                        location.hash = '';
+                    }
+                };
+
+                const leaveProjectPage = () => {
+                    if (!state.openProject) return;
+                    state.openProject = null;
+                    projectPage.page.classList.add('hidden');
+                    projectPage.content.innerHTML = '';
+                    stopSliders();
+                    clearProjectHash();
+                };
+
                 const navigateTo = (pageKey) => {
+                    leaveProjectPage();
+                    state.lastPage = pageKey;
                     Object.values(pages).forEach(page => page.classList.add('hidden'));
                     Object.values(navLinks).forEach(link => {
                         link.classList.remove(activeClass);
@@ -1034,17 +1128,75 @@
                     navLinks[pageKey].setAttribute('aria-current', 'page');
                     window.scrollTo(0, 0); // the nav is sticky, so start each page at the top
                     if (pageKey === 'home') state.refreshProjectCarousel?.(); // re-check the carousel arrows once it's visible again
-
-                    if (pageKey === 'projects') {
-                        initKneeExo3D();
-                        initHipExo3D();
-                        initHapticDevice3D();
-                        // Reset controls every time the page is viewed
-                        if (state.kneeExoControls) state.kneeExoControls.reset();
-                        if (state.hipExoControls) state.hipExoControls.reset();
-                        if (state.hapticDeviceControls) state.hapticDeviceControls.reset();
-                    }
                 };
+
+                // Show a project's own page. Returns false if there is no such project.
+                const showProjectPage = (projectKey) => {
+                    const config = projectPages[projectKey];
+                    const details = config && itemDetails[config.detailsKey];
+                    if (!details) return false;
+
+                    Object.values(pages).forEach(page => page.classList.add('hidden'));
+                    Object.values(navLinks).forEach(link => {
+                        link.classList.remove(activeClass);
+                        link.removeAttribute('aria-current');
+                    });
+                    navLinks.projects.classList.add(activeClass); // project pages live under Projects
+
+                    // The write-up is shared with the pop-up, so make sure only one copy is in the page
+                    itemModal.modal.classList.add('hidden');
+                    itemModal.content.innerHTML = '';
+                    stopSliders();
+
+                    projectPage.title.textContent = config.title || details.title;
+                    projectPage.content.innerHTML = details.content;
+                    projectPage.page.classList.remove('hidden');
+                    state.openProject = projectKey;
+                    window.scrollTo(0, 0);
+                    (config.sliders || []).forEach(setupSlider);
+
+                    // 3D model on the right third; without one, the write-up takes the full width
+                    const hasModel = Boolean(config.modelContainer);
+                    projectPage.model.classList.toggle('hidden', !hasModel);
+                    [projectPage.header, projectPage.content].forEach(el => {
+                        el.classList.toggle('md:col-span-2', hasModel);
+                        el.classList.toggle('md:col-span-3', !hasModel);
+                    });
+                    projectPage.model.querySelectorAll('.project-model').forEach(el => {
+                        el.classList.toggle('hidden', el.id !== config.modelContainer);
+                    });
+                    if (hasModel) {
+                        config.initModel();                         // only does work the first time
+                        window.dispatchEvent(new Event('resize'));  // re-fit the viewer to its container
+                        state[config.controlsKey]?.reset();
+                    }
+                    return true;
+                };
+
+                // The address bar drives project pages, so the browser's Back button works:
+                //   #project/<key>  -> that project's page;  anything else -> back to the last main page
+                const syncProjectPageToHash = () => {
+                    const match = location.hash.match(/^#project\/(.+)$/);
+                    if (match && showProjectPage(decodeURIComponent(match[1]))) return;
+                    if (state.openProject) navigateTo(state.lastPage);
+                };
+                window.addEventListener('hashchange', syncProjectPageToHash);
+
+                document.addEventListener('click', (e) => {
+                    const card = e.target instanceof Element ? e.target.closest('[data-project-page]') : null;
+                    if (!card) return;
+                    state.projectOpenedInApp = true;
+                    location.hash = '#project/' + encodeURIComponent(card.dataset.projectPage);
+                });
+
+                projectPage.backBtn?.addEventListener('click', () => {
+                    if (state.projectOpenedInApp) {
+                        state.lastPage = 'projects';
+                        history.back();          // undoes the card click, so Back/Forward stay consistent
+                    } else {
+                        navigateTo('projects');  // page was opened directly from a link
+                    }
+                });
 
                 Object.entries(navLinks).forEach(([key, link]) => {
                     link.addEventListener('click', (e) => {
@@ -1065,6 +1217,11 @@
                 });
 
                 navigateTo('home'); // Set initial page
+            };
+
+            // Open a project page straight from a link such as index.html#project/hip-exo-test
+            const openProjectFromAddress = () => {
+                if (location.hash.startsWith('#project/')) window.dispatchEvent(new HashChangeEvent('hashchange'));
             };
 
             // Lightbox Logic
@@ -1434,6 +1591,7 @@
                     scene.add(model);
                     controls.update();
                     controls.saveState();
+                    container.querySelector('.model-loading')?.remove();
                 }, undefined, (error) => {
                     console.error(error);
                     container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
@@ -1573,6 +1731,7 @@
             setupProjectCarousel();
             setupProjectsGrid();
             setupGlass();
+            openProjectFromAddress();
         });
     </script>
 </body>
