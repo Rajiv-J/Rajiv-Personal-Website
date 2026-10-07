@@ -808,8 +808,26 @@
                                 <dd class="mb-1 text-2xl font-bold text-ink">26.7%</dd>
                             </div>
                         </dl>
-                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
-                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: photos of the V2.0 device</div>
+                        <div class="mt-6 flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+                            <figure class="sm:flex-[1.28_1_0%] min-w-0 w-full sm:w-auto">
+                                <img src="Knee_Exo_Resources/Knee_V2_Worn_Views.png" alt="The V2.0 knee exoskeleton worn on both legs: standing side view, squatting, and standing front view" loading="lazy" class="w-full h-auto rounded-lg">
+                                <figcaption class="mt-2 text-sm text-center text-ink/60">Worn on both legs: standing, squatting, and from the front</figcaption>
+                            </figure>
+                            <figure class="sm:flex-[0.342_1_0%] min-w-0 w-1/2 sm:w-auto">
+                                <img src="Knee_Exo_Resources/Knee_V2_Unilateral.png" alt="One leg module of the V2.0 knee exoskeleton" loading="lazy" class="w-full h-auto rounded-lg">
+                                <figcaption class="mt-2 text-sm text-center text-ink/60">One leg module</figcaption>
+                            </figure>
+                        </div>
+                        <div class="mt-6 flex flex-col sm:flex-row gap-4 items-center sm:items-start">
+                            <figure class="sm:flex-[2.401_1_0%] min-w-0 w-full sm:w-auto">
+                                <img src="Knee_Exo_Resources/Knee_V2_HighLevel_Board.png" alt="High-level control board with the Jetson Orin Nano, battery, and emergency stop mounted on the waist belt" loading="lazy" class="w-full h-auto rounded-lg">
+                                <figcaption class="mt-2 text-sm text-center text-ink/60">High-level board: Jetson Orin Nano, battery, and E-stop on the waist belt</figcaption>
+                            </figure>
+                            <figure class="sm:flex-[0.504_1_0%] min-w-0 w-1/2 sm:w-auto">
+                                <img src="Knee_Exo_Resources/Knee_V2_LowLevel_PCB.png" alt="Low-level PCB carrying the Teensy 4.1 microcontroller" loading="lazy" class="w-full h-auto rounded-lg">
+                                <figcaption class="mt-2 text-sm text-center text-ink/60">Low-level PCB (Teensy 4.1)</figcaption>
+                            </figure>
+                        </div>
 
                         <h3 class="text-xl font-bold text-main mt-10 mb-4">V2.0 at a glance</h3>
                         <dl class="border-t border-ink/15">
@@ -855,58 +873,24 @@
                             </div>
                         </dl>
 
-                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Mechanical design decisions</h3>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">My contributions</h3>
                         <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li><strong class="text-ink">Shell-dominant printing:</strong> Each cuff is printed with solid outer walls and minimal infill. That puts material far from the neutral axis, where it resists bending most effectively, much like the flanges of an I-beam.</li>
-                            <li><strong class="text-ink">Wrap-around cuffs:</strong> Early cuffs covered only the front-facing regions of the leg, and under load the device rotated around the limb. That rotation corrupted the IMU readings feeding the controller. Wrapping the cuffs around the front and back of the leg converts part of the shear force into normal force and stopped the rotation.</li>
-                            <li><strong class="text-ink">Result:</strong> The final cuffs transferred the full 18 Nm to the user with minimal device migration, and no material deformation was observed across all seven participants' trials.</li>
+                            <li><strong class="text-ink">Mechanical design:</strong> Designed the full CAD for the device, a three-cuff interface spanning the thigh, shank, and ankle, and 3D printed every structural part.</li>
+                            <li><strong class="text-ink">Low-level firmware:</strong> Wrote the low-level communication on the Teensy and the split architecture that separates it from the high-level computer, so each leg handles its own sensing and motor commands.</li>
+                            <li><strong class="text-ink">High-level control:</strong> Wrote the high-level control loop on the Jetson, which reads the state of each leg, runs the active controller, and sends back the torque command.</li>
+                            <li><strong class="text-ink">Simulation-trained controller:</strong> Trained a knee-assistance controller entirely in simulation and deployed it on the device, with no real-world training data collected beforehand.</li>
                         </ul>
 
-                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Final embedded architecture</h3>
-                        <p class="text-ink/85">Control is split across two tiers, so a new controller can be developed without touching the hardware layer.</p>
-                        <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li><strong class="text-ink">Low level, 1000 Hz:</strong> A Teensy 4.1 on each leg polls the two IMUs over SPI, sends torque commands over CAN to the actuator's FOC driver, and logs motor position, velocity, and torque.</li>
-                            <li><strong class="text-ink">High level, 100 Hz:</strong> A Jetson Orin Nano polls both Teensys over a shared CAN FD bus at the start of each cycle, runs the active controller, and sends the torque command back. Communication between the tiers is interrupt-driven, with end-to-end latency under 80 ms across the bilateral network.</li>
-                            <li><strong class="text-ink">Safety:</strong> A watchdog timer on each Teensy commands 0 Nm if a valid torque command does not arrive in time, returning the device to a passive, backdrivable state.</li>
-                            <li><strong class="text-ink">A Teensy per leg:</strong> Keeping each leg's low-level control self-contained means future controllers can run entirely on the microcontroller, without the Jetson, in a bilateral or unilateral setup.</li>
-                            <li><strong class="text-ink">Logging and sync:</strong> Data is logged on the Jetson by trial, and GPIO trigger pulses mark the start and end of each trial to align it with the motion capture, treadmill, and EMG systems.</li>
-                        </ul>
-                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
-                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: high-level and low-level control boards</div>
-                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
-                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: control loop diagram</div>
-
-                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Simulation-trained controller</h3>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Validation</h3>
                         <p class="text-ink/85">
-                            I developed and deployed a knee-assistance controller that was trained entirely in simulation, with no real-world training data collected beforehand.
+                            We tested PEAK in a human-subject experiment, comparing squats with and without the device. The full protocol and results are in the paper at the end of this page.
                         </p>
-                        <ol class="mt-3 list-decimal pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li><strong class="text-ink">Imitation in simulation:</strong> A reinforcement learning policy (soft actor-critic, in the style of DeepMimic) learned to reproduce reference squatting kinematics in a musculoskeletal simulation built in SCONE with the Hyfydy physics engine. The reward combined motion tracking with penalties on muscular effort and abrupt changes in actuation.</li>
-                            <li><strong class="text-ink">Distillation:</strong> Rollouts of that policy provided synchronized kinematics and knee moments. These were distilled into a temporal convolutional network (TCN) that estimates knee moment from a short history of knee angle and thigh and shank angular velocity, the signals available from the IMUs and motor encoder. Sensor noise and calibration offsets were added during training for robustness.</li>
-                            <li><strong class="text-ink">Deployment:</strong> On the device, the estimator runs on the Jetson from the onboard sensors alone, and its output is scaled into assistive knee torque.</li>
-                        </ol>
-
-                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Experiment</h3>
-                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li><strong class="text-ink">Participants:</strong> Seven healthy adults, under a protocol approved by the Carnegie Mellon University Institutional Review Board.</li>
-                            <li><strong class="text-ink">Task:</strong> Bodyweight squats paced by a 40 BPM metronome in 60-second trials, with and without the exoskeleton.</li>
-                            <li><strong class="text-ink">Instrumentation:</strong> A 10-camera Vicon motion capture system, a Bertec split-belt instrumented treadmill with force plates, and Delsys surface EMG on the vastus medialis (quadriceps) and medial gastrocnemius (calf).</li>
-                            <li><strong class="text-ink">Analysis:</strong> Inverse kinematics and inverse dynamics in OpenSim with participant-scaled models, adding the exoskeleton's mass for the assisted trials. The final 10 squat cycles were averaged per participant and compared with paired t-tests.</li>
+                        <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Muscle effort:</strong> Quadriceps activation was lower with the device.</li>
+                            <li><strong class="text-ink">Knee moment:</strong> The peak knee extension moment the user had to produce was lower.</li>
+                            <li><strong class="text-ink">Joint loading:</strong> With the device sharing the demand of the squat, the knee carried less load.</li>
+                            <li><strong class="text-ink">Takeaway:</strong> A controller trained entirely in simulation transferred to the physical device and gave meaningful assistance.</li>
                         </ul>
-                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
-                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: experiment setup</div>
-
-                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Outcomes</h3>
-                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li><strong class="text-ink">Joint loading:</strong> Peak knee extension moment fell 21.5%, from 81.9 to 64.3 Nm (p = 0.006), with a reduction in all seven participants.</li>
-                            <li><strong class="text-ink">Muscle effort:</strong> Peak vastus medialis activation fell 26.7%, from 77.1 to 56.5 %MVC (p = 0.016), with a reduction in six of the seven participants.</li>
-                            <li><strong class="text-ink">No compensation:</strong> Medial gastrocnemius activation showed no significant change, so the assistance did not shift effort onto an unassisted muscle.</li>
-                            <li><strong class="text-ink">Kinematics:</strong> Peak knee flexion was slightly lower with the device, 107.1&deg; compared with 114.5&deg; (p = 0.019). Peak commanded torque averaged 15.7 Nm.</li>
-                            <li><strong class="text-ink">Takeaway:</strong> A controller trained entirely in simulation transferred to the physical device and gave meaningful biomechanical assistance.</li>
-                            <li><strong class="text-ink">Limits so far:</strong> Validation covers squatting only, in seven healthy young adults.</li>
-                        </ul>
-                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
-                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: results plots</div>
 
                         <h2 class="text-2xl font-bold text-main mt-12 mb-4">Next steps</h2>
                         <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
@@ -915,6 +899,12 @@
                             <li>Taking the device outdoors to validate it in real-world settings, beyond constrained laboratory environments.</li>
                             <li>Finalizing the documentation for the full open-source release of the platform. To our knowledge it will be the first full-stack open-source exoskeleton and the first that is fully 3D printed. Full stack means we release the hardware, the embedded systems, the low-level control, and the high-level simulation controller pipeline.</li>
                         </ul>
+
+                        <!-- The paper opens in the site's PDF viewer (data-pdf); the href is the fallback -->
+                        <div class="mt-10 pt-6 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
+                            <p class="text-ink/85">For the full design, controller, and experimental details:</p>
+                            <a href="Knee_Exo_Resources/Knee_Exoskeleton_Paper.pdf" target="_blank" rel="noopener" data-pdf="Knee_Exo_Resources/Knee_Exoskeleton_Paper.pdf" data-pdf-title="A Holistic Design Framework for a Modular Knee Exoskeleton System" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">Read the paper (PDF)</a>
+                        </div>
                     `
                 },
                 'hip-exo-title': {
@@ -1561,6 +1551,14 @@
             };
 
             const setupModals = () => {
+                // Links with data-pdf="<file>" open in the PDF viewer (data-pdf-title sets its heading)
+                document.addEventListener('click', (e) => {
+                    const link = e.target instanceof Element ? e.target.closest('[data-pdf]') : null;
+                    if (!link) return;
+                    e.preventDefault();
+                    openPDFModal(link.dataset.pdf, link.dataset.pdfTitle || 'Document');
+                });
+
                 pdfModal.closeBtn?.addEventListener('click', closePDFModal);
                 pdfModal.modal?.addEventListener('click', (e) => {
                     if (e.target === pdfModal.modal) closePDFModal();
