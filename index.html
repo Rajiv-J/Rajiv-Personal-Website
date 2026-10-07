@@ -176,6 +176,87 @@
                 0 4px 14px rgb(0 0 0 / .3);
         }
 
+        /* Blue-tinted glass (LinkedIn button) */
+        .glass.glass-blue {
+            background-color: rgb(10 102 194 / .62);
+            border-color: rgb(150 200 255 / .4);
+            box-shadow:
+                inset 0 1px 0 rgb(255 255 255 / .4),
+                inset 0 -1px 0 rgb(0 0 0 / .3),
+                0 6px 20px rgb(10 102 194 / .35);
+        }
+
+        /* Projects carousel on the home page */
+        .project-track {
+            display: flex;
+            gap: 1.5rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-padding-inline: .25rem;
+            overscroll-behavior-x: contain;
+            scrollbar-width: none;
+            /* room for the cards' shadows, cancelled out so the layout doesn't shift */
+            padding: 1rem .25rem 2.5rem;
+            margin: -1rem -.25rem -2.5rem;
+        }
+        .project-track::-webkit-scrollbar {
+            display: none;
+        }
+        .project-card {
+            flex: 0 0 85%;               /* phones: one card and a peek of the next */
+            scroll-snap-align: start;
+            box-shadow:
+                inset 0 1px 0 rgb(255 255 255 / .28),
+                inset 0 -1px 0 rgb(0 0 0 / .3),
+                0 8px 22px rgb(0 0 0 / .26);
+        }
+        .project-card:active {
+            scale: .985;
+        }
+        @media (min-width: 640px) {
+            .project-card {
+                flex-basis: calc((100% - 1.5rem) / 2);   /* two cards */
+            }
+        }
+        @media (min-width: 768px) {
+            .project-card {
+                flex-basis: calc((100% - 3rem) / 3);     /* three cards */
+            }
+        }
+        .carousel-arrow {
+            position: absolute;
+            top: 1rem;       /* matches .project-track's padding, so the arrow spans exactly the cards */
+            bottom: 2.5rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            width: 3rem;
+            color: rgb(var(--ink) / .6);
+            filter: drop-shadow(0 1px 2px rgb(0 0 0 / .7));
+            transition: color .2s ease;
+        }
+        .carousel-arrow[hidden] {
+            display: none;
+        }
+        .carousel-arrow:hover,
+        .carousel-arrow:focus-visible {
+            color: rgb(var(--ink));
+        }
+        .carousel-arrow.is-prev {
+            left: 0;
+            justify-content: flex-start;
+            padding-left: .25rem;
+            border-radius: 1rem 0 0 1rem;
+            background: linear-gradient(90deg, rgb(var(--page) / .5), transparent);
+        }
+        .carousel-arrow.is-next {
+            right: 0;
+            justify-content: flex-end;
+            padding-right: .25rem;
+            border-radius: 0 1rem 1rem 0;
+            background: linear-gradient(270deg, rgb(var(--page) / .5), transparent);
+        }
+
         /* Translucent content panels */
         .surface {
             background-color: rgb(var(--panel) / .62);
@@ -231,7 +312,11 @@
                     <div class="photo-frame p-2.5">
                         <img src="Rajiv_pfp.jpg" alt="Rajiv Joshi" class="w-full aspect-[4/5] object-cover rounded-2xl">
                     </div>
-                    <figcaption class="mt-3 px-2.5 text-sm text-ink/60">Mechanical Engineer</figcaption>
+                    <figcaption class="flex items-center justify-between gap-3 mt-3 px-2.5 text-sm">
+                        <span class="text-ink/60">Mechanical Engineer</span>
+                        <!-- w-[19ch] = the width of the "Mechanical Engineer" label (19 characters, same font size) -->
+                        <a href="https://www.linkedin.com/in/rajivj02/" target="_blank" rel="noopener noreferrer" class="glass glass-blue glass-btn w-[19ch] py-1.5 rounded-full text-center font-bold text-ink">LinkedIn</a>
+                    </figcaption>
                 </figure>
 
                 <!-- About -->
@@ -242,10 +327,10 @@
 
                     <div class="mt-8 space-y-5 text-lg leading-relaxed text-ink/85">
                         <p>
-                            I earned my M.S. in Mechanical Engineering (Research) at Carnegie Mellon, advised by Inseung Kang in the MetaMobility Lab. Before that I earned two B.S. degrees at Virginia Tech, one in Mechanical Engineering and one in Robotics and Mechatronics.
+                            Hi, I'm Rajiv. I'm an engineer who likes being part of the whole build: the hardware, the embedded systems, the programming and the controls. I've been lucky to work on all four, and every project still teaches me something new.
                         </p>
                         <p>
-                            At the MetaMobility Lab I've worked on every layer of these devices, from hardware, embedded systems programming and electrical architecture to, now, reinforcement learning that trains digital twins. The question I'm working on: how can we train controllers without collecting large amounts of data, especially for impaired populations?
+                            I studied at Virginia Tech, where I earned B.S. degrees in Mechanical Engineering and in Robotics and Mechatronics, then completed my M.S. in Mechanical Engineering at Carnegie Mellon, advised by Inseung Kang in the MetaMobility Lab. There I worked on wearable robots that help people walk and move, starting with hardware and electronics and most recently training controllers with reinforcement learning and digital twins.
                         </p>
                     </div>
                 </section>
@@ -265,6 +350,54 @@
                         <dd class="leading-relaxed text-ink/85">Volleyball&nbsp;&middot; Billiards&nbsp;&middot; D&amp;D&nbsp;&middot; Hiking&nbsp;&middot; Traveling</dd>
                     </div>
                 </dl>
+
+                <!-- Projects carousel: three cards visible, arrows step one project at a time.
+                     Each card opens the same details pop-up as the matching title on the Projects page (data-item). -->
+                <section class="md:col-span-12 min-w-0" aria-labelledby="home-projects-heading">
+                    <h2 id="home-projects-heading" class="mb-6 text-2xl font-bold text-main">Projects</h2>
+                    <div class="relative">
+                        <div id="projects-track" class="project-track">
+                            <button type="button" data-item="knee-exo-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover object-[center_70%] rounded-xl">
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Knee Exoskeleton</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">MetaMobility Lab</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">A lightweight, high-torque knee exoskeleton designed to assist individuals with gait impairment.</span>
+                            </button>
+                            <button type="button" data-item="hip-exo-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <img src="Hip_Exo/Hip_Exo_Angle.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Hip Exoskeleton</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">MetaMobility Lab</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An assistive device that reduces hip work with an adaptive controller based on real-time gait cycle estimation.</span>
+                            </button>
+                            <button type="button" data-item="haptic-design-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <img src="Haptic_Device/Haptics_Final_1.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Open-Source Haptic Device</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">Haptic Design Interfaces</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An open-source teaching tool for learning forward kinematics, biological sensors, and haptics.</span>
+                            </button>
+                            <button type="button" data-item="mechatronics-project-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <img src="ADV_Mechatronics/ADV_Mechatronics_Final.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Whac-A-Wacko Arcade Game</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">ADV Mechatronics</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">A robust arcade game demonstrating depth of knowledge in mechatronic system design.</span>
+                            </button>
+                            <button type="button" data-item="solar-car-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <span class="flex items-center justify-center w-full aspect-[4/3] rounded-xl bg-ink/5 text-sm text-ink/50">Photo coming soon</span>
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Solar Car</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">Virginia Tech</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">Design and manufacturing of a solar-powered vehicle for competitive racing.</span>
+                            </button>
+                            <button type="button" data-item="assistive-robotics-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <span class="flex items-center justify-center w-full aspect-[4/3] rounded-xl bg-ink/5 text-sm text-ink/50">Photo coming soon</span>
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Tennis Training Robot</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">Assistive Robotics Lab</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An autonomous robotic system for tennis training and practice.</span>
+                            </button>
+                        </div>
+                        <button type="button" id="projects-prev" class="carousel-arrow is-prev" aria-label="Previous project" hidden><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
+                        <button type="button" id="projects-next" class="carousel-arrow is-next" aria-label="Next project"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></button>
+                    </div>
+                </section>
 
             </main>
         </div>
@@ -999,6 +1132,7 @@
                     navLinks[pageKey].classList.add(activeClass);
                     navLinks[pageKey].setAttribute('aria-current', 'page');
                     window.scrollTo(0, 0); // the nav is sticky, so start each page at the top
+                    if (pageKey === 'home') state.refreshProjectCarousel?.(); // re-check the carousel arrows once it's visible again
 
                     if (pageKey === 'projects') {
                         initKneeExo3D();
@@ -1128,68 +1262,74 @@
                     if (e.target === pdfModal.modal) closePDFModal();
                 });
 
-                // Generic Item Modal
+                // Generic Item Modal: opened by project titles (Projects page) and project cards (home carousel)
+                const openItemModal = (itemId) => {
+                    const details = itemDetails[itemId];
+                    if (!details) return;
+                    itemModal.title.textContent = details.title;
+                    itemModal.content.innerHTML = details.content;
+                    itemModal.modal.classList.remove('hidden');
+                    
+                    // Initialize sliders based on which modal is opened
+                    if (itemId === 'knee-exo-title') {
+                        setupSlider('knee-slider');
+                        setupSlider('knee-pcb-slider'); // Initialize new PCB slider
+                    }
+                    if (itemId === 'hip-exo-title') {
+                        setupSlider('hip-slider');
+                    }
+                    if (itemId === 'haptic-design-title') {
+                        // Updated ID reference to match HTML above
+                        setupSlider('haptics-slider');
+                        
+                        // Render Report PDF Thumbnail
+                        renderPDFThumbnail(
+                            'Haptic_Device/Haptics_Report.pdf',
+                            'haptics-report-canvas',
+                            'haptics-report-loading'
+                        );
+
+                        // Attach click listener for report modal
+                        setTimeout(() => {
+                            const reportLink = document.getElementById('haptics-report-link');
+                            if (reportLink) {
+                                reportLink.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    openPDFModal('Haptic_Device/Haptics_Report.pdf', 'Project Report');
+                                });
+                            }
+                        }, 100);
+                    }
+                    if (itemId === 'mechatronics-project-title') {
+                        // Render Report PDF Thumbnail for Mechatronics
+                        renderPDFThumbnail(
+                            'ADV_Mechatronics/ADV_Mechatronics_Report.pdf', // Assuming path
+                            'mechatronics-report-canvas',
+                            'mechatronics-report-loading'
+                        );
+
+                        // Attach click listener for report modal
+                        setTimeout(() => {
+                            const reportLink = document.getElementById('mechatronics-report-link');
+                            if (reportLink) {
+                                reportLink.addEventListener('click', (e) => {
+                                    e.preventDefault();
+                                    openPDFModal('ADV_Mechatronics/ADV_Mechatronics_Report.pdf', 'Project Report');
+                                });
+                            }
+                        }, 100);
+                    }
+                };
+
                 const itemTriggers = document.querySelectorAll('[id$="-title"]');
                 itemTriggers.forEach(trigger => {
                     if (itemDetails[trigger.id]) {
                         trigger.classList.add('cursor-pointer', 'hover:text-main-light', 'transition-colors');
-                        trigger.addEventListener('click', () => {
-                            const details = itemDetails[trigger.id];
-                            itemModal.title.textContent = details.title;
-                            itemModal.content.innerHTML = details.content;
-                            itemModal.modal.classList.remove('hidden');
-                            
-                            // Initialize sliders based on which modal is opened
-                            if (trigger.id === 'knee-exo-title') {
-                                setupSlider('knee-slider');
-                                setupSlider('knee-pcb-slider'); // Initialize new PCB slider
-                            }
-                            if (trigger.id === 'hip-exo-title') {
-                                setupSlider('hip-slider');
-                            }
-                            if (trigger.id === 'haptic-design-title') {
-                                // Updated ID reference to match HTML above
-                                setupSlider('haptics-slider');
-                                
-                                // Render Report PDF Thumbnail
-                                renderPDFThumbnail(
-                                    'Haptic_Device/Haptics_Report.pdf',
-                                    'haptics-report-canvas',
-                                    'haptics-report-loading'
-                                );
-
-                                // Attach click listener for report modal
-                                setTimeout(() => {
-                                    const reportLink = document.getElementById('haptics-report-link');
-                                    if (reportLink) {
-                                        reportLink.addEventListener('click', (e) => {
-                                            e.preventDefault();
-                                            openPDFModal('Haptic_Device/Haptics_Report.pdf', 'Project Report');
-                                        });
-                                    }
-                                }, 100);
-                            }
-                            if (trigger.id === 'mechatronics-project-title') {
-                                // Render Report PDF Thumbnail for Mechatronics
-                                renderPDFThumbnail(
-                                    'ADV_Mechatronics/ADV_Mechatronics_Report.pdf', // Assuming path
-                                    'mechatronics-report-canvas',
-                                    'mechatronics-report-loading'
-                                );
-
-                                // Attach click listener for report modal
-                                setTimeout(() => {
-                                    const reportLink = document.getElementById('mechatronics-report-link');
-                                    if (reportLink) {
-                                        reportLink.addEventListener('click', (e) => {
-                                            e.preventDefault();
-                                            openPDFModal('ADV_Mechatronics/ADV_Mechatronics_Report.pdf', 'Project Report');
-                                        });
-                                    }
-                                }, 100);
-                            }
-                        });
+                        trigger.addEventListener('click', () => openItemModal(trigger.id));
                     }
+                });
+                document.querySelectorAll('[data-item]').forEach(card => {
+                    card.addEventListener('click', () => openItemModal(card.dataset.item));
                 });
                 
                 const closeItemModal = () => {
@@ -1478,6 +1618,35 @@
                 animate();
             };
             
+            // Home page projects carousel: arrows step one project at a time,
+            // and each arrow disappears when there is nothing further in that direction.
+            const setupProjectCarousel = () => {
+                const track = document.getElementById('projects-track');
+                const prevBtn = document.getElementById('projects-prev');
+                const nextBtn = document.getElementById('projects-next');
+                if (!track || !prevBtn || !nextBtn) return;
+
+                const updateArrows = () => {
+                    const maxScroll = track.scrollWidth - track.clientWidth;
+                    prevBtn.hidden = track.scrollLeft <= 2;
+                    nextBtn.hidden = track.scrollLeft >= maxScroll - 2;
+                };
+                const step = (direction) => {
+                    const card = track.querySelector('.project-card');
+                    if (!card) return;
+                    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+                    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    track.scrollBy({ left: direction * (card.offsetWidth + gap), behavior: reduceMotion ? 'auto' : 'smooth' });
+                };
+
+                prevBtn.addEventListener('click', () => step(-1));
+                nextBtn.addEventListener('click', () => step(1));
+                track.addEventListener('scroll', () => requestAnimationFrame(updateArrows), { passive: true });
+                window.addEventListener('resize', updateArrows);
+                state.refreshProjectCarousel = updateArrows;
+                updateArrows();
+            };
+
             // Liquid glass: the highlight on glass elements follows the pointer
             const setupGlass = () => {
                 const selector = '.glass-btn, .glass-bar';
@@ -1497,6 +1666,7 @@
             setupNavigation();
             setupModals();
             setupLightbox();
+            setupProjectCarousel();
             setupGlass();
         });
     </script>
