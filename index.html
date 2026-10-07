@@ -380,11 +380,17 @@
                     <h2 id="home-projects-heading" class="mb-6 text-2xl font-bold text-main">Projects</h2>
                     <div class="relative">
                         <div id="projects-track" class="project-track">
+                            <button type="button" data-project-page="peak-knee-exo" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
+                                <img src="Knee_Exo_Resources/Knee_V2_Worn_Views.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">PEAK Knee Exoskeleton V2.0</span>
+                                <span class="block mt-1 px-1 text-sm text-ink/60">MetaMobility Lab</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">A fully 3D-printed, open-source knee exoskeleton, validated with a controller trained entirely in simulation.</span>
+                            </button>
                             <button type="button" data-project-page="knee-exo" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
                                 <img src="Knee_Exo_Resources/Knee_Professional.jpg" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover object-[center_70%] rounded-xl">
-                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Knee Exoskeleton</span>
+                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Knee Exoskeleton V1.0</span>
                                 <span class="block mt-1 px-1 text-sm text-ink/60">MetaMobility Lab</span>
-                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">A lightweight, high-torque knee exoskeleton designed to assist individuals with gait impairment.</span>
+                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">The first prototype: a unilateral knee exoskeleton built in a summer sprint to prove out the hardware and baseline control.</span>
                             </button>
                             <button type="button" data-project-page="hip-exo" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
                                 <img src="Hip_Exo/Hip_Exo_Angle.png" alt="" loading="lazy" class="w-full aspect-[4/3] object-cover rounded-xl">
@@ -409,12 +415,6 @@
                                 <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Solar Car</span>
                                 <span class="block mt-1 px-1 text-sm text-ink/60">Virginia Tech</span>
                                 <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">Design and manufacturing of a solar-powered vehicle for competitive racing.</span>
-                            </button>
-                            <button type="button" data-item="assistive-robotics-title" class="glass glass-btn project-card flex flex-col justify-start p-3 rounded-2xl text-left">
-                                <span class="flex items-center justify-center w-full aspect-[4/3] rounded-xl bg-ink/5 text-sm text-ink/50">Photo coming soon</span>
-                                <span class="block mt-4 px-1 text-xl font-bold leading-snug text-main">Tennis Training Robot</span>
-                                <span class="block mt-1 px-1 text-sm text-ink/60">Assistive Robotics Lab</span>
-                                <span class="block mt-3 px-1 pb-2 leading-relaxed text-ink/85">An autonomous robotic system for tennis training and practice.</span>
                             </button>
                         </div>
                         <button type="button" id="projects-prev" class="carousel-arrow is-prev" aria-label="Previous project" hidden><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg></button>
@@ -575,8 +575,7 @@
                 // Sliders state maps: 'sliderID' -> { interval, currentIndex, totalImages }
                 sliders: {},
                 openProject: null,          // key of the project page being shown, if any
-                lastPage: 'home',           // last main page shown (where Back returns to)
-                projectOpenedInApp: false   // true when the project page was reached by clicking a card
+                lastPage: 'home'            // last main page shown (where the browser's Back returns to)
             };
 
             // --- DOM ELEMENT SELECTIONS ---
@@ -631,26 +630,19 @@
             
             // --- DATA ---
             const itemDetails = {
-                // Knee exoskeleton: two write-ups, shown one after the other on its project page
+                // Knee exoskeleton: V1.0 (the first prototype) and V2.0 (PEAK) each have their own project page
                 'knee-exo-v1': {
-                    title: 'MetaMobility Lab - Knee Exoskeleton',
+                    title: 'MetaMobility Lab - Knee Exoskeleton V1.0',
                     content: `
                         <h2 class="text-2xl font-bold text-main mb-4">Motivation</h2>
                         <p class="text-ink/85">
-                            Mobility is fundamental to independence, yet millions of people struggle to walk, stand, or climb stairs because of age-related musculoskeletal decline, neurological disease, or injury. The knee is a key joint to assist: it bears most of the load in everyday tasks such as rising from a chair, taking stairs, and squatting to lift.
+                            The goal of this project was to design, manufacture, and test a state-of-the-art robotic knee exoskeleton to assist people with gait impairments such as cerebral palsy, stroke, and osteoarthritis.
                         </p>
                         <p class="mt-4 text-ink/85">
-                            Most exoskeleton platforms, open-source or proprietary, depend on machined or custom-fabricated hardware that is expensive, slow to produce, and hard to modify, so other research groups struggle to reproduce or build on them. This project set out to:
+                            To realize this, multiple communication protocols, high-torque-density motors, and custom adjustable orthotic interfaces were designed and integrated to adapt to people's varying body proportions. Beyond the hardware, the project aims to advance current understanding of human locomotion through adaptive, generalized, and personalized control.
                         </p>
-                        <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li>Assist people with gait impairments such as cerebral palsy, stroke, and osteoarthritis, with an interface that adapts to a wide range of body proportions.</li>
-                            <li>Make the hardware fast and inexpensive to build: fully 3D printed, assembled with off-the-shelf fasteners and desktop tools.</li>
-                            <li>Separate low-level and high-level control, so new controllers can be developed independently of hardware changes.</li>
-                            <li>Advance the understanding of human locomotion through adaptive, generalized, and personalized control.</li>
-                            <li>Release the whole platform as open source, so other labs can adopt and extend it.</li>
-                        </ul>
 
-                        <h2 class="text-2xl font-bold text-main mt-12 mb-4">V1.0: the first prototype</h2>
+                        <h2 class="text-2xl font-bold text-main mt-12 mb-4">The first prototype</h2>
                         <p class="text-ink/85">
                             The first version was a unilateral knee exoskeleton, designed, built, and tested in a 2&ndash;3 month summer sprint to prove out the hardware and validate baseline control.
                         </p>
@@ -794,14 +786,32 @@
                             </button>
                         </div>
                         <p class="mt-2 text-sm text-center text-ink/60">PCB design work that followed the protoboards</p>
+
+                        <div class="mt-10 pt-6 border-t border-ink/15 flex flex-wrap items-center justify-between gap-4">
+                            <p class="text-ink/85">These challenges led to a ground-up redesign:</p>
+                            <button type="button" data-project-page="peak-knee-exo" class="glass glass-btn px-5 py-2 rounded-full font-bold text-ink">See V2.0: PEAK</button>
+                        </div>
                     `
                 },
                 'knee-exo-v2': {
-                    title: 'MetaMobility Lab - Knee Exoskeleton',
+                    title: 'MetaMobility Lab - PEAK Knee Exoskeleton V2.0',
                     content: `
-                        <h2 class="text-2xl font-bold text-main mb-4">V2.0: PEAK, the finalized design</h2>
+                        <h2 class="text-2xl font-bold text-main mb-4">Motivation</h2>
                         <p class="text-ink/85">
-                            PEAK (Powered Exoskeleton for Assisting Knee) is the finalized device: a fully 3D-printed, open-source knee exoskeleton for bilateral or unilateral torque assistance, built to be manufactured quickly and inexpensively with widely available desktop tools. It was redesigned from the ground up, so its specifications differ from V1.0 across the board.
+                            Mobility is fundamental to independence, yet millions of people struggle to walk, stand, or climb stairs because of age-related musculoskeletal decline, neurological disease, or injury. The knee is a key joint to assist: it bears most of the load in everyday tasks such as rising from a chair, taking stairs, and squatting to lift.
+                        </p>
+                        <p class="mt-4 text-ink/85">
+                            Most exoskeleton platforms, open-source or proprietary, depend on machined or custom-fabricated hardware that is expensive, slow to produce, and hard to modify, so other research groups struggle to reproduce or build on them. PEAK set out to:
+                        </p>
+                        <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>Make the hardware fast and inexpensive to build: fully 3D printed, assembled with off-the-shelf fasteners and desktop tools.</li>
+                            <li>Separate low-level and high-level control, so new controllers can be developed independently of hardware changes.</li>
+                            <li>Release the whole platform as open source, so other labs can adopt and extend it.</li>
+                        </ul>
+
+                        <h2 class="text-2xl font-bold text-main mt-12 mb-4">The finalized design</h2>
+                        <p class="text-ink/85">
+                            PEAK (Powered Exoskeleton for Assisting Knee) is the finalized device: a fully 3D-printed, open-source knee exoskeleton for bilateral or unilateral torque assistance, built to be manufactured quickly and inexpensively with widely available desktop tools. It was redesigned from the ground up after <a href="#project/knee-exo" class="underline decoration-main underline-offset-4 hover:text-main-light">the V1.0 prototype</a>, so its specifications differ across the board.
                         </p>
                         <dl class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-4 sm:gap-x-0 sm:divide-x divide-ink/20">
                             <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
@@ -1317,15 +1327,11 @@
                     title: 'Solar Car at Virginia Tech',
                     content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
                 },
-                'assistive-robotics-title': {
-                    title: 'Assistive Robotics Lab - Tennis Training Robot',
-                    content: `<p class="text-xl text-center py-16">More updates on the way soon!</p>`
-                },
             };
 
             // 3D models used on project pages. Each is loaded the first time its page is opened.
             const projectModels = {
-                'knee-v1': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V1.0 model' },
+                'knee-v1': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: '' },
                 // PLACEHOLDER: point `url` at the V2.0 model file when it is ready, then drop the note from `label`
                 'knee-v2': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V2.0 model (placeholder: showing the V1.0 model for now)' },
                 'hip':     { url: 'Hip_Exo/Hip_Exo_V2_Rajiv.glb', label: '' },
@@ -1339,11 +1345,16 @@
             //              detailsKey  which itemDetails entry supplies the write-up
             //              model       key in projectModels shown beside that write-up (omit for none)
             const projectPages = {
+                'peak-knee-exo': {
+                    sliders: [],
+                    parts: [
+                        { detailsKey: 'knee-exo-v2', model: 'knee-v2' }
+                    ]
+                },
                 'knee-exo': {
                     sliders: ['knee-slider', 'knee-pcb-slider'],
                     parts: [
-                        { detailsKey: 'knee-exo-v1', model: 'knee-v1' },
-                        { detailsKey: 'knee-exo-v2', model: 'knee-v2' }
+                        { detailsKey: 'knee-exo-v1', model: 'knee-v1' }
                     ]
                 },
                 'hip-exo': {
@@ -1500,18 +1511,11 @@
                 document.addEventListener('click', (e) => {
                     const card = e.target instanceof Element ? e.target.closest('[data-project-page]') : null;
                     if (!card) return;
-                    state.projectOpenedInApp = true;
                     location.hash = '#project/' + encodeURIComponent(card.dataset.projectPage);
                 });
 
                 document.addEventListener('click', (e) => {
-                    if (!(e.target instanceof Element) || !e.target.closest('[data-project-back]')) return;
-                    if (state.projectOpenedInApp) {
-                        state.lastPage = 'projects';
-                        history.back();          // undoes the card click, so Back/Forward stay consistent
-                    } else {
-                        navigateTo('projects');  // page was opened directly from a link
-                    }
+                    if (e.target instanceof Element && e.target.closest('[data-project-back]')) navigateTo('projects');
                 });
 
                 Object.entries(navLinks).forEach(([key, link]) => {
