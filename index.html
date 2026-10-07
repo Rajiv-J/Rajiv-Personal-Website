@@ -420,32 +420,13 @@
             <div id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
         </div>
         
-        <!-- Single Project Page (opened by cards with data-project-page; see projectPages in the script)
-             Left 2/3: the project write-up. Right 1/3: its 3D model, which stays in view while you scroll. -->
+        <!-- Single Project Page (opened by cards with data-project-page; see projectPages in the script).
+             The script fills #project-page-parts with one row per part of the project:
+             write-up on the left 2/3, that part's 3D model on the right 1/3, pinned while its part is on screen. -->
         <div id="project-page" class="hidden">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start">
-                <div id="project-page-header" class="md:col-span-2 flex flex-wrap items-center gap-x-5 gap-y-3">
-                    <button type="button" id="project-back" class="glass glass-btn flex items-center gap-1 pl-2.5 pr-4 py-1.5 rounded-full font-bold text-ink">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                        Projects
-                    </button>
-                    <h1 id="project-page-title" class="text-2xl sm:text-3xl font-bold text-main"></h1>
-                </div>
-                <!-- Sits in the right-hand column on desktop (pinned while scrolling), between the title and the write-up on phones -->
-                <aside id="project-page-model" class="md:col-start-3 md:row-start-1 md:row-span-2 md:sticky md:top-24">
-                    <div class="surface p-3 rounded-2xl">
-                        <!-- One container per project model; only the open project's is shown -->
-                        <div id="knee-exo-3d-container" class="project-model relative w-full h-72 md:h-[calc(100vh-13rem)] md:max-h-[44rem] rounded-xl cursor-grab active:cursor-grabbing">
-                            <p class="model-loading absolute inset-0 flex items-center justify-center text-sm text-ink/60">Loading 3D model…</p>
-                        </div>
-                        <div id="hip-exo-3d-container" class="project-model relative w-full h-72 md:h-[calc(100vh-13rem)] md:max-h-[44rem] rounded-xl cursor-grab active:cursor-grabbing">
-                            <p class="model-loading absolute inset-0 flex items-center justify-center text-sm text-ink/60">Loading 3D model…</p>
-                        </div>
-                        <p class="mt-2 text-sm text-center text-ink/60">Drag to rotate. Scroll or pinch to zoom.</p>
-                    </div>
-                </aside>
-                <article id="project-page-content" class="surface md:col-span-2 min-w-0 p-5 sm:p-8 rounded-2xl leading-relaxed text-ink"></article>
-            </div>
+            <div id="project-page-parts"></div>
+            <!-- 3D viewers wait here between visits so each model only has to load once -->
+            <div id="project-model-bank" class="hidden"></div>
         </div>
 
         <!-- Gallery Page Content -->
@@ -579,13 +560,9 @@
             
             // --- STATE MANAGEMENT ---
             const state = {
-                kneeExo3DInitialized: false,
-                hipExo3DInitialized: false,
                 hapticDevice3DInitialized: false,
                 // Sliders state maps: 'sliderID' -> { interval, currentIndex, totalImages }
                 sliders: {},
-                kneeExoControls: null,
-                hipExoControls: null,
                 hapticDeviceControls: null,
                 openProject: null,          // key of the project page being shown, if any
                 lastPage: 'home',           // last main page shown (where Back returns to)
@@ -621,11 +598,8 @@
             // Single project page
             const projectPage = {
                 page: document.getElementById('project-page'),
-                header: document.getElementById('project-page-header'),
-                title: document.getElementById('project-page-title'),
-                content: document.getElementById('project-page-content'),
-                model: document.getElementById('project-page-model'),
-                backBtn: document.getElementById('project-back')
+                parts: document.getElementById('project-page-parts'),
+                modelBank: document.getElementById('project-model-bank')
             };
 
             // Generic Item Modal Elements
@@ -647,17 +621,29 @@
             
             // --- DATA ---
             const itemDetails = {
-                'knee-exo-title': {
+                // Knee exoskeleton: two write-ups, shown one after the other on its project page
+                'knee-exo-v1': {
                     title: 'MetaMobility Lab - Knee Exoskeleton',
                     content: `
-                        <h2 class="text-xl font-bold text-main mb-4">Motivation</h2>
+                        <h2 class="text-2xl font-bold text-main mb-4">Motivation</h2>
                         <p class="text-ink/85">
-                            The goal of this project was to design, manufacture, and test a state-of-the-art robotic knee exoskeleton. The device is aimed at assisting people with gait impairments such as cerebral palsy, stroke, and osteoarthritis.
+                            Mobility is fundamental to independence, yet millions of people struggle to walk, stand, or climb stairs because of age-related musculoskeletal decline, neurological disease, or injury. The knee is a key joint to assist: it bears most of the load in everyday tasks such as rising from a chair, taking stairs, and squatting to lift.
                         </p>
                         <p class="mt-4 text-ink/85">
-                            To realize this, multiple communication protocols, high-torque-density motors, and custom adjustable orthotic interfaces were designed and integrated to adapt to people's varying body proportions. Beyond the hardware, the project aims to advance current understanding of human locomotion through adaptive, generalized, and personalized control.
+                            Most exoskeleton platforms, open-source or proprietary, depend on machined or custom-fabricated hardware that is expensive, slow to produce, and hard to modify, so other research groups struggle to reproduce or build on them. This project set out to:
                         </p>
+                        <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>Assist people with gait impairments such as cerebral palsy, stroke, and osteoarthritis, with an interface that adapts to a wide range of body proportions.</li>
+                            <li>Make the hardware fast and inexpensive to build: fully 3D printed, assembled with off-the-shelf fasteners and desktop tools.</li>
+                            <li>Separate low-level and high-level control, so new controllers can be developed independently of hardware changes.</li>
+                            <li>Advance the understanding of human locomotion through adaptive, generalized, and personalized control.</li>
+                            <li>Release the whole platform as open source, so other labs can adopt and extend it.</li>
+                        </ul>
 
+                        <h2 class="text-2xl font-bold text-main mt-12 mb-4">V1.0: the first prototype</h2>
+                        <p class="text-ink/85">
+                            The first version was a unilateral knee exoskeleton, designed, built, and tested in a 2&ndash;3 month summer sprint to prove out the hardware and validate baseline control.
+                        </p>
                         <dl class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-4 sm:gap-x-0 sm:divide-x divide-ink/20">
                             <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
                                 <dt class="text-sm text-ink/60">Torque delivered to the user</dt>
@@ -689,9 +675,9 @@
                             </div>
                         </div>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">My role</h2>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">My role</h3>
                         <p class="text-ink/85">
-                            As project lead, I coordinated a team of five researchers through a 2&ndash;3 month summer sprint covering design and baseline control validation. My responsibilities included:
+                            As project lead, I coordinated a team of five researchers through the sprint. My responsibilities included:
                         </p>
                         <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
                             <li>Setting project milestones and the timeline</li>
@@ -701,7 +687,7 @@
                             <li>Baseline data collection to validate the sensor readings</li>
                         </ul>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Mechanical systems</h2>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Mechanical systems</h3>
                         <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
                             <li><strong class="text-ink">Orthotic cuffs:</strong> Custom designed for user comfort, with a form factor that fits a variety of body types so the device can be fitted to many users.</li>
                             <li><strong class="text-ink">Linear freedom adjustments:</strong> Allow adaptable sizing across users.</li>
@@ -710,9 +696,9 @@
                         </ul>
 
                         <div id="knee-slider" class="grid grid-cols-1 relative w-full max-w-lg mx-auto mt-10 rounded-lg overflow-hidden group">
-                            <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" alt="Knee exoskeleton worn, front view" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
-                            <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" alt="Knee exoskeleton worn, side view" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
-                            <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" alt="Knee exoskeleton worn, back view" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Front.jpg" alt="V1.0 knee exoskeleton worn, front view" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Side.jpg" alt="V1.0 knee exoskeleton worn, side view" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
+                            <img src="Knee_Exo_Resources/Knee_IRL_Back.jpg" alt="V1.0 knee exoskeleton worn, back view" class="col-start-1 row-start-1 w-full h-auto object-cover rounded-lg transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
                             <button class="prev-btn absolute left-0 top-1/2 transform -translate-y-1/2 glass glass-btn text-ink p-2 rounded-r-xl opacity-0 group-hover:opacity-100 focus:opacity-100" aria-label="Previous photo">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                             </button>
@@ -721,31 +707,40 @@
                             </button>
                         </div>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">System at a glance</h2>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">V1.0 at a glance</h3>
                         <dl class="border-t border-ink/15">
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
-                                <dt class="text-main">Actuation</dt>
-                                <dd class="sm:col-span-3 text-ink/85">AK80-9 high-torque-density quasi-direct-drive (QDD) motors, providing assistance directly in line with the knee joint</dd>
+                                <dt class="text-main">Configuration</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Unilateral (one leg)</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
-                                <dt class="text-main">Compute</dt>
-                                <dd class="sm:col-span-3 text-ink/85">A two-tier architecture: a Teensy 4.1, in a future variation, to manage all low-level commands such as torque commands and sensor and actuator parameter tracking, and a Jetson Orin Nano planned for high-level control and for deploying trained ML and AI models on the hardware</dd>
+                                <dt class="text-main">Actuation</dt>
+                                <dd class="sm:col-span-3 text-ink/85">AK80-9 high-torque-density quasi-direct-drive (QDD) motor, providing assistance directly in line with the knee joint</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Sensing</dt>
-                                <dd class="sm:col-span-3 text-ink/85">IMUs for limb orientation, gait phase estimation, and limb velocity and acceleration; FSRs for detecting heel strikes and possible gait cycle segmentation; EMG to measure lower-limb muscle activity for controller validation and future human-in-the-loop control strategies</dd>
+                                <dd class="sm:col-span-3 text-ink/85">IMUs for limb orientation, gait phase estimation, and limb velocity and acceleration; FSRs for detecting heel strikes and possible gait cycle segmentation; EMG to measure lower-limb muscle activity for controller validation</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
                                 <dt class="text-main">Communication</dt>
-                                <dd class="sm:col-span-3 text-ink/85">CAN and CAN FD for robust communication between components and devices; SPI and I2C for high-frequency sensor data acquisition</dd>
+                                <dd class="sm:col-span-3 text-ink/85">CAN and CAN FD between components and devices; SPI and I2C for high-frequency sensor data acquisition</dd>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
-                                <dt class="text-main">PCB</dt>
-                                <dd class="sm:col-span-3 text-ink/85">A 4-layer board, currently in progress, with a separate power plane for current draw upwards of 40 A. It lets the motors connect directly to the PCB, reducing cable clutter and making the connections between sensor and actuator peripherals more robust.</dd>
+                                <dt class="text-main">Electronics</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Hand-wired protoboard prototypes</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Structure</dt>
+                                <dd class="sm:col-span-3 text-ink/85">3D printed in Onyx, with orthotic cuffs, linear adjustments, and BOA ratchet straps</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Control</dt>
+                                <dd class="sm:col-span-3 text-ink/85">A simple impedance-based controller for initial validation</dd>
                             </div>
                         </dl>
 
-                        <div class="flex flex-col gap-4 mt-8 max-w-lg mx-auto">
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Protoboard prototypes</h3>
+                        <div class="flex flex-col gap-4 max-w-lg mx-auto">
                             <div class="w-full rounded-lg overflow-hidden bg-page transition-transform duration-300 hover:scale-[1.02]">
                                 <img src="Knee_Exo_Resources/Knee_Electronics.jpg" alt="Main Electronics Board" class="w-full h-auto object-contain">
                             </div>
@@ -759,6 +754,22 @@
                             </div>
                         </div>
 
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">What V1.0 achieved</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>A working knee exoskeleton that delivered 10&ndash;15 Nm of torque to the user while worn.</li>
+                            <li>Tested on a range of people in the lab; the built-in adjustment mechanisms adapted it to every body shape.</li>
+                            <li>Custom BOA strapping with neoprene foam padding was enough to suspend the system off the user's thighs and shanks while staying comfortable.</li>
+                            <li>The embedded system worked as intended: data was collected and plotted showing accurate biological kinematics, and a simple impedance-based controller was deployed for initial validation.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Challenges that shaped V2.0</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Cuff strength:</strong> The cuff tabs that held the straps were very thin and snapped at higher torques.</li>
+                            <li><strong class="text-ink">Fragile electronics:</strong> The protoboards worked, but they were not robust. During long sessions the cables pulled and connections eventually broke, which called for a proper PCB with a power plane rated for the motors' current draw.</li>
+                            <li><strong class="text-ink">Control architecture:</strong> Low-level commands (reading sensor values, commanding torque) needed to move onto a Teensy, leaving a Jetson Orin Nano free to run the main controller.</li>
+                            <li><strong class="text-ink">No real controller yet:</strong> The hardware still needed a novel controller to validate its performance. The plan was to simulate a person's lower-limb kinematics and kinetics and use that to train a temporal convolutional network to assist the knee.</li>
+                        </ul>
+
                         <div id="knee-pcb-slider" class="relative w-full max-w-lg mx-auto h-64 md:h-80 mt-8 rounded-lg overflow-hidden group bg-page">
                             <img src="Knee_Exo_Resources/Knee_PCB_3D.png" alt="3D View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-100 slider-image">
                             <img src="Knee_Exo_Resources/Knee_PCB_Top.png" alt="Top View of Knee PCB" class="absolute inset-0 w-full h-full object-contain transition-opacity duration-1000 ease-in-out opacity-0 slider-image">
@@ -769,22 +780,140 @@
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                             </button>
                         </div>
+                        <p class="mt-2 text-sm text-center text-ink/60">PCB design work that followed the protoboards</p>
+                    `
+                },
+                'knee-exo-v2': {
+                    title: 'MetaMobility Lab - Knee Exoskeleton',
+                    content: `
+                        <h2 class="text-2xl font-bold text-main mb-4">V2.0: PEAK, the finalized design</h2>
+                        <p class="text-ink/85">
+                            PEAK (Powered Exoskeleton for Assisting Knee) is the finalized device: a fully 3D-printed, open-source knee exoskeleton for bilateral or unilateral torque assistance, built to be manufactured quickly and inexpensively with widely available desktop tools. It was redesigned from the ground up, so its specifications differ from V1.0 across the board.
+                        </p>
+                        <dl class="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-x-4 sm:gap-x-0 sm:divide-x divide-ink/20">
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Peak assistance torque</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">18 Nm</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Bilateral system mass</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">3.4 kg</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Lower peak knee extension moment</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">21.5%</dd>
+                            </div>
+                            <div class="flex flex-col-reverse justify-end py-3 sm:py-1 sm:px-5 sm:first:pl-0 sm:last:pr-0">
+                                <dt class="text-sm text-ink/60">Lower peak quadriceps activation</dt>
+                                <dd class="mb-1 text-2xl font-bold text-ink">26.7%</dd>
+                            </div>
+                        </dl>
+                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
+                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: photos of the V2.0 device</div>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Outcomes</h2>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">V2.0 at a glance</h3>
+                        <dl class="border-t border-ink/15">
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Configuration</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Bilateral or unilateral, with three cuffs per leg spanning the thigh, shank, and ankle</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Structure</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Fully FDM 3D printed in PAHT-CF, a carbon-fiber-reinforced polyamide, and assembled with off-the-shelf fasteners. No machining or custom sheet metal.</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Fit</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Conical cuffs matched to lower-limb geometry and adjustable for leg length; the ankle cuff anchors the device against sliding down; custom webbing straps; multilayer padding of 3D mesh fabric over polyurethane foam</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Actuation</dt>
+                                <dd class="sm:col-span-3 text-ink/85">AK80-9 V3.0 quasi-direct-drive actuator mounted at the knee: brushless DC motor, 9:1 planetary reduction, magnetic encoder, and onboard FOC driver. 18 Nm usable peak torque and 0.51 Nm backdrive torque.</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Low-level control</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Teensy 4.1 on each leg module, running at 1000 Hz</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">High-level control</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Jetson Orin Nano on the waist belt, running at 100 Hz</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Sensing</dt>
+                                <dd class="sm:col-span-3 text-ink/85">Two ICM-20948 IMUs per leg (thigh and shank) read over SPI, plus the motor encoder for knee angle</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Communication</dt>
+                                <dd class="sm:col-span-3 text-ink/85">CAN between each Teensy and its actuator; a shared CAN FD bus between the Jetson and both Teensys</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Power</dt>
+                                <dd class="sm:col-span-3 text-ink/85">6-cell, 24 V, 3300 mAh LiPo battery on the waist belt (about 79 Wh), for roughly 2 hours of continuous operation</dd>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-6 py-3 border-b border-ink/15">
+                                <dt class="text-main">Mass</dt>
+                                <dd class="sm:col-span-3 text-ink/85">About 1.2 kg per leg; about 3.4 kg for the full bilateral system including the waist belt, Jetson, and battery</dd>
+                            </div>
+                        </dl>
+
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Mechanical design decisions</h3>
                         <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li>Created a novel knee exoskeleton that delivers 10&ndash;15 Nm of torque to the user while worn.</li>
-                            <li>Tested the system on a range of people in the lab; the built-in adjustment mechanisms adapted it to every body shape.</li>
-                            <li>Custom BOA strapping with neoprene foam padding was enough to suspend the system off the user's thighs and shanks while staying comfortable.</li>
-                            <li>The embedded system worked as intended: data was collected and plotted showing accurate biological kinematics, and a simple impedance-based controller was deployed for initial validation.</li>
+                            <li><strong class="text-ink">Shell-dominant printing:</strong> Each cuff is printed with solid outer walls and minimal infill. That puts material far from the neutral axis, where it resists bending most effectively, much like the flanges of an I-beam.</li>
+                            <li><strong class="text-ink">Wrap-around cuffs:</strong> Early cuffs covered only the front-facing regions of the leg, and under load the device rotated around the limb. That rotation corrupted the IMU readings feeding the controller. Wrapping the cuffs around the front and back of the leg converts part of the shear force into normal force and stopped the rotation.</li>
+                            <li><strong class="text-ink">Result:</strong> The final cuffs transferred the full 18 Nm to the user with minimal device migration, and no material deformation was observed across all seven participants' trials.</li>
                         </ul>
 
-                        <h2 class="text-xl font-bold text-main mt-10 mb-4">Next steps</h2>
-                        <p class="text-ink/85">With these wins, there are still many steps ahead:</p>
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Final embedded architecture</h3>
+                        <p class="text-ink/85">Control is split across two tiers, so a new controller can be developed without touching the hardware layer.</p>
                         <ul class="mt-3 list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
-                            <li><strong class="text-ink">Stronger cuff interface:</strong> The cuff tabs that hold the straps are very thin and snap at higher torques.</li>
-                            <li><strong class="text-ink">PCB:</strong> The current system works, but the protoboard is not robust. During long sessions the cables pull and connections eventually break.</li>
-                            <li><strong class="text-ink">Finalized two-tier communication architecture:</strong> Offloading only the low-level commands (reading sensor values, commanding torque) to the Teensy, while a Jetson Orin Nano runs the main controller.</li>
-                            <li><strong class="text-ink">A proper controller for validation:</strong> The main next step is a novel controller that validates the hardware's performance and pushes the exoskeleton field forward in assistance strategies. I aim to simulate a person's lower-limb kinematics and kinetics in software such as OpenSim, derive the joint impedances of the knee, and use them to train a temporal convolutional neural network that provides impedance-based assistance at the knee joint.</li>
+                            <li><strong class="text-ink">Low level, 1000 Hz:</strong> A Teensy 4.1 on each leg polls the two IMUs over SPI, sends torque commands over CAN to the actuator's FOC driver, and logs motor position, velocity, and torque.</li>
+                            <li><strong class="text-ink">High level, 100 Hz:</strong> A Jetson Orin Nano polls both Teensys over a shared CAN FD bus at the start of each cycle, runs the active controller, and sends the torque command back. Communication between the tiers is interrupt-driven, with end-to-end latency under 80 ms across the bilateral network.</li>
+                            <li><strong class="text-ink">Safety:</strong> A watchdog timer on each Teensy commands 0 Nm if a valid torque command does not arrive in time, returning the device to a passive, backdrivable state.</li>
+                            <li><strong class="text-ink">A Teensy per leg:</strong> Keeping each leg's low-level control self-contained means future controllers can run entirely on the microcontroller, without the Jetson, in a bilateral or unilateral setup.</li>
+                            <li><strong class="text-ink">Logging and sync:</strong> Data is logged on the Jetson by trial, and GPIO trigger pulses mark the start and end of each trial to align it with the motion capture, treadmill, and EMG systems.</li>
+                        </ul>
+                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
+                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: high-level and low-level control boards</div>
+                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
+                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: control loop diagram</div>
+
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Simulation-trained controller</h3>
+                        <p class="text-ink/85">
+                            I developed and deployed a knee-assistance controller that was trained entirely in simulation, with no real-world training data collected beforehand.
+                        </p>
+                        <ol class="mt-3 list-decimal pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Imitation in simulation:</strong> A reinforcement learning policy (soft actor-critic, in the style of DeepMimic) learned to reproduce reference squatting kinematics in a musculoskeletal simulation built in SCONE with the Hyfydy physics engine. The reward combined motion tracking with penalties on muscular effort and abrupt changes in actuation.</li>
+                            <li><strong class="text-ink">Distillation:</strong> Rollouts of that policy provided synchronized kinematics and knee moments. These were distilled into a temporal convolutional network (TCN) that estimates knee moment from a short history of knee angle and thigh and shank angular velocity, the signals available from the IMUs and motor encoder. Sensor noise and calibration offsets were added during training for robustness.</li>
+                            <li><strong class="text-ink">Deployment:</strong> On the device, the estimator runs on the Jetson from the onboard sensors alone, and its output is scaled into assistive knee torque.</li>
+                        </ol>
+
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Experiment</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Participants:</strong> Seven healthy adults, under a protocol approved by the Carnegie Mellon University Institutional Review Board.</li>
+                            <li><strong class="text-ink">Task:</strong> Bodyweight squats paced by a 40 BPM metronome in 60-second trials, with and without the exoskeleton.</li>
+                            <li><strong class="text-ink">Instrumentation:</strong> A 10-camera Vicon motion capture system, a Bertec split-belt instrumented treadmill with force plates, and Delsys surface EMG on the vastus medialis (quadriceps) and medial gastrocnemius (calf).</li>
+                            <li><strong class="text-ink">Analysis:</strong> Inverse kinematics and inverse dynamics in OpenSim with participant-scaled models, adding the exoskeleton's mass for the assisted trials. The final 10 squat cycles were averaged per participant and compared with paired t-tests.</li>
+                        </ul>
+                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
+                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: experiment setup</div>
+
+                        <h3 class="text-xl font-bold text-main mt-10 mb-4">Outcomes</h3>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li><strong class="text-ink">Joint loading:</strong> Peak knee extension moment fell 21.5%, from 81.9 to 64.3 Nm (p = 0.006), with a reduction in all seven participants.</li>
+                            <li><strong class="text-ink">Muscle effort:</strong> Peak vastus medialis activation fell 26.7%, from 77.1 to 56.5 %MVC (p = 0.016), with a reduction in six of the seven participants.</li>
+                            <li><strong class="text-ink">No compensation:</strong> Medial gastrocnemius activation showed no significant change, so the assistance did not shift effort onto an unassisted muscle.</li>
+                            <li><strong class="text-ink">Kinematics:</strong> Peak knee flexion was slightly lower with the device, 107.1&deg; compared with 114.5&deg; (p = 0.019). Peak commanded torque averaged 15.7 Nm.</li>
+                            <li><strong class="text-ink">Takeaway:</strong> A controller trained entirely in simulation transferred to the physical device and gave meaningful biomechanical assistance.</li>
+                            <li><strong class="text-ink">Limits so far:</strong> Validation covers squatting only, in seven healthy young adults.</li>
+                        </ul>
+                        <!-- IMAGE PLACEHOLDER: replace this block with an <img> when the picture is ready -->
+                        <div class="mt-6 flex items-center justify-center h-44 rounded-lg border border-dashed border-ink/30 bg-ink/5 px-4 text-center text-sm text-ink/50">Image placeholder: results plots</div>
+
+                        <h2 class="text-2xl font-bold text-main mt-12 mb-4">Next steps</h2>
+                        <ul class="list-disc pl-5 space-y-2 text-ink/85 marker:text-main">
+                            <li>Testing the device across other types of locomotion and terrain to validate its performance.</li>
+                            <li>Testing new simulation-based exoskeleton controllers.</li>
+                            <li>Taking the device outdoors to validate it in real-world settings, beyond constrained laboratory environments.</li>
+                            <li>Finalizing the documentation for the full open-source release of the platform. To our knowledge it will be the first full-stack open-source exoskeleton and the first that is fully 3D printed. Full stack means we release the hardware, the embedded systems, the low-level control, and the high-level simulation controller pipeline.</li>
                         </ul>
                     `
                 },
@@ -1139,26 +1268,33 @@
                 },
             };
 
+            // 3D models used on project pages. Each is loaded the first time its page is opened.
+            const projectModels = {
+                'knee-v1': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V1.0 model' },
+                // PLACEHOLDER: point `url` at the V2.0 model file when it is ready, then drop the note from `label`
+                'knee-v2': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V2.0 model (placeholder: showing the V1.0 model for now)' },
+                'hip':     { url: 'Hip_Exo/Hip_Exo_V2_Rajiv.glb', label: '' }
+            };
+
             // Projects that open as their own page (cards with data-project-page="<key>").
-            //   detailsKey     which itemDetails entry supplies the title and write-up
-            //   sliders        ids of image sliders inside that write-up
-            //   modelContainer id of this project's 3D container in #project-page-model (omit if no model)
-            //   initModel      starts the 3D viewer the first time the page is opened
-            //   controlsKey    where that viewer stores its OrbitControls in `state`
+            //   title    page heading (defaults to the first part's itemDetails title)
+            //   sliders  ids of the image sliders inside the write-ups
+            //   parts    shown top to bottom; each has
+            //              detailsKey  which itemDetails entry supplies the write-up
+            //              model       key in projectModels shown beside that write-up (omit for none)
             const projectPages = {
                 'knee-exo': {
-                    detailsKey: 'knee-exo-title',
                     sliders: ['knee-slider', 'knee-pcb-slider'],
-                    modelContainer: 'knee-exo-3d-container',
-                    initModel: () => initKneeExo3D(),
-                    controlsKey: 'kneeExoControls'
+                    parts: [
+                        { detailsKey: 'knee-exo-v1', model: 'knee-v1' },
+                        { detailsKey: 'knee-exo-v2', model: 'knee-v2' }
+                    ]
                 },
                 'hip-exo': {
-                    detailsKey: 'hip-exo-title',
                     sliders: ['hip-slider'],
-                    modelContainer: 'hip-exo-3d-container',
-                    initModel: () => initHipExo3D(),
-                    controlsKey: 'hipExoControls'
+                    parts: [
+                        { detailsKey: 'hip-exo-title', model: 'hip' }
+                    ]
                 }
             };
             
@@ -1187,7 +1323,8 @@
                     if (!state.openProject) return;
                     state.openProject = null;
                     projectPage.page.classList.add('hidden');
-                    projectPage.content.innerHTML = '';
+                    parkModelViewers();               // keep the loaded 3D viewers for next time
+                    projectPage.parts.innerHTML = '';
                     stopSliders();
                     clearProjectHash();
                 };
@@ -1211,8 +1348,8 @@
                 // Show a project's own page. Returns false if there is no such project.
                 const showProjectPage = (projectKey) => {
                     const config = projectPages[projectKey];
-                    const details = config && itemDetails[config.detailsKey];
-                    if (!details) return false;
+                    const parts = (config ? config.parts : []).filter(part => itemDetails[part.detailsKey]);
+                    if (parts.length === 0) return false;
 
                     Object.values(pages).forEach(page => page.classList.add('hidden'));
                     Object.values(navLinks).forEach(link => {
@@ -1221,33 +1358,63 @@
                     });
                     navLinks.projects.classList.add(activeClass); // project pages live under Projects
 
-                    // The write-up is shared with the pop-up, so make sure only one copy is in the page
+                    // Start clean: close the pop-up and clear any earlier project page
                     itemModal.modal.classList.add('hidden');
                     itemModal.content.innerHTML = '';
                     stopSliders();
+                    parkModelViewers();
+                    projectPage.parts.innerHTML = '';
 
-                    projectPage.title.textContent = config.title || details.title;
-                    projectPage.content.innerHTML = details.content;
                     projectPage.page.classList.remove('hidden');
                     state.openProject = projectKey;
+
+                    // One row per part: write-up on the left 2/3, its 3D model on the right 1/3
+                    parts.forEach((part, index) => {
+                        const hasModel = Boolean(projectModels[part.model]);
+                        const wide = hasModel ? 'md:col-span-2' : 'md:col-span-3';
+                        const row = document.createElement('div');
+                        row.className = 'grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start' + (index > 0 ? ' mt-6 lg:mt-8' : '');
+
+                        if (index === 0) {
+                            const header = document.createElement('div');
+                            header.className = `${wide} flex flex-wrap items-center gap-x-5 gap-y-3`;
+                            header.innerHTML = `
+                                <button type="button" data-project-back class="glass glass-btn flex items-center gap-1 pl-2.5 pr-4 py-1.5 rounded-full font-bold text-ink">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                    Projects
+                                </button>
+                                <h1 class="text-2xl sm:text-3xl font-bold text-main"></h1>`;
+                            header.querySelector('h1').textContent = config.title || itemDetails[parts[0].detailsKey].title;
+                            row.appendChild(header);
+                        }
+
+                        let modelSlot = null;
+                        if (hasModel) {
+                            // Right-hand column on desktop, pinned while this part is on screen; above the write-up on phones
+                            const aside = document.createElement('aside');
+                            aside.className = 'md:col-start-3 md:row-start-1 md:sticky md:top-24' + (index === 0 ? ' md:row-span-2' : '');
+                            const label = projectModels[part.model].label;
+                            aside.innerHTML = `
+                                <div class="surface p-3 rounded-2xl">
+                                    ${label ? `<p class="mb-2 text-sm font-bold text-center text-main">${label}</p>` : ''}
+                                    <div data-model-slot></div>
+                                    <p class="mt-2 text-sm text-center text-ink/60">Drag to rotate. Scroll or pinch to zoom.</p>
+                                </div>`;
+                            modelSlot = aside.querySelector('[data-model-slot]');
+                            row.appendChild(aside);
+                        }
+
+                        const article = document.createElement('article');
+                        article.className = `surface ${wide} md:col-start-1 min-w-0 p-5 sm:p-8 rounded-2xl leading-relaxed text-ink`;
+                        article.innerHTML = itemDetails[part.detailsKey].content;
+                        row.appendChild(article);
+
+                        projectPage.parts.appendChild(row);
+                        if (modelSlot) mountModelViewer(part.model, modelSlot); // after the row is on the page, so the viewer can size itself
+                    });
+
                     window.scrollTo(0, 0);
                     (config.sliders || []).forEach(setupSlider);
-
-                    // 3D model on the right third; without one, the write-up takes the full width
-                    const hasModel = Boolean(config.modelContainer);
-                    projectPage.model.classList.toggle('hidden', !hasModel);
-                    [projectPage.header, projectPage.content].forEach(el => {
-                        el.classList.toggle('md:col-span-2', hasModel);
-                        el.classList.toggle('md:col-span-3', !hasModel);
-                    });
-                    projectPage.model.querySelectorAll('.project-model').forEach(el => {
-                        el.classList.toggle('hidden', el.id !== config.modelContainer);
-                    });
-                    if (hasModel) {
-                        config.initModel();                         // only does work the first time
-                        window.dispatchEvent(new Event('resize'));  // re-fit the viewer to its container
-                        state[config.controlsKey]?.reset();
-                    }
                     return true;
                 };
 
@@ -1267,7 +1434,8 @@
                     location.hash = '#project/' + encodeURIComponent(card.dataset.projectPage);
                 });
 
-                projectPage.backBtn?.addEventListener('click', () => {
+                document.addEventListener('click', (e) => {
+                    if (!(e.target instanceof Element) || !e.target.closest('[data-project-back]')) return;
                     if (state.projectOpenedInApp) {
                         state.lastPage = 'projects';
                         history.back();          // undoes the card click, so Back/Forward stay consistent
@@ -1564,90 +1732,46 @@
             };
             
             // 3D Scene
-            const initKneeExo3D = () => {
-                if (state.kneeExo3DInitialized) return;
-                const container = document.getElementById('knee-exo-3d-container');
-                if (!container) return;
-                state.kneeExo3DInitialized = true;
+            // 3D viewers for project pages. A viewer is built the first time its model is needed and then
+            // reused: between visits it waits in #project-model-bank, so the model never has to reload.
+            const modelViewers = {}; // model key -> { el, controls, fit }
 
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                renderer.setSize(container.clientWidth, container.clientHeight);
-                container.appendChild(renderer.domElement);
-                
-                const controls = new OrbitControls(camera, renderer.domElement);
-                controls.enableDamping = true;
-                state.kneeExoControls = controls; // Store controls
-
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-                scene.add(ambientLight);
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
-                directionalLight.position.set(5, 10, 7.5);
-                scene.add(directionalLight);
-
-                new GLTFLoader().load('Knee_Exo_Resources/knee_exoskeleton.glb', (gltf) => {
-                    const model = gltf.scene;
-                    const box = new THREE.Box3().setFromObject(model);
-                    const size = box.getSize(new THREE.Vector3()).length();
-                    const center = box.getCenter(new THREE.Vector3());
-                    model.position.sub(center);
-                    camera.position.set(size * 0.6, size * 0.4, size);
-                    controls.target.set(0, 0, 0);
-                    camera.lookAt(0, 0, 0);
-                    controls.minDistance = size / 5;
-                    controls.maxDistance = size * 5;
-                    camera.near = size / 100;
-                    camera.far = size * 100;
-                    camera.updateProjectionMatrix();
-                    scene.add(model);
-                    controls.update();
-                    controls.saveState();
-                    container.querySelector('.model-loading')?.remove();
-                }, undefined, (error) => {
-                    console.error(error);
-                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
-                });
-
-                window.addEventListener('resize', () => {
-                    if (!container || !container.clientWidth) return; // skip while its page is hidden
-                    camera.aspect = container.clientWidth / container.clientHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(container.clientWidth, container.clientHeight);
-                }, false);
-
-                const animate = () => {
-                    requestAnimationFrame(animate);
-                    if (container.offsetParent === null) return; // not on screen: don't spend time drawing
-                    controls.update();
-                    renderer.render(scene, camera);
-                };
-                animate();
+            const parkModelViewers = () => {
+                Object.values(modelViewers).forEach(viewer => projectPage.modelBank.appendChild(viewer.el));
             };
 
-            const initHipExo3D = () => {
-                if (state.hipExo3DInitialized) return;
-                const container = document.getElementById('hip-exo-3d-container');
-                if (!container) return;
-                state.hipExo3DInitialized = true;
+            const mountModelViewer = (modelKey, slot) => {
+                const spec = projectModels[modelKey];
+                if (!spec) return;
+
+                const existing = modelViewers[modelKey];
+                if (existing) {
+                    slot.appendChild(existing.el);
+                    existing.fit();
+                    existing.controls.reset();
+                    return;
+                }
+
+                const el = document.createElement('div');
+                el.className = 'project-model relative w-full h-72 md:h-[calc(100vh-15rem)] md:max-h-[44rem] rounded-xl cursor-grab active:cursor-grabbing';
+                el.innerHTML = '<p class="model-loading absolute inset-0 flex items-center justify-center text-sm text-ink/60">Loading 3D model…</p>';
+                slot.appendChild(el);
 
                 const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+                const camera = new THREE.PerspectiveCamera(75, el.clientWidth / el.clientHeight, 0.1, 1000);
                 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                renderer.setSize(container.clientWidth, container.clientHeight);
-                container.appendChild(renderer.domElement);
-                
+                renderer.setSize(el.clientWidth, el.clientHeight);
+                el.appendChild(renderer.domElement);
+
                 const controls = new OrbitControls(camera, renderer.domElement);
                 controls.enableDamping = true;
-                state.hipExoControls = controls; // Store controls
 
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-                scene.add(ambientLight);
+                scene.add(new THREE.AmbientLight(0xffffff, 0.8));
                 const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
-                new GLTFLoader().load('Hip_Exo/Hip_Exo_V2_Rajiv.glb', (gltf) => {
+                new GLTFLoader().load(spec.url, (gltf) => {
                     const model = gltf.scene;
                     const box = new THREE.Box3().setFromObject(model);
                     const size = box.getSize(new THREE.Vector3()).length();
@@ -1664,26 +1788,34 @@
                     scene.add(model);
                     controls.update();
                     controls.saveState();
-                    container.querySelector('.model-loading')?.remove();
+                    el.querySelector('.model-loading')?.remove();
                 }, undefined, (error) => {
                     console.error(error);
-                    container.innerHTML = `<div class="text-red-400 text-center p-4 flex items-center justify-center h-full"><strong>Error:</strong> Failed to load 3D model.</div>`;
+                    const note = el.querySelector('.model-loading');
+                    if (note) note.innerHTML = '<span class="text-red-400"><strong>Error:</strong> Failed to load 3D model.</span>';
                 });
 
-                window.addEventListener('resize', () => {
-                    if (!container || !container.clientWidth) return; // skip while its page is hidden
-                    camera.aspect = container.clientWidth / container.clientHeight;
+                // Match the drawing size to the container (skipped while the viewer is parked off-page)
+                const fit = () => {
+                    if (!el.clientWidth || !el.clientHeight) return;
+                    camera.aspect = el.clientWidth / el.clientHeight;
                     camera.updateProjectionMatrix();
-                    renderer.setSize(container.clientWidth, container.clientHeight);
-                }, false);
+                    renderer.setSize(el.clientWidth, el.clientHeight);
+                };
+                window.addEventListener('resize', fit);
 
+                // Only draw while the viewer is actually on screen
+                let onScreen = true;
+                new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; }).observe(el);
                 const animate = () => {
                     requestAnimationFrame(animate);
-                    if (container.offsetParent === null) return; // not on screen: don't spend time drawing
+                    if (!onScreen || el.offsetParent === null) return;
                     controls.update();
                     renderer.render(scene, camera);
                 };
                 animate();
+
+                modelViewers[modelKey] = { el, controls, fit };
             };
 
             const initHapticDevice3D = () => {
