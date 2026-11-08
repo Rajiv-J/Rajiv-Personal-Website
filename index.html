@@ -566,6 +566,7 @@
         import * as THREE from 'three';
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js'; // for compressed models such as the V2.0 knee
 
         // --- Main App Initialization ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -1332,8 +1333,7 @@
             // 3D models used on project pages. Each is loaded the first time its page is opened.
             const projectModels = {
                 'knee-v1': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: '' },
-                // PLACEHOLDER: point `url` at the V2.0 model file when it is ready, then drop the note from `label`
-                'knee-v2': { url: 'Knee_Exo_Resources/knee_exoskeleton.glb', label: 'V2.0 model (placeholder: showing the V1.0 model for now)' },
+                'knee-v2': { url: 'Knee_Exo_Resources/Knee_Exo_V2_Model.glb', label: '' }, // compressed copy of the 233 MB export
                 'hip':     { url: 'Hip_Exo/Hip_Exo_V2_Rajiv.glb', label: '' },
                 'haptic':  { url: 'Haptic_Device/Open_Source_Haptic_Device.glb', label: '' }
             };
@@ -1780,9 +1780,11 @@
                 directionalLight.position.set(5, 10, 7.5);
                 scene.add(directionalLight);
 
-                new GLTFLoader().load(spec.url, (gltf) => {
+                const loader = new GLTFLoader();
+                loader.setMeshoptDecoder(MeshoptDecoder);
+                loader.load(spec.url, (gltf) => {
                     const model = gltf.scene;
-                    const box = new THREE.Box3().setFromObject(model);
+                    const box = new THREE.Box3().setFromObject(model, true); // exact bounds, so compressed models frame correctly
                     const size = box.getSize(new THREE.Vector3()).length();
                     const center = box.getCenter(new THREE.Vector3());
                     model.position.sub(center);
